@@ -23,6 +23,33 @@ function calcScore(reportCount, helpedCount) {
   return reportCount + Math.floor((helpedCount || 0) * 0.5);
 }
 
+// 距離計算（ハーバーサイン公式）
+function calcDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLng/2) * Math.sin(dLng/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// 主要駅の座標
+const STATION_COORDS = {
+  "西区": { lat: 34.6841, lng: 135.4917 },
+  "大阪": { lat: 34.7025, lng: 135.4960 },
+  "梅田": { lat: 34.7025, lng: 135.4960 },
+  "難波": { lat: 34.6687, lng: 135.5010 },
+  "なんば": { lat: 34.6687, lng: 135.5010 },
+  "天王寺": { lat: 34.6464, lng: 135.5133 },
+  "心斎橋": { lat: 34.6753, lng: 135.5007 },
+  "本町": { lat: 34.6836, lng: 135.5010 },
+  "江戸堀": { lat: 34.6884, lng: 135.4919 },
+  "四ツ橋": { lat: 34.6753, lng: 135.4958 },
+  "堀江": { lat: 34.6732, lng: 135.4959 },
+  "中央区": { lat: 34.6837, lng: 135.5073 },
+};
+
 const SEARCH_RADIUS_METERS = 500;
 const MAX_RESULTS = 20;
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
@@ -244,6 +271,7 @@ export default function EatInFinder() {
   const [reportData, setReportData] = useState({ hasEatIn: null, outlet: false, wifi: false, seats: "", comment: "" });
   const [submitted, setSubmitted] = useState(false);
   const [cacheHit, setCacheHit] = useState(false);
+  const [searchCenter, setSearchCenter] = useState(null);
 
   const handleCongestion = (store, status, e) => {
     e.stopPropagation();
@@ -282,12 +310,28 @@ export default function EatInFinder() {
       setProgress({ current: i + 1, total: places.length });
       setStores([...results]);
     }
+    // 検索中心点から距離順にソート
+    if (searchCenter) {
+      results.sort((a, b) => {
+        const da = calcDistance(searchCenter.lat, searchCenter.lng, a.lat, a.lng);
+        const db = calcDistance(searchCenter.lat, searchCenter.lng, b.lat, b.lng);
+        return da - db;
+      });
+    }
+    setStores([...results]);
     setToCache(areaKey, results);
     setAnalyzing(false);
   }, []);
 
   const handleSearch = useCallback(async () => {
     if (!searchArea.trim()) return;
+    // 駅名から座標を探す
+    const matched = Object.entries(STATION_COORDS).find(([k]) => searchArea.includes(k));
+    if (matched) {
+      setSearchCenter({ lat: matched[1].lat, lng: matched[1].lng });
+    } else {
+      setSearchCenter(null);
+    }
     await runSearch(searchArea);
   }, [searchArea, runSearch]);
 
@@ -418,6 +462,11 @@ export default function EatInFinder() {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontWeight: 800, fontSize: "13px", lineHeight: 1.4 }}>{store.name}</div>
                         <div style={{ fontSize: "11px", color: "#999", marginTop: 2 }}>📍 {store.address}</div>
+                        {searchCenter && (() => {
+                          const dist = calcDistance(searchCenter.lat, searchCenter.lng, store.lat, store.lng);
+                          const label = dist < 1000 ? `${Math.round(dist)}m` : `${(dist/1000).toFixed(1)}km`;
+                          return <div style={{ fontSize: "11px", color: "#0077b6", marginTop: 1 }}>🚶 {label}</div>;
+                        })()}
                       </div>
                       <div style={{ padding: "4px 10px", borderRadius: 20, flexShrink: 0, background: store.hasEatIn ? "#e8f5e9" : "#f5f5f5", border: `1px solid ${store.hasEatIn ? "#a5d6a7" : "#eee"}`, color: store.hasEatIn ? "#2d6a4f" : "#ccc", fontSize: "12px", fontWeight: 700 }}>
                         {store.hasEatIn ? "🪑 あり" : "✗ なし"}
