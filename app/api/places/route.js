@@ -13,7 +13,7 @@ export async function GET(request) {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location",
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.regularOpeningHours",
       },
       body: JSON.stringify({
         includedTypes: ["convenience_store"],
@@ -34,6 +34,8 @@ export async function GET(request) {
       address: p.formattedAddress || "",
       lat: p.location?.latitude,
       lng: p.location?.longitude,
+      isOpenNow: p.currentOpeningHours?.openNow ?? null,
+      openingHours: p.regularOpeningHours?.weekdayDescriptions || [],
     }));
     return Response.json({ places });
   } catch (e) {

@@ -21,6 +21,25 @@ function getNextRank(count) {
   return idx < RANKS.length - 1 ? RANKS[idx + 1] : null;
 }
 
+// ============================================================
+// 投稿済み店舗管理（ローカルストレージ）
+// ============================================================
+function getReportedStores() {
+  try {
+    return JSON.parse(localStorage.getItem("reportedStores") || "{}");
+  } catch { return {}; }
+}
+
+function markAsReported(placeId, storeName, hasEatIn) {
+  const reported = getReportedStores();
+  reported[placeId] = { date: new Date().toISOString(), storeName, hasEatIn };
+  localStorage.setItem("reportedStores", JSON.stringify(reported));
+}
+
+function isReported(placeId) {
+  return !!getReportedStores()[placeId];
+}
+
 function calcScore(reportCount, helpedCount) {
   return reportCount + Math.floor((helpedCount || 0) * 0.5);
 }
@@ -504,6 +523,8 @@ async function searchNearbyConvenience(lat, lng, radius = 500) {
       address: p.address,
       lat: p.lat,
       lng: p.lng,
+      isOpenNow: p.isOpenNow ?? null,
+      openingHours: p.openingHours || [],
       reviews: [],
       congestion: null,
       helpedCount: 0,
@@ -574,6 +595,8 @@ export default function EatInFinder() {
   const [filterOutlet, setFilterOutlet] = useState(false);
   const [filterWifi, setFilterWifi] = useState(false);
   const [filterVerified, setFilterVerified] = useState(false);
+  const [filterOpenNow, setFilterOpenNow] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const [gpsLoading, setGpsLoading] = useState(false);
   const [gpsError, setGpsError] = useState("");
   const [myReportCount, setMyReportCount] = useState(4);
@@ -738,12 +761,14 @@ export default function EatInFinder() {
 
   const handleSubmitReport = async () => {
     if (!reportTarget) return;
+    if (isReported(reportTarget.place_id)) return;
     setStores(prev => prev.map(s => {
       if (s.place_id !== reportTarget.place_id) return s;
       const newVerification = { userId: "me", reportCount: myReportCount + 1, comment: reportData.comment };
       return { ...s, hasEatIn: reportData.hasEatIn ?? s.hasEatIn, outlet: reportData.outlet || s.outlet, wifi: reportData.wifi || s.wifi, seats: reportData.seats ? parseInt(reportData.seats) : s.seats, verifications: [...(s.verifications || []), newVerification] };
     }));
     setMyReportCount(c => c + 1);
+    markAsReported(reportTarget.place_id, reportTarget.name, reportData.hasEatIn);
     setSubmitted(true);
     // Firestoreに保存
     try {
@@ -767,6 +792,7 @@ export default function EatInFinder() {
   // ② ワンタップ投稿
   const handleQuickReport = async (store, hasEatIn, e) => {
     e.stopPropagation();
+    if (isReported(store.place_id)) return;
     setStores(prev => prev.map(s => {
       if (s.place_id !== store.place_id) return s;
       const newVer = { userId: "me", reportCount: myReportCount + 1, comment: hasEatIn ? "イートインあり" : "イートインなし" };
@@ -782,6 +808,7 @@ export default function EatInFinder() {
         reportCount: myReportCount + 1, createdAt: new Date(),
       });
     } catch (e) { console.error("投稿エラー:", e); }
+    markAsReported(store.place_id, store.name, hasEatIn);
     // ④ エリア制覇チェック
     checkAreaConquest(store.place_id, hasEatIn);
   };
@@ -791,6 +818,7 @@ export default function EatInFinder() {
     if (filterOutlet && !s.outlet) return false;
     if (filterWifi && !s.wifi) return false;
     if (filterVerified && (!s.verifications || s.verifications.length === 0)) return false;
+    if (filterOpenNow && s.isOpenNow === false) return false;
     return true;
   });
 
@@ -824,6 +852,11 @@ export default function EatInFinder() {
         <div onClick={() => { setStores([]); setSearchArea(""); setSelected(null); }} style={{ fontWeight: 900, fontSize: "16px", letterSpacing: "-0.5px", cursor: "pointer" }}>
           🏪 <span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
         </div>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+        <button onClick={() => setShowHistory(true)} style={{
+          background: "#f5f5f5", border: "none", borderRadius: 10,
+          padding: "6px 10px", cursor: "pointer", fontSize: "11px", fontWeight: 700, color: "#555",
+        }}>投稿履歴</button>
         <button onClick={() => setShowProfile(true)} style={{ display: "flex", alignItems: "center", gap: 6, background: myRank.bg, border: `1.5px solid ${myRank.color}55`, borderRadius: 10, padding: "6px 10px", cursor: "pointer" }}>
           <span style={{ fontSize: "16px" }}>{myRank.icon}</span>
           <div style={{ textAlign: "left" }}>
@@ -831,6 +864,7 @@ export default function EatInFinder() {
             <div style={{ fontSize: "10px", color: "#aaa" }}>{myScore}pt</div>
           </div>
         </button>
+        </div>
       </div>
 
       {/* ④ エリア制覇通知 */}
@@ -935,6 +969,11 @@ export default function EatInFinder() {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontWeight: 800, fontSize: "13px", lineHeight: 1.4 }}>{store.name}</div>
                         <div style={{ fontSize: "11px", color: "#999", marginTop: 2 }}>📍 {store.address}</div>
+                        {store.isOpenNow !== null && (
+                          <div style={{ fontSize: "11px", marginTop: 2, fontWeight: 700, color: store.isOpenNow ? "#2d6a4f" : "#e63946" }}>
+                            {store.isOpenNow ? "🟢 営業中" : "🔴 営業時間外"}
+                          </div>
+                        )}
                         {searchCenter && (() => {
                           const dist = calcDistance(searchCenter.lat, searchCenter.lng, store.lat, store.lng);
                           const label = dist < 1000 ? `${Math.round(dist)}m` : `${(dist/1000).toFixed(1)}km`;
@@ -971,6 +1010,14 @@ export default function EatInFinder() {
                   </div>
                   {isOpen && (
                     <div style={{ borderTop: `1px solid ${isVerified ? "#fdebd0" : "#f0f0f0"}`, background: "#fafafa", padding: "12px 14px" }}>
+                      {store.openingHours && store.openingHours.length > 0 && (
+                        <div style={{ background: "#fff", border: "1.5px solid #f0f0f0", borderRadius: 10, padding: "10px 12px", marginBottom: 10 }}>
+                          <div style={{ fontSize: "11px", color: "#aaa", fontWeight: 700, marginBottom: 6 }}>🕐 営業時間</div>
+                          {store.openingHours.map((h, i) => (
+                            <div key={i} style={{ fontSize: "11px", color: "#555", padding: "2px 0" }}>{h}</div>
+                          ))}
+                        </div>
+                      )}
                       <a href={`https://maps.google.com/?q=${encodeURIComponent(store.name + " " + store.address)}`} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()}
                         style={{ display: "flex", alignItems: "center", gap: 8, background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 10, padding: "9px 12px", textDecoration: "none", marginBottom: 10 }}>
                         <span style={{ fontSize: "18px" }}>📍</span>
@@ -998,22 +1045,30 @@ export default function EatInFinder() {
                       </div>
                       {/* ② ワンタップ投稿 */}
                       <div style={{ marginBottom: 8 }}>
-                        <div style={{ fontSize: "12px", color: "#888", marginBottom: 8, fontWeight: 700 }}>📝 実際に行った方は教えてください！</div>
-                        <div style={{ display: "flex", gap: 8 }}>
-                          <button onClick={e => handleQuickReport(store, true, e)} style={{
-                            flex: 1, padding: "12px", borderRadius: 12, border: "2px solid #a5d6a7",
-                            background: "#e8f5e9", color: "#2d6a4f", fontSize: "14px", fontWeight: 700, cursor: "pointer",
-                          }}>🪑 イートインあった！</button>
-                          <button onClick={e => handleQuickReport(store, false, e)} style={{
-                            flex: 1, padding: "12px", borderRadius: 12, border: "2px solid #ffcdd2",
-                            background: "#ffeaea", color: "#c0392b", fontSize: "14px", fontWeight: 700, cursor: "pointer",
-                          }}>✗ なかった</button>
-                        </div>
-                        <button onClick={e => openReport(store, e)} style={{
-                          width: "100%", marginTop: 8, padding: "8px", borderRadius: 10,
-                          border: "1.5px solid #ddd", background: "#fff",
-                          fontSize: "12px", color: "#888", cursor: "pointer", fontWeight: 600,
-                        }}>席数・コンセント・Wi-Fiも詳しく登録する →</button>
+                        {isReported(store.place_id) ? (
+                          <div style={{ padding: "12px", borderRadius: 12, background: "#f5f5f5", textAlign: "center", fontSize: "13px", color: "#aaa", fontWeight: 700 }}>
+                            ✅ 投稿済みです（1店舗1回まで）
+                          </div>
+                        ) : (
+                          <>
+                            <div style={{ fontSize: "12px", color: "#888", marginBottom: 8, fontWeight: 700 }}>📝 実際に行った方は教えてください！</div>
+                            <div style={{ display: "flex", gap: 8 }}>
+                              <button onClick={e => handleQuickReport(store, true, e)} style={{
+                                flex: 1, padding: "12px", borderRadius: 12, border: "2px solid #a5d6a7",
+                                background: "#e8f5e9", color: "#2d6a4f", fontSize: "14px", fontWeight: 700, cursor: "pointer",
+                              }}>🪑 イートインあった！</button>
+                              <button onClick={e => handleQuickReport(store, false, e)} style={{
+                                flex: 1, padding: "12px", borderRadius: 12, border: "2px solid #ffcdd2",
+                                background: "#ffeaea", color: "#c0392b", fontSize: "14px", fontWeight: 700, cursor: "pointer",
+                              }}>✗ なかった</button>
+                            </div>
+                            <button onClick={e => openReport(store, e)} style={{
+                              width: "100%", marginTop: 8, padding: "8px", borderRadius: 10,
+                              border: "1.5px solid #ddd", background: "#fff",
+                              fontSize: "12px", color: "#888", cursor: "pointer", fontWeight: 600,
+                            }}>席数・コンセント・Wi-Fiも詳しく登録する →</button>
+                          </>
+                        )}
                       </div>
                     </div>
                   )}
@@ -1100,6 +1155,60 @@ export default function EatInFinder() {
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 投稿履歴モーダル */}
+      {showHistory && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 200, display: "flex", alignItems: "flex-end" }}
+          onClick={e => e.target === e.currentTarget && setShowHistory(false)}>
+          <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", padding: "24px 20px 40px", maxHeight: "80vh", overflowY: "auto" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+              <div style={{ fontWeight: 900, fontSize: "17px" }}>📋 投稿履歴</div>
+              <button onClick={() => setShowHistory(false)} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#aaa" }}>✕</button>
+            </div>
+            {(() => {
+              const reported = getReportedStores();
+              const entries = Object.entries(reported).sort((a, b) => {
+                const dateA = typeof a[1] === "object" ? a[1].date : a[1];
+                const dateB = typeof b[1] === "object" ? b[1].date : b[1];
+                return new Date(dateB) - new Date(dateA);
+              });
+              if (entries.length === 0) return (
+                <div style={{ textAlign: "center", padding: "32px 0", color: "#aaa" }}>
+                  <div style={{ fontSize: "40px" }}>📭</div>
+                  <div style={{ marginTop: 8, fontWeight: 700 }}>まだ投稿がありません</div>
+                  <div style={{ fontSize: "12px", marginTop: 4 }}>近くのコンビニを検索して投稿してみよう！</div>
+                </div>
+              );
+              return (
+                <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ fontSize: "12px", color: "#888", marginBottom: 4 }}>合計 {entries.length} 件投稿済み</div>
+                  {entries.map(([placeId, data]) => {
+                    const storeName = typeof data === "object" ? data.storeName : placeId;
+                    const hasEatIn = typeof data === "object" ? data.hasEatIn : null;
+                    const date = typeof data === "object" ? data.date : data;
+                    return (
+                      <div key={placeId} style={{ display: "flex", alignItems: "center", gap: 10, padding: "12px", background: "#fafafa", borderRadius: 12, border: "1px solid #eee" }}>
+                        <div style={{ width: 36, height: 36, borderRadius: 8, background: "#111", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "16px", flexShrink: 0 }}>
+                          {hasEatIn === true ? "🪑" : hasEatIn === false ? "✗" : "📝"}
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontWeight: 700, fontSize: "13px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{storeName || "店舗名不明"}</div>
+                          <div style={{ fontSize: "11px", color: "#aaa", marginTop: 2 }}>
+                            {new Date(date).toLocaleDateString("ja-JP")} ·
+                            <span style={{ color: hasEatIn ? "#2d6a4f" : "#e63946", fontWeight: 700, marginLeft: 4 }}>
+                              {hasEatIn === true ? "イートインあり" : hasEatIn === false ? "イートインなし" : "投稿済み"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()}
           </div>
         </div>
       )}
