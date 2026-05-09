@@ -666,28 +666,21 @@ export default function EatInFinder() {
     } catch (e) { console.error("助かった保存エラー:", e); }
   };
 
-  const runSearch = useCallback(async (areaKey, coords = null) => {
+  const runSearch = useCallback(async (areaKey) => {
     setStores([]); setSelected(null); setCacheHit(false);
     const cached = getFromCache(areaKey);
     if (cached) { setCacheHit(true); setStores(cached); return; }
     setLoading(true);
     await new Promise(r => setTimeout(r, 900));
     setLoading(false);
-// Places APIで検索（座標がある場合）
-    let places = null;
-    if (coords) {
-      const apiPlaces = await searchNearbyConvenience(coords.lat, coords.lng, SEARCH_RADIUS_METERS);
-      if (apiPlaces && apiPlaces.length > 0) places = apiPlaces;
-    }
-    // Places APIが使えない場合はMOCKデータ
-    if (!places) {
-      const isGPS = areaKey === "現在地";
-      const areaFiltered = isGPS ? MOCK_PLACES : MOCK_PLACES.filter(p =>
-        p.address.includes(areaKey) || p.name.includes(areaKey) ||
-        Object.keys(STATION_COORDS).some(k => areaKey.includes(k) && p.address.includes(k))
-      );
-      places = (areaFiltered.length > 0 ? areaFiltered : MOCK_PLACES).slice(0, MAX_RESULTS);
-    }
+    // エリア絞り込み：住所に検索ワードが含まれる店舗のみ（GPS検索時はスキップ）
+    const isGPS = areaKey === "現在地";
+    const areaFiltered = isGPS ? MOCK_PLACES : MOCK_PLACES.filter(p => 
+      p.address.includes(areaKey) || p.name.includes(areaKey) ||
+      Object.keys(STATION_COORDS).some(k => areaKey.includes(k) && p.address.includes(k))
+    );
+    // 絞り込み結果がない場合は全件表示
+    const places = (areaFiltered.length > 0 ? areaFiltered : MOCK_PLACES).slice(0, MAX_RESULTS);
     setAnalyzing(true);
     setProgress({ current: 0, total: places.length });
     const results = [];
@@ -828,8 +821,8 @@ export default function EatInFinder() {
                 <div style={{ fontWeight: 800, fontSize: "14px" }}>Google マップからコンビニを収集中…</div>
                 <div style={{ color: "#aaa", fontSize: "11px", marginTop: 4 }}>📍 半径{(SEARCH_RADIUS_METERS / 1000).toFixed(1)}km以内 · 最大{MAX_RESULTS}件</div></>
             ) : (
-              <><div style={{ fontSize: "30px", marginBottom: 10 }}>🤖</div>
-                <div style={{ fontWeight: 800, fontSize: "14px" }}>AIが口コミを解析中…</div>
+              <><div style={{ fontSize: "30px", marginBottom: 10 }}>🏪</div>
+                <div style={{ fontWeight: 800, fontSize: "14px" }}>コンビニ情報を取得中…</div>
                 <div style={{ color: "#aaa", fontSize: "12px", marginTop: 4, marginBottom: 12 }}>{progress.current} / {progress.total} 件完了</div>
                 <div style={{ background: "#f0f0f0", borderRadius: 99, height: 8, overflow: "hidden" }}>
                   <div style={{ height: "100%", borderRadius: 99, background: "#e63946", width: `${(progress.current / progress.total) * 100}%`, transition: "width 0.4s ease" }} />
@@ -892,7 +885,7 @@ export default function EatInFinder() {
                       );
                     })()}
                     <div style={{ marginTop: 7 }}>
-                      {isVerified ? <VerifiedBadge verifications={store.verifications} /> : <span style={{ fontSize: "10px", color: CONF_COLOR[store.confidence] }}>🤖 AI判定 · {CONF_LABEL[store.confidence]}</span>}
+                      {isVerified ? <VerifiedBadge verifications={store.verifications} /> : <span style={{ fontSize: "10px", color: CONF_COLOR[store.confidence] }}>🔍 情報募集中</span>}
                     </div>
                   </div>
                   {isOpen && (
@@ -920,11 +913,7 @@ export default function EatInFinder() {
                         </div>
                       )}
                       <div style={{ background: "#fff", border: "1.5px solid #f0f0f0", borderRadius: 10, padding: "10px 12px", marginBottom: 10 }}>
-                        <div style={{ fontSize: "11px", color: "#aaa", fontWeight: 700, marginBottom: 6 }}>🤖 AI判定根拠（Google口コミより）</div>
-                        {store.reviews.map((r, i) => (
-                          <div key={i} style={{ fontSize: "12px", color: "#555", padding: "4px 0", borderTop: i > 0 ? "1px solid #f5f5f5" : "none" }}>「{r}」</div>
-                        ))}
-                        <div style={{ fontSize: "11px", color: CONF_COLOR[store.confidence], marginTop: 8, fontWeight: 700 }}>→ {store.reason}（{CONF_LABEL[store.confidence]}）</div>
+
                       </div>
                       <button onClick={e => openReport(store, e)} style={{ width: "100%", padding: "10px", borderRadius: 10, border: "none", background: "#111", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
                         ✅ 実際に確認した！投稿して確認済みにする
@@ -944,10 +933,21 @@ export default function EatInFinder() {
           <div style={{ fontSize: "44px", marginBottom: 12 }}>🔍</div>
           <div style={{ fontWeight: 800, fontSize: "15px", color: "#777" }}>エリアを入力して検索</div>
           <div style={{ fontSize: "12px", marginTop: 8, lineHeight: 1.8, color: "#aaa" }}>Google マップからコンビニを自動収集し<br />AIが口コミを解析してイートインを判定します</div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 4, marginTop: 20, flexWrap: "wrap" }}>
-            {["🗺️ Places API", "→", "🤖 AI解析", "→", "✅ ユーザー確認"].map((s, i) => (
-              <span key={i} style={{ fontSize: "11px", color: s === "→" ? "#ccc" : "#fff", background: s === "→" ? "transparent" : "#444", padding: s === "→" ? "0 2px" : "4px 10px", borderRadius: 20, fontWeight: s === "→" ? 400 : 600 }}>{s}</span>
-            ))}
+          <div style={{ marginTop: 24, background: "#fff", borderRadius: 16, padding: "20px", boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
+            <div style={{ fontSize: "28px", marginBottom: 8 }}>🙌</div>
+            <div style={{ fontWeight: 800, fontSize: "14px", color: "#333", marginBottom: 8 }}>みんなの情報でマップを充実させよう！</div>
+            <div style={{ fontSize: "12px", color: "#888", lineHeight: 1.8 }}>
+              近くのコンビニを検索して<br />
+              イートインの有無を投稿するだけ！<br />
+              あなたの一投稿がみんなの役に立ちます
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginTop: 16 }}>
+              {[["🔍", "エリアや駅名で検索"], ["🪑", "イートインの有無を投稿"], ["👍", "役に立ったら「助かった！」を押す"], ["⭐", "投稿数に応じてランクアップ"]].map(([icon, text]) => (
+                <div key={text} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: "12px", color: "#555" }}>
+                  <span style={{ fontSize: "18px" }}>{icon}</span>{text}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
