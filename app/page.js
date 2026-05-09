@@ -5,11 +5,11 @@ import { db } from "../lib/firebase";
 import { collection, addDoc, getDocs, updateDoc, doc, increment, query, where, orderBy } from "firebase/firestore";
 
 const RANKS = [
-  { id: "newcomer",  label: "ビギナー",    min: 0,  max: 2,  icon: "🌱", color: "#aaa",    bg: "#f5f5f5",    trust: 1 },
-  { id: "regular",   label: "レギュラー",  min: 3,  max: 9,  icon: "☕", color: "#795548", bg: "#efebe9",    trust: 2 },
-  { id: "veteran",   label: "ベテラン",    min: 10, max: 24, icon: "⭐", color: "#f4a261", bg: "#fff3e0",    trust: 3 },
-  { id: "expert",    label: "エキスパート",min: 25, max: 49, icon: "🏅", color: "#0077b6", bg: "#e3f2fd",    trust: 4 },
-  { id: "master",    label: "マスター",    min: 50, max: 999,icon: "👑", color: "#e63946", bg: "#ffeaea",    trust: 5 },
+  { id: "newcomer",  label: "ビギナー",    min: 0,   max: 20,  icon: "🌱", color: "#aaa",    bg: "#f5f5f5",    trust: 1 },
+  { id: "regular",   label: "レギュラー",  min: 21,  max: 50,  icon: "☕", color: "#795548", bg: "#efebe9",    trust: 2 },
+  { id: "veteran",   label: "ベテラン",    min: 51,  max: 150, icon: "⭐", color: "#f4a261", bg: "#fff3e0",    trust: 3 },
+  { id: "expert",    label: "エキスパート",min: 151, max: 500, icon: "🏅", color: "#0077b6", bg: "#e3f2fd",    trust: 4 },
+  { id: "master",    label: "マスター",    min: 501, max: 9999,icon: "👑", color: "#e63946", bg: "#ffeaea",    trust: 5 },
 ];
 
 function getRank(count) {
@@ -764,6 +764,28 @@ export default function EatInFinder() {
 
   const openReport = (store, e) => { e.stopPropagation(); setReportTarget(store); setShowReport(true); };
 
+  // ② ワンタップ投稿
+  const handleQuickReport = async (store, hasEatIn, e) => {
+    e.stopPropagation();
+    setStores(prev => prev.map(s => {
+      if (s.place_id !== store.place_id) return s;
+      const newVer = { userId: "me", reportCount: myReportCount + 1, comment: hasEatIn ? "イートインあり" : "イートインなし" };
+      return { ...s, hasEatIn, verifications: [...(s.verifications || []), newVer] };
+    }));
+    setMyReportCount(c => c + 1);
+    // Firestoreに保存
+    try {
+      await addDoc(collection(db, "verifications"), {
+        placeId: store.place_id, placeName: store.name,
+        hasEatIn, outlet: false, wifi: false, seats: null,
+        comment: hasEatIn ? "イートインあり" : "イートインなし",
+        reportCount: myReportCount + 1, createdAt: new Date(),
+      });
+    } catch (e) { console.error("投稿エラー:", e); }
+    // ④ エリア制覇チェック
+    checkAreaConquest(store.place_id, hasEatIn);
+  };
+
   const filtered = stores.filter(s => {
     if (filterEatIn && !s.hasEatIn) return false;
     if (filterOutlet && !s.outlet) return false;
@@ -771,6 +793,25 @@ export default function EatInFinder() {
     if (filterVerified && (!s.verifications || s.verifications.length === 0)) return false;
     return true;
   });
+
+  const [conquests, setConquests] = useState([]); // 制覇したエリア
+  const [showConquest, setShowConquest] = useState(null); // 制覇通知
+
+  // ④ エリア制覇チェック
+  const checkAreaConquest = useCallback((placeId, hasEatIn) => {
+    const updatedStores = stores.map(s =>
+      s.place_id === placeId ? { ...s, hasEatIn, verifications: [...(s.verifications || []), { userId: "me" }] } : s
+    );
+    const allReported = updatedStores.every(s => s.verifications && s.verifications.length > 0);
+    if (allReported && updatedStores.length >= 3) {
+      const areaName = searchArea.replace(/\s*\(.*\)/, "");
+      if (!conquests.includes(areaName)) {
+        setConquests(prev => [...prev, areaName]);
+        setShowConquest(areaName);
+        setTimeout(() => setShowConquest(null), 3000);
+      }
+    }
+  }, [stores, searchArea, conquests]);
 
   const myScore = calcScore(myReportCount, myHelpedCount);
   const myRank = getRank(myScore);
@@ -791,6 +832,20 @@ export default function EatInFinder() {
           </div>
         </button>
       </div>
+
+      {/* ④ エリア制覇通知 */}
+      {showConquest && (
+        <div style={{
+          position: "fixed", top: 80, left: "50%", transform: "translateX(-50%)",
+          background: "#111", color: "#fff", borderRadius: 16, padding: "14px 24px",
+          zIndex: 300, textAlign: "center", boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
+          animation: "fadeIn 0.3s ease",
+        }}>
+          <div style={{ fontSize: "28px" }}>🏆</div>
+          <div style={{ fontWeight: 900, fontSize: "15px", marginTop: 4 }}>{showConquest}エリア制覇！</div>
+          <div style={{ fontSize: "11px", color: "#aaa", marginTop: 2 }}>このエリアの全店舗を確認しました</div>
+        </div>
+      )}
 
       {/* Search */}
       <div style={{ padding: "14px 16px", background: "#fff", borderBottom: "1px solid #eee" }}>
@@ -846,7 +901,28 @@ export default function EatInFinder() {
       {/* Results */}
       {!loading && stores.length > 0 && (
         <div style={{ padding: "12px 16px" }}>
-          <div style={{ fontSize: "12px", color: "#888", marginBottom: 10 }}>{filtered.length}件表示{(filterEatIn || filterOutlet || filterWifi || filterVerified) ? " （フィルター適用中）" : ""}</div>
+          {(() => {
+            const total = stores.length;
+            const reported = stores.filter(s => s.verifications && s.verifications.length > 0).length;
+            const rate = total > 0 ? Math.round((reported / total) * 100) : 0;
+            const barColor = rate < 30 ? "#f4a261" : rate < 70 ? "#0077b6" : "#2d6a4f";
+            return (
+              <div style={{ marginBottom: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                  <span style={{ fontSize: "12px", color: "#888" }}>{filtered.length}件表示{(filterEatIn || filterOutlet || filterWifi || filterVerified) ? " （フィルター中）" : ""}</span>
+                  <span style={{ fontSize: "12px", fontWeight: 700, color: barColor }}>確認済み {rate}%（{reported}/{total}件）</span>
+                </div>
+                <div style={{ background: "#f0f0f0", borderRadius: 99, height: 6, overflow: "hidden" }}>
+                  <div style={{ height: "100%", borderRadius: 99, background: barColor, width: `${rate}%`, transition: "width 0.5s ease" }} />
+                </div>
+                {rate === 100 && (
+                  <div style={{ marginTop: 6, fontSize: "12px", fontWeight: 700, color: "#2d6a4f", textAlign: "center" }}>
+                    🏆 このエリア制覇！全店舗確認済みです
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {filtered.map(store => {
               const isVerified = store.verifications && store.verifications.length > 0;
@@ -885,7 +961,12 @@ export default function EatInFinder() {
                       );
                     })()}
                     <div style={{ marginTop: 7 }}>
-                      {isVerified ? <VerifiedBadge verifications={store.verifications} /> : <span style={{ fontSize: "10px", color: CONF_COLOR[store.confidence] }}>🔍 情報募集中</span>}
+                      {isVerified
+                        ? <VerifiedBadge verifications={store.verifications} />
+                        : <span style={{ display: "inline-flex", alignItems: "center", gap: 4, background: "#f5f5f5", border: "1.5px dashed #ddd", borderRadius: 20, padding: "3px 10px", fontSize: "11px", fontWeight: 700, color: "#aaa" }}>
+                            🔍 情報募集中 — 最初に投稿してみよう！
+                          </span>
+                      }
                     </div>
                   </div>
                   {isOpen && (
@@ -915,9 +996,25 @@ export default function EatInFinder() {
                       <div style={{ background: "#fff", border: "1.5px solid #f0f0f0", borderRadius: 10, padding: "10px 12px", marginBottom: 10 }}>
 
                       </div>
-                      <button onClick={e => openReport(store, e)} style={{ width: "100%", padding: "10px", borderRadius: 10, border: "none", background: "#111", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-                        ✅ 実際に確認した！投稿して確認済みにする
-                      </button>
+                      {/* ② ワンタップ投稿 */}
+                      <div style={{ marginBottom: 8 }}>
+                        <div style={{ fontSize: "12px", color: "#888", marginBottom: 8, fontWeight: 700 }}>📝 実際に行った方は教えてください！</div>
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <button onClick={e => handleQuickReport(store, true, e)} style={{
+                            flex: 1, padding: "12px", borderRadius: 12, border: "2px solid #a5d6a7",
+                            background: "#e8f5e9", color: "#2d6a4f", fontSize: "14px", fontWeight: 700, cursor: "pointer",
+                          }}>🪑 イートインあった！</button>
+                          <button onClick={e => handleQuickReport(store, false, e)} style={{
+                            flex: 1, padding: "12px", borderRadius: 12, border: "2px solid #ffcdd2",
+                            background: "#ffeaea", color: "#c0392b", fontSize: "14px", fontWeight: 700, cursor: "pointer",
+                          }}>✗ なかった</button>
+                        </div>
+                        <button onClick={e => openReport(store, e)} style={{
+                          width: "100%", marginTop: 8, padding: "8px", borderRadius: 10,
+                          border: "1.5px solid #ddd", background: "#fff",
+                          fontSize: "12px", color: "#888", cursor: "pointer", fontWeight: 600,
+                        }}>席数・コンセント・Wi-Fiも詳しく登録する →</button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -974,6 +1071,18 @@ export default function EatInFinder() {
                 </div>
                 <div style={{ background: "#f0f0f0", borderRadius: 99, height: 10, overflow: "hidden" }}>
                   <div style={{ height: "100%", borderRadius: 99, background: `linear-gradient(90deg, ${myRank.color}, ${nextRank.color})`, width: `${((myScore - myRank.min) / (nextRank.min - myRank.min)) * 100}%`, transition: "width 0.5s ease" }} />
+                </div>
+              </div>
+            )}
+            {conquests.length > 0 && (
+              <div style={{ marginBottom: 20 }}>
+                <div style={{ fontSize: "12px", color: "#888", marginBottom: 8, fontWeight: 700 }}>🏆 制覇したエリア</div>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                  {conquests.map(c => (
+                    <span key={c} style={{ background: "#111", color: "#fff", borderRadius: 20, padding: "4px 12px", fontSize: "12px", fontWeight: 700 }}>
+                      🏆 {c}
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
