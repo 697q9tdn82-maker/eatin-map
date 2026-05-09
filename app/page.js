@@ -490,6 +490,33 @@ const OWNER_DATA = {
   "user_55": { hasEatIn: true, seats: null, outlet: false, wifi: false },
 };
 
+// ============================================================
+// Google Places API（New）でコンビニ検索
+// ============================================================
+async function searchNearbyConvenience(lat, lng, radius = 500) {
+  try {
+    const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=${radius}`);
+    const data = await res.json();
+    if (!data.places || data.places.length === 0) return null;
+    const places = data.places.map(p => ({
+      place_id: p.place_id,
+      name: p.name,
+      address: p.address,
+      lat: p.lat,
+      lng: p.lng,
+      reviews: [],
+      congestion: null,
+      helpedCount: 0,
+      verifications: [],
+    }));
+    places.sort((a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng));
+    return places.slice(0, MAX_RESULTS);
+  } catch (e) {
+    console.error("Places APIエラー:", e);
+    return null;
+  }
+}
+
 async function analyzeEatIn(name, reviews) {
   await new Promise(r => setTimeout(r, 400 + Math.random() * 500));
   const text = reviews.join(" ");
@@ -639,21 +666,28 @@ export default function EatInFinder() {
     } catch (e) { console.error("助かった保存エラー:", e); }
   };
 
-  const runSearch = useCallback(async (areaKey) => {
+  const runSearch = useCallback(async (areaKey, coords = null) => {
     setStores([]); setSelected(null); setCacheHit(false);
     const cached = getFromCache(areaKey);
     if (cached) { setCacheHit(true); setStores(cached); return; }
     setLoading(true);
     await new Promise(r => setTimeout(r, 900));
     setLoading(false);
-    // エリア絞り込み：住所に検索ワードが含まれる店舗のみ（GPS検索時はスキップ）
-    const isGPS = areaKey === "現在地";
-    const areaFiltered = isGPS ? MOCK_PLACES : MOCK_PLACES.filter(p => 
-      p.address.includes(areaKey) || p.name.includes(areaKey) ||
-      Object.keys(STATION_COORDS).some(k => areaKey.includes(k) && p.address.includes(k))
-    );
-    // 絞り込み結果がない場合は全件表示
-    const places = (areaFiltered.length > 0 ? areaFiltered : MOCK_PLACES).slice(0, MAX_RESULTS);
+// Places APIで検索（座標がある場合）
+    let places = null;
+    if (coords) {
+      const apiPlaces = await searchNearbyConvenience(coords.lat, coords.lng, SEARCH_RADIUS_METERS);
+      if (apiPlaces && apiPlaces.length > 0) places = apiPlaces;
+    }
+    // Places APIが使えない場合はMOCKデータ
+    if (!places) {
+      const isGPS = areaKey === "現在地";
+      const areaFiltered = isGPS ? MOCK_PLACES : MOCK_PLACES.filter(p =>
+        p.address.includes(areaKey) || p.name.includes(areaKey) ||
+        Object.keys(STATION_COORDS).some(k => areaKey.includes(k) && p.address.includes(k))
+      );
+      places = (areaFiltered.length > 0 ? areaFiltered : MOCK_PLACES).slice(0, MAX_RESULTS);
+    }
     setAnalyzing(true);
     setProgress({ current: 0, total: places.length });
     const results = [];
@@ -684,14 +718,11 @@ export default function EatInFinder() {
 
   const handleSearch = useCallback(async () => {
     if (!searchArea.trim()) return;
-    // 駅名から座標を探す
     const matched = Object.entries(STATION_COORDS).find(([k]) => searchArea.includes(k));
-    if (matched) {
-      setSearchCenter({ lat: matched[1].lat, lng: matched[1].lng });
-    } else {
-      setSearchCenter(null);
-    }
-    await runSearch(searchArea);
+    const coords = matched ? matched[1] : null;
+    if (coords) setSearchCenter(coords);
+    else setSearchCenter(null);
+    await runSearch(searchArea, coords);
   }, [searchArea, runSearch]);
 
   const handleGPS = useCallback(() => {
@@ -702,7 +733,7 @@ export default function EatInFinder() {
         const { latitude, longitude } = pos.coords;
         setGpsLoading(false);
         setSearchArea(`現在地 (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`);
-        runSearch("現在地");
+        runSearch("現在地", { lat: latitude, lng: longitude });
       },
       (err) => {
         setGpsLoading(false);
