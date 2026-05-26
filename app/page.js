@@ -56,14 +56,15 @@ function setToCache(key, data) { searchCache.set(key, { data, timestamp: Date.no
 
 // ピンカラー
 function getPinColor(store) {
-  if (!store.verifications || store.verifications.length === 0) return "#f4a261"; // 未確認：オレンジ
-  if (store.hasEatIn) return "#2d6a4f"; // あり：緑
-  return "#aaa"; // なし：グレー
+  if (store.hasEatIn === true) return "#2d6a4f";  // あり：緑
+  if (store.hasEatIn === false) return "#aaa";     // なし：グレー
+  return "#f4a261";                                // 未確認：オレンジ
 }
+
 function getPinEmoji(store) {
-  if (!store.verifications || store.verifications.length === 0) return "?";
-  if (store.hasEatIn) return "🪑";
-  return "✗";
+  if (store.hasEatIn === true) return "🪑";
+  if (store.hasEatIn === false) return "✗";
+  return "?";
 }
 
 // ============================================================
@@ -270,6 +271,11 @@ export default function EatInFinder() {
       return { ...s, hasEatIn: reportData.hasEatIn ?? s.hasEatIn, outlet: reportData.outlet||s.outlet, wifi: reportData.wifi||s.wifi, seats: reportData.seats ? parseInt(reportData.seats) : s.seats, verifications: [...(s.verifications||[]), newVer] };
     }));
     setMyReportCount(c => c+1);
+    setSelected(prev => prev?.place_id === store.place_id ? {
+  ...prev,
+  hasEatIn,
+  verifications: [...(prev.verifications||[]), { userId: "me", reportCount: myReportCount+1, comment: hasEatIn ? "イートインあり" : "イートインなし" }]
+} : prev);
     markAsReported(reportTarget.place_id, reportTarget.name, reportData.hasEatIn);
     setSubmitted(true);
     try {
