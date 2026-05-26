@@ -161,12 +161,17 @@ export default function EatInFinder() {
       verSnap.forEach(d => { const data = d.data(); if (!verMap[data.placeId]) verMap[data.placeId] = []; verMap[data.placeId].push({ ...data, docId: d.id }); });
       congSnap.forEach(d => { const data = d.data(); congMap[data.placeId] = data.status; });
       helpSnap.forEach(d => { const data = d.data(); helpMap[data.placeId] = data.count || 0; });
-      setStores(prev => prev.map(s => ({
-        ...s,
-        verifications: verMap[s.place_id] || s.verifications || [],
-        congestion: congMap[s.place_id] || s.congestion,
-        helpedCount: helpMap[s.place_id] ?? s.helpedCount,
-      })));
+    setStores(prev => prev.map(s => {
+  const vers = verMap[s.place_id] || s.verifications || [];
+  const latestHasEatIn = vers.length > 0 ? vers[vers.length - 1].hasEatIn : s.hasEatIn;
+  return {
+    ...s,
+    verifications: vers,
+    congestion: congMap[s.place_id] || s.congestion,
+    helpedCount: helpMap[s.place_id] ?? s.helpedCount,
+    hasEatIn: latestHasEatIn ?? s.hasEatIn,
+  };
+}));
     } catch (e) { console.error("Firestore読み込みエラー:", e); }
   }, []);
 
