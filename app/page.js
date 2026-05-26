@@ -56,11 +56,10 @@ function setToCache(key, data) { searchCache.set(key, { data, timestamp: Date.no
 
 // ピンカラー
 function getPinColor(store) {
-  if (store.hasEatIn === true) return "#2d6a4f";  // あり：緑
-  if (store.hasEatIn === false) return "#aaa";     // なし：グレー
-  return "#f4a261";                                // 未確認：オレンジ
+  if (store.hasEatIn === true) return "#2d6a4f";   // あり：緑
+  if (store.hasEatIn === false) return "#aaa";      // なし：グレー
+  return "#f4a261";                                 // 未確認：オレンジ
 }
-
 function getPinEmoji(store) {
   if (store.hasEatIn === true) return "🪑";
   if (store.hasEatIn === false) return "✗";
@@ -143,6 +142,7 @@ export default function EatInFinder() {
   const [myReportCount, setMyReportCount] = useState(4);
   const [myHelpedCount, setMyHelpedCount] = useState(3);
   const [searchCenter, setSearchCenter] = useState(null);
+  const [myLocation, setMyLocation] = useState(null);
   const mapRef = useRef(null);
 
   const myScore = calcScore(myReportCount, myHelpedCount);
@@ -161,17 +161,17 @@ export default function EatInFinder() {
       verSnap.forEach(d => { const data = d.data(); if (!verMap[data.placeId]) verMap[data.placeId] = []; verMap[data.placeId].push({ ...data, docId: d.id }); });
       congSnap.forEach(d => { const data = d.data(); congMap[data.placeId] = data.status; });
       helpSnap.forEach(d => { const data = d.data(); helpMap[data.placeId] = data.count || 0; });
-    setStores(prev => prev.map(s => {
-  const vers = verMap[s.place_id] || s.verifications || [];
-  const latestHasEatIn = vers.length > 0 ? vers[vers.length - 1].hasEatIn : s.hasEatIn;
-  return {
-    ...s,
-    verifications: vers,
-    congestion: congMap[s.place_id] || s.congestion,
-    helpedCount: helpMap[s.place_id] ?? s.helpedCount,
-    hasEatIn: latestHasEatIn ?? s.hasEatIn,
-  };
-}));
+      setStores(prev => prev.map(s => {
+        const vers = verMap[s.place_id] || s.verifications || [];
+        const latestHasEatIn = vers.length > 0 ? vers[vers.length - 1].hasEatIn : s.hasEatIn;
+        return {
+          ...s,
+          verifications: vers,
+          congestion: congMap[s.place_id] || s.congestion,
+          helpedCount: helpMap[s.place_id] ?? s.helpedCount,
+          hasEatIn: latestHasEatIn ?? s.hasEatIn,
+        };
+      }));
     } catch (e) { console.error("Firestore読み込みエラー:", e); }
   }, []);
 
@@ -217,6 +217,7 @@ export default function EatInFinder() {
         setMapCenter({ lat, lng });
         setMapZoom(16);
         setSearchCenter({ lat, lng });
+        setMyLocation({ lat, lng });
         searchPlaces(lat, lng);
       },
       (err) => {
@@ -276,11 +277,6 @@ export default function EatInFinder() {
       return { ...s, hasEatIn: reportData.hasEatIn ?? s.hasEatIn, outlet: reportData.outlet||s.outlet, wifi: reportData.wifi||s.wifi, seats: reportData.seats ? parseInt(reportData.seats) : s.seats, verifications: [...(s.verifications||[]), newVer] };
     }));
     setMyReportCount(c => c+1);
-    setSelected(prev => prev?.place_id === store.place_id ? {
-  ...prev,
-  hasEatIn,
-  verifications: [...(prev.verifications||[]), { userId: "me", reportCount: myReportCount+1, comment: hasEatIn ? "イートインあり" : "イートインなし" }]
-} : prev);
     markAsReported(reportTarget.place_id, reportTarget.name, reportData.hasEatIn);
     setSubmitted(true);
     try {
@@ -397,6 +393,19 @@ export default function EatInFinder() {
                 />
               </OverlayView>
             ))}
+            {myLocation && (
+              <OverlayView
+                position={myLocation}
+                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+              >
+                <div style={{
+                  width: 18, height: 18, borderRadius: "50%",
+                  background: "#4285f4", border: "3px solid #fff",
+                  boxShadow: "0 2px 8px rgba(66,133,244,0.6)",
+                  transform: "translate(-50%, -50%)",
+                }} />
+              </OverlayView>
+            )}
           </GoogleMap>
         ) : (
           <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "#aaa", fontSize: "14px" }}>地図を読み込み中…</div>
@@ -486,6 +495,16 @@ export default function EatInFinder() {
             ) : (
               <div style={{ background: "#f5f5f5", border: "1.5px dashed #ddd", borderRadius: 10, padding: "8px 12px", marginBottom: 10, fontSize: "11px", color: "#aaa", fontWeight: 700 }}>
                 🔍 情報募集中 — 最初に投稿してみよう！
+              </div>
+            )}
+
+            {/* 営業時間 */}
+            {selected.openingHours && selected.openingHours.length > 0 && (
+              <div style={{ background: "#fafafa", border: "1.5px solid #eee", borderRadius: 10, padding: "10px 12px", marginBottom: 10 }}>
+                <div style={{ fontSize: "11px", color: "#aaa", fontWeight: 700, marginBottom: 6 }}>🕐 営業時間</div>
+                {selected.openingHours.map((h, i) => (
+                  <div key={i} style={{ fontSize: "11px", color: "#555", padding: "2px 0" }}>{h}</div>
+                ))}
               </div>
             )}
 
