@@ -336,9 +336,9 @@ export default function EatInFinder() {
 
       {/* ヘッダー */}
       <div style={{ background: "#fff", borderBottom: "2px solid #111", padding: "10px 14px", zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-        <div style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px" }}>
-          🏪 <span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
-        </div>
+        <button onClick={() => { setStores([]); setSelected(null); setMyLocation(null); }} style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit" }}>
+  🏪 <span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
+</button>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <button onClick={() => setShowHistory(true)} style={{ background: "#f5f5f5", border: "none", borderRadius: 10, padding: "6px 10px", cursor: "pointer", fontSize: "11px", fontWeight: 700, color: "#555" }}>投稿履歴</button>
           <button onClick={() => setShowProfile(true)} style={{ display: "flex", alignItems: "center", gap: 5, background: myRank.bg, border: `1.5px solid ${myRank.color}55`, borderRadius: 10, padding: "5px 10px", cursor: "pointer" }}>
