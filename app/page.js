@@ -56,7 +56,7 @@ function setToCache(key, data) { searchCache.set(key, { data, timestamp: Date.no
 
 // ピンカラー
 function getPinColor(store) {
-  if (store.hasEatIn === true) return "#2d6a4f";   // あり：緑
+  if (store.hasEatIn === true) return "#29b6f6";   // あり：青
   if (store.hasEatIn === false) return "#aaa";      // なし：グレー
   return "#f4a261";                                 // 未確認：オレンジ
 }
@@ -420,7 +420,7 @@ export default function EatInFinder() {
 
         {/* 凡例 */}
         <div style={{ position: "absolute", bottom: selected ? 320 : 16, right: 12, background: "#fff", borderRadius: 12, padding: "8px 12px", boxShadow: "0 2px 10px rgba(0,0,0,0.12)", fontSize: "11px", zIndex: 5, transition: "bottom 0.3s ease" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}><div style={{ width: 12, height: 12, borderRadius: "50%", background: "#2d6a4f" }} /><span>イートインあり</span></div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}><div style={{ width: 12, height: 12, borderRadius: "50%", background: "#29b6f6" }} /><span>イートインあり</span></div>
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}><div style={{ width: 12, height: 12, borderRadius: "50%", background: "#aaa" }} /><span>イートインなし</span></div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 12, height: 12, borderRadius: "50%", background: "#f4a261" }} /><span>未確認</span></div>
         </div>
