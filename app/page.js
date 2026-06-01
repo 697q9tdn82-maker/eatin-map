@@ -188,19 +188,37 @@ export default function EatInFinder() {
       const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=500`);
       const data = await res.json();
       if (data.places && data.places.length > 0) {
-        const places = data.places.map(p => ({
-          ...p,
-          verifications: [],
-          congestion: null,
-          helpedCount: 0,
-          hasEatIn: null,
-          outlet: false,
-          wifi: false,
-          seats: null,
-        })).sort((a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng))
-          .slice(0, MAX_RESULTS);
-        setStores(places);
-        setToCache(`${lat},${lng}`, places);
+ const places = data.places.map(p => ({
+  ...p,
+  verifications: [],
+  congestion: null,
+  helpedCount: 0,
+  hasEatIn: null,
+  outlet: false,
+  wifi: false,
+  seats: null,
+})).sort((a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng))
+  .slice(0, MAX_RESULTS);
+setStores(places);
+
+// Claude APIで口コミを解析
+const analyzed = await Promise.all(places.map(async (place) => {
+  if (!place.reviews || place.reviews.length === 0) return place;
+  try {
+    const res = await fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ storeName: place.name, reviews: place.reviews.map(r => r.text).filter(Boolean) }),
+    });
+    const result = await res.json();
+    if (result.hasEatIn !== null) {
+      return { ...place, hasEatIn: result.hasEatIn };
+    }
+  } catch (e) { console.error("解析エラー:", e); }
+  return place;
+}));
+setStores(analyzed);
+setToCache(`${lat},${lng}`, analyzed);
       }
     } catch (e) { console.error("検索エラー:", e); }
     setLoading(false);

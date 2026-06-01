@@ -40,6 +40,11 @@ export default function Terms() {
       </section>
 
       <a href="/" style={{ display: "inline-block", marginTop: 16, fontSize: "13px", color: "#e63946", textDecoration: "none", fontWeight: 700 }}>← トップに戻る</a>
+    {/* フッター */}
+      <div style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #eee", padding: "8px 16px", display: "flex", justifyContent: "center", gap: 20, zIndex: 50, fontSize: "11px" }}>
+        <a href="/privacy" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>プライバシーポリシー</a>
+        <a href="/terms" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>利用規約</a>
+      </div>
     </div>
   );
 }

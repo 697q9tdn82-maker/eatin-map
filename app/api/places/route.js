@@ -13,7 +13,7 @@ export async function GET(request) {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.regularOpeningHours",
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.regularOpeningHours,places.reviews",
       },
       body: JSON.stringify({
         includedTypes: ["convenience_store"],
