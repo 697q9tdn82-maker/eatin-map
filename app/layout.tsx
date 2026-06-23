@@ -56,7 +56,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="イートインマップ" />
         <link rel="apple-touch-icon" href="/icon.png" />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <footer style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #eee", padding: "8px 16px", display: "flex", justifyContent: "center", gap: 20, zIndex: 50, fontSize: "11px" }}>
+          <a href="/privacy" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>プライバシーポリシー</a>
+          <a href="/terms" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>利用規約</a>
+        </footer>
+      </body>
     </html>
   );
 }
