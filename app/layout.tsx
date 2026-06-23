@@ -14,7 +14,28 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "コンビニイートインマップ",
-  description: "近くのコンビニのイートインスペースを探せるマップアプリ",
+  description: "近くのコンビニのイートインスペースを探せるマップアプリ。物価高のいま、無料・登録不要で使えます。",
+  openGraph: {
+    title: "コンビニイートインマップ",
+    description: "近くのコンビニのイートインスペースを探せるマップアプリ",
+    url: "https://eatin-map.vercel.app",
+    siteName: "コンビニイートインマップ",
+    images: [
+      {
+        url: "https://eatin-map.vercel.app/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: "ja_JP",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "コンビニイートインマップ",
+    description: "近くのコンビニのイートインスペースを探せるマップアプリ",
+    images: ["https://eatin-map.vercel.app/og-image.png"],
+  },
 };
 
 export default function RootLayout({

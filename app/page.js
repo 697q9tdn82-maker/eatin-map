@@ -201,24 +201,8 @@ export default function EatInFinder() {
   .slice(0, MAX_RESULTS);
 setStores(places);
 
-// Claude APIで口コミを解析
-const analyzed = await Promise.all(places.map(async (place) => {
-  if (!place.reviews || place.reviews.length === 0) return place;
-  try {
-    const res = await fetch("/api/analyze", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ storeName: place.name, reviews: place.reviews.map(r => r.text).filter(Boolean) }),
-    });
-    const result = await res.json();
-    if (result.hasEatIn !== null) {
-      return { ...place, hasEatIn: result.hasEatIn };
-    }
-  } catch (e) { console.error("解析エラー:", e); }
-  return place;
-}));
-setStores(analyzed);
-setToCache(`${lat},${lng}`, analyzed);
+setStores(places);
+setToCache(`${lat},${lng}`, places);
       }
     } catch (e) { console.error("検索エラー:", e); }
     setLoading(false);
