@@ -1,6 +1,6 @@
 export default function PrivacyPolicy() {
   return (
-    <div style={{ fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif", maxWidth: 680, margin: "0 auto", padding: "32px 20px 60px", color: "#1a1a1a", lineHeight: 1.8 }}>
+    <div style={{ fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif", maxWidth: 680, margin: "0 auto", padding: "32px 20px 60px", color: "#1a1a1a", lineHeight: 1.8, background: "#fff", minHeight: "100vh" }}>
       <h1 style={{ fontSize: "22px", fontWeight: 900, marginBottom: 8 }}>プライバシーポリシー</h1>
       <p style={{ fontSize: "12px", color: "#aaa", marginBottom: 32 }}>最終更新日：2025年6月1日</p>
 
