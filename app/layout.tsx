@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "コンビニイートインマップ",
     description: "近くのコンビニのイートインスペースを探せるマップアプリ",
-    url: "https://eatin-map.vercel.app",
+    url: "https://www.eatin-map.jp",
     siteName: "コンビニイートインマップ",
     images: [
       {
-        url: "https://eatin-map.vercel.app/og-image.png",
+        url: "https://www.eatin-map.jp/og-image.png",
         width: 1200,
         height: 630,
       },
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "コンビニイートインマップ",
     description: "近くのコンビニのイートインスペースを探せるマップアプリ",
-    images: ["https://eatin-map.vercel.app/og-image.png"],
+    images: ["https://www.eatin-map.jp/og-image.png"],
   },
 };
 
