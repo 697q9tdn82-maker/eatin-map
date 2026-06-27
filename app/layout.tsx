@@ -17,11 +17,11 @@ export const metadata: Metadata = {
   verification: {
     google: "hd6AI8K-1PLP8HbJu6uXEPFLWu8SjVe3QmDoDnclfb0",
   },
-  title: "コンビニイートインマップ",
-  description: "近くのコンビニのイートインスペースを探せるマップアプリ。物価高のいま、無料・登録不要で使えます。",
+  title: "コンビニイートインマップ｜近くの座れるコンビニを地図で検索",
+  description: "コンビニのイートイン席を地図で検索。新宿・渋谷など全国対応。ランチや休憩に使える座れるコンビニをすぐ探せます。登録不要・無料。",
   openGraph: {
-    title: "コンビニイートインマップ",
-    description: "近くのコンビニのイートインスペースを探せるマップアプリ",
+    title: "コンビニイートインマップ｜近くの座れるコンビニを地図で検索",
+    description: "コンビニのイートイン席を地図で検索。ランチや休憩に使える座れるコンビニをすぐ探せます。登録不要・無料。",
     url: "https://www.eatin-map.jp",
     siteName: "コンビニイートインマップ",
     images: [
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "コンビニイートインマップ",
-    description: "近くのコンビニのイートインスペースを探せるマップアプリ",
+    title: "コンビニイートインマップ｜近くの座れるコンビニを地図で検索",
+    description: "コンビニのイートイン席を地図で検索。ランチや休憩に使える座れるコンビニをすぐ探せます。登録不要・無料。",
     images: ["https://www.eatin-map.jp/og-image.png"],
   },
 };
