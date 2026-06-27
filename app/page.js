@@ -524,28 +524,30 @@ setToCache(`${lat},${lng}`, places);
         </div>
       )}
 
-      {/* 初期状態 */}
+      {/* 初期状態ヒント（地図上に浮かせる） */}
       {!loading && stores.length === 0 && (
-        <div style={{ position: "absolute", bottom: 80, left: "50%", transform: "translateX(-50%)", zIndex: 10, width: "calc(100% - 32px)", maxWidth: 360 }}>
-          <div style={{ background: "#fff", borderRadius: 16, padding: "16px 20px", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", textAlign: "center", marginBottom: recentPosts.length > 0 ? 10 : 0 }}>
+        <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", zIndex: 10, width: "calc(100% - 40px)", maxWidth: 300, pointerEvents: "none" }}>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "16px 20px", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", textAlign: "center" }}>
             <div style={{ fontSize: "28px", marginBottom: 6 }}>📡</div>
             <div style={{ fontWeight: 800, fontSize: "14px" }}>現在地から探してみよう！</div>
             <div style={{ fontSize: "12px", color: "#aaa", marginTop: 4 }}>「現在地から探す」ボタンを押すか<br />地図を動かして「この地図で探す」を押してください</div>
           </div>
-          {recentPosts.length > 0 && (
-            <div style={{ background: "#fff", borderRadius: 16, padding: "14px 16px", boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}>
-              <div style={{ fontSize: "11px", fontWeight: 800, color: "#888", marginBottom: 10, letterSpacing: "0.5px" }}>🕐 みんなの最近の投稿</div>
-              {recentPosts.map((post, i) => (
-                <div key={post.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderTop: i > 0 ? "1px solid #f0f0f0" : "none" }}>
-                  <span style={{ fontSize: "16px", flexShrink: 0 }}>{post.hasEatIn ? "🪑" : "✗"}</span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{post.placeName}</div>
-                    <div style={{ fontSize: "11px", color: post.hasEatIn ? "#2d6a4f" : "#999", fontWeight: 600 }}>{post.hasEatIn ? "イートインあり" : "イートインなし"}</div>
-                  </div>
-                </div>
-              ))}
+        </div>
+      )}
+
+      {/* 最近の投稿フィード（地図の下に表示） */}
+      {!loading && stores.length === 0 && recentPosts.length > 0 && (
+        <div style={{ background: "#fff", borderTop: "1px solid #eee", flexShrink: 0, overflowY: "auto", maxHeight: 200, paddingBottom: 48 }}>
+          <div style={{ fontSize: "11px", fontWeight: 800, color: "#888", padding: "10px 16px 6px", letterSpacing: "0.5px" }}>🕐 みんなの最近の投稿</div>
+          {recentPosts.map((post, i) => (
+            <div key={post.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", borderTop: i === 0 ? "none" : "1px solid #f0f0f0" }}>
+              <span style={{ fontSize: "18px", flexShrink: 0 }}>{post.hasEatIn ? "🪑" : "✗"}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{post.placeName}</div>
+                <div style={{ fontSize: "11px", color: post.hasEatIn ? "#2d6a4f" : "#999", fontWeight: 600 }}>{post.hasEatIn ? "イートインあり" : "イートインなし"}</div>
+              </div>
             </div>
-          )}
+          ))}
         </div>
       )}
 
