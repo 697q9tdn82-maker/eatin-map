@@ -3,21 +3,11 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
 import { db } from "../lib/firebase";
-import { collection, addDoc, getDocs, updateDoc, doc, increment, query, where } from "firebase/firestore";
+import { collection, addDoc, getDocs, updateDoc, doc, increment, query, where, orderBy, limit } from "firebase/firestore";
 
 // ============================================================
 // 定数・ユーティリティ
 // ============================================================
-const RANKS = [
-  { id: "newcomer",  label: "ビギナー",     min: 0,   max: 20,  icon: "🌱", color: "#aaa",    bg: "#f5f5f5",    trust: 1 },
-  { id: "regular",   label: "レギュラー",   min: 21,  max: 50,  icon: "☕", color: "#795548", bg: "#efebe9",    trust: 2 },
-  { id: "veteran",   label: "ベテラン",     min: 51,  max: 150, icon: "⭐", color: "#f4a261", bg: "#fff3e0",    trust: 3 },
-  { id: "expert",    label: "エキスパート", min: 151, max: 500, icon: "🏅", color: "#0077b6", bg: "#e3f2fd",    trust: 4 },
-  { id: "master",    label: "マスター",     min: 501, max: 9999,icon: "👑", color: "#e63946", bg: "#ffeaea",    trust: 5 },
-];
-function getRank(count) { return RANKS.find(r => count >= r.min && count <= r.max) || RANKS[0]; }
-function getNextRank(count) { const idx = RANKS.findIndex(r => count >= r.min && count <= r.max); return idx < RANKS.length - 1 ? RANKS[idx + 1] : null; }
-function calcScore(reportCount, helpedCount) { return reportCount + Math.floor((helpedCount || 0) * 0.5); }
 function calcDistance(lat1, lng1, lat2, lng2) {
   const R = 6371000;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -99,19 +89,6 @@ function StorePin({ store, isSelected, onClick }) {
 }
 
 // ============================================================
-// RankBadge
-// ============================================================
-function RankBadge({ count, large }) {
-  const rank = getRank(count);
-  return (
-    <span style={{ display: "inline-flex", alignItems: "center", gap: large ? 6 : 4, background: rank.bg, color: rank.color, border: `1.5px solid ${rank.color}44`, borderRadius: large ? 12 : 20, padding: large ? "6px 14px" : "2px 8px", fontSize: large ? "14px" : "11px", fontWeight: 700 }}>
-      {rank.icon} {rank.label}
-      {large && <span style={{ opacity: 0.6, fontWeight: 400, fontSize: "12px" }}>（投稿{count}件）</span>}
-    </span>
-  );
-}
-
-// ============================================================
 // メインコンポーネント
 // ============================================================
 export default function EatInFinder() {
@@ -130,8 +107,6 @@ export default function EatInFinder() {
   const [filterEatIn, setFilterEatIn] = useState(false);
   const [filterVerified, setFilterVerified] = useState(false);
   const [filterOpenNow, setFilterOpenNow] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
-  const [showHistory, setShowHistory] = useState(false);
   const [showCongestion, setShowCongestion] = useState(null);
   const [congestionSubmitted, setCongestionSubmitted] = useState(null);
   const [showReport, setShowReport] = useState(false);
@@ -139,15 +114,11 @@ export default function EatInFinder() {
   const [reportStep, setReportStep] = useState(1);
   const [reportData, setReportData] = useState({ hasEatIn: null, outlet: false, wifi: false, seats: "", comment: "" });
   const [submitted, setSubmitted] = useState(false);
-  const [myReportCount, setMyReportCount] = useState(4);
-  const [myHelpedCount, setMyHelpedCount] = useState(3);
   const [searchCenter, setSearchCenter] = useState(null);
   const [myLocation, setMyLocation] = useState(null);
+  const [recentPosts, setRecentPosts] = useState([]);
+  const [justReported, setJustReported] = useState(null);
   const mapRef = useRef(null);
-
-  const myScore = calcScore(myReportCount, myHelpedCount);
-  const myRank = getRank(myScore);
-  const nextRank = getNextRank(myScore);
 
   // Firestoreデータ読み込み
   const loadFirestoreData = useCallback(async () => {
@@ -176,6 +147,26 @@ export default function EatInFinder() {
   }, []);
 
   useEffect(() => { if (stores.length > 0) loadFirestoreData(); }, [stores.length]);
+
+  const loadRecentPosts = useCallback(async () => {
+    try {
+      const q = query(collection(db, "verifications"), orderBy("createdAt", "desc"), limit(5));
+      const snap = await getDocs(q);
+      setRecentPosts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    } catch (e) { console.error(e); }
+  }, []);
+
+  useEffect(() => { loadRecentPosts(); }, [loadRecentPosts]);
+
+  const shareOnX = (storeName, hasEatIn) => {
+    const text = hasEatIn
+      ? `「${storeName}」にイートインスペースがありました！ #コンビニイートインマップ`
+      : `「${storeName}」のイートイン情報を確認しました。 #コンビニイートインマップ`;
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent("https://www.eatin-map.jp")}`,
+      "_blank"
+    );
+  };
 
   // Places API検索
   const searchPlaces = useCallback(async (lat, lng) => {
@@ -260,7 +251,6 @@ setToCache(`${lat},${lng}`, places);
   const handleHelped = async (store, e) => {
     e.stopPropagation();
     setStores(prev => prev.map(s => s.place_id === store.place_id ? { ...s, helpedCount: (s.helpedCount||0)+1, helpedByMe: true } : s));
-    setMyHelpedCount(c => c+1);
     try {
       const q = query(collection(db, "helped"), where("placeId", "==", store.place_id));
       const snap = await getDocs(q);
@@ -275,10 +265,9 @@ setToCache(`${lat},${lng}`, places);
     if (isReported(reportTarget.place_id)) return;
     setStores(prev => prev.map(s => {
       if (s.place_id !== reportTarget.place_id) return s;
-      const newVer = { userId: "me", reportCount: myReportCount+1, comment: reportData.comment };
+      const newVer = { userId: "me", comment: reportData.comment };
       return { ...s, hasEatIn: reportData.hasEatIn ?? s.hasEatIn, outlet: reportData.outlet||s.outlet, wifi: reportData.wifi||s.wifi, seats: reportData.seats ? parseInt(reportData.seats) : s.seats, verifications: [...(s.verifications||[]), newVer] };
     }));
-    setMyReportCount(c => c+1);
     markAsReported(reportTarget.place_id, reportTarget.name, reportData.hasEatIn);
     setSubmitted(true);
     try {
@@ -286,10 +275,10 @@ setToCache(`${lat},${lng}`, places);
         placeId: reportTarget.place_id, placeName: reportTarget.name,
         hasEatIn: reportData.hasEatIn, outlet: reportData.outlet, wifi: reportData.wifi,
         seats: reportData.seats ? parseInt(reportData.seats) : null,
-        comment: reportData.comment, reportCount: myReportCount+1, createdAt: new Date(),
+        comment: reportData.comment, createdAt: new Date(),
       });
+      loadRecentPosts();
     } catch (e) { console.error(e); }
-    setTimeout(() => { setShowReport(false); setSubmitted(false); setReportStep(1); setReportData({ hasEatIn: null, outlet: false, wifi: false, seats: "", comment: "" }); }, 2200);
   };
 
   const handleQuickReport = async (store, hasEatIn, e) => {
@@ -297,17 +286,17 @@ setToCache(`${lat},${lng}`, places);
     if (isReported(store.place_id)) return;
     setStores(prev => prev.map(s => {
       if (s.place_id !== store.place_id) return s;
-      const newVer = { userId: "me", reportCount: myReportCount+1, comment: hasEatIn ? "イートインあり" : "イートインなし" };
+      const newVer = { userId: "me", comment: hasEatIn ? "イートインあり" : "イートインなし" };
       return { ...s, hasEatIn, verifications: [...(s.verifications||[]), newVer] };
     }));
-    setMyReportCount(c => c+1);
     markAsReported(store.place_id, store.name, hasEatIn);
+    setJustReported({ storeId: store.place_id, storeName: store.name, hasEatIn });
     try {
       await addDoc(collection(db, "verifications"), {
         placeId: store.place_id, placeName: store.name, hasEatIn,
         outlet: false, wifi: false, seats: null,
         comment: hasEatIn ? "イートインあり" : "イートインなし",
-        reportCount: myReportCount+1, createdAt: new Date(),
+        createdAt: new Date(),
       });
     } catch (e) { console.error(e); }
   };
@@ -341,16 +330,7 @@ setToCache(`${lat},${lng}`, places);
         <button onClick={() => { setStores([]); setSelected(null); setMyLocation(null); }} style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit" }}>
   🏪 <span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
 </button>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <button onClick={() => setShowHistory(true)} style={{ background: "#f5f5f5", border: "none", borderRadius: 10, padding: "6px 10px", cursor: "pointer", fontSize: "11px", fontWeight: 700, color: "#555" }}>投稿履歴</button>
-          <button onClick={() => setShowProfile(true)} style={{ display: "flex", alignItems: "center", gap: 5, background: myRank.bg, border: `1.5px solid ${myRank.color}55`, borderRadius: 10, padding: "5px 10px", cursor: "pointer" }}>
-            <span style={{ fontSize: "15px" }}>{myRank.icon}</span>
-            <div>
-              <div style={{ fontSize: "10px", fontWeight: 700, color: myRank.color }}>{myRank.label}</div>
-              <div style={{ fontSize: "9px", color: "#aaa" }}>{myScore}pt</div>
-            </div>
-          </button>
-        </div>
+        <div />
       </div>
 
       {/* 検索バー */}
@@ -489,7 +469,6 @@ setToCache(`${lat},${lng}`, places);
                 <div style={{ fontSize: "11px", color: "#b7950b", fontWeight: 700, marginBottom: 6 }}>✅ ユーザー確認情報</div>
                 {selected.verifications.slice(0, 2).map((v, i) => (
                   <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", padding: "4px 0", borderTop: i > 0 ? "1px solid #fdebd0" : "none" }}>
-                    <RankBadge count={v.reportCount || 0} />
                     <div style={{ flex: 1, fontSize: "12px", color: "#555" }}>{v.comment || "確認済み"}</div>
                   </div>
                 ))}
@@ -523,7 +502,14 @@ setToCache(`${lat},${lng}`, places);
 
             {/* ワンタップ投稿 */}
             {isReported(selected.place_id) ? (
-              <div style={{ padding: "12px", borderRadius: 12, background: "#f5f5f5", textAlign: "center", fontSize: "13px", color: "#aaa", fontWeight: 700 }}>✅ 投稿済みです（1店舗1回まで）</div>
+              <div>
+                <div style={{ padding: "12px", borderRadius: 12, background: "#f5f5f5", textAlign: "center", fontSize: "13px", color: "#aaa", fontWeight: 700, marginBottom: 8 }}>✅ 投稿済みです（1店舗1回まで）</div>
+                {justReported?.storeId === selected.place_id && (
+                  <button onClick={() => shareOnX(justReported.storeName, justReported.hasEatIn)} style={{ width: "100%", padding: "11px", borderRadius: 12, border: "none", background: "#000", color: "#fff", fontWeight: 700, fontSize: "13px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                    𝕏 Xでシェアする
+                  </button>
+                )}
+              </div>
             ) : (
               <>
                 <div style={{ fontSize: "12px", color: "#888", marginBottom: 8, fontWeight: 700 }}>📝 実際に行った方は教えてください！</div>
@@ -540,79 +526,29 @@ setToCache(`${lat},${lng}`, places);
 
       {/* 初期状態 */}
       {!loading && stores.length === 0 && (
-        <div style={{ position: "absolute", bottom: 80, left: "50%", transform: "translateX(-50%)", background: "#fff", borderRadius: 16, padding: "16px 20px", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", zIndex: 10, textAlign: "center", width: "calc(100% - 40px)", maxWidth: 340 }}>
-          <div style={{ fontSize: "28px", marginBottom: 6 }}>📡</div>
-          <div style={{ fontWeight: 800, fontSize: "14px" }}>現在地から探してみよう！</div>
-          <div style={{ fontSize: "12px", color: "#aaa", marginTop: 4 }}>「現在地から探す」ボタンを押すか<br />地図を動かして「この地図で探す」を押してください</div>
-        </div>
-      )}
-
-      {/* プロフィールモーダル */}
-      {showProfile && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end" }} onClick={e => e.target === e.currentTarget && setShowProfile(false)}>
-          <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", padding: "28px 20px 40px", maxHeight: "80vh", overflowY: "auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 24 }}>
-              <div style={{ fontWeight: 900, fontSize: "17px" }}>あなたのランク</div>
-              <button onClick={() => setShowProfile(false)} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#aaa" }}>✕</button>
-            </div>
-            <div style={{ background: myRank.bg, borderRadius: 16, padding: "20px", textAlign: "center", marginBottom: 20 }}>
-              <div style={{ fontSize: "48px" }}>{myRank.icon}</div>
-              <div style={{ fontWeight: 900, fontSize: "22px", color: myRank.color, marginTop: 6 }}>{myRank.label}</div>
-              <div style={{ fontSize: "13px", color: "#888", marginTop: 4 }}>投稿数：{myReportCount}件　👍 {myHelpedCount}件</div>
-              <div style={{ fontSize: "11px", color: "#aaa", marginTop: 2 }}>スコア：{myScore}pt</div>
-            </div>
-            {nextRank && (
-              <div style={{ marginBottom: 20 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#888", marginBottom: 6 }}>
-                  <span>次のランク：{nextRank.icon} {nextRank.label}</span><span>あと{nextRank.min - myScore}pt</span>
-                </div>
-                <div style={{ background: "#f0f0f0", borderRadius: 99, height: 10, overflow: "hidden" }}>
-                  <div style={{ height: "100%", borderRadius: 99, background: `linear-gradient(90deg, ${myRank.color}, ${nextRank.color})`, width: `${((myScore - myRank.min) / (nextRank.min - myRank.min)) * 100}%`, transition: "width 0.5s ease" }} />
-                </div>
-              </div>
-            )}
-            <div style={{ fontSize: "12px", color: "#888", marginBottom: 10, fontWeight: 700 }}>ランク一覧</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {RANKS.map(r => (
-                <div key={r.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 12px", background: r.id === myRank.id ? r.bg : "#fafafa", border: `1.5px solid ${r.id === myRank.id ? r.color+"55" : "#eee"}`, borderRadius: 10 }}>
-                  <span style={{ fontSize: "20px" }}>{r.icon}</span>
-                  <div style={{ flex: 1 }}><div style={{ fontWeight: 700, fontSize: "13px", color: r.color }}>{r.label}</div><div style={{ fontSize: "11px", color: "#aaa" }}>{r.min}pt〜</div></div>
-                  <div style={{ fontSize: "11px", color: "#aaa" }}>信頼度 {"⭐".repeat(r.trust)}</div>
-                  {r.id === myRank.id && <span style={{ fontSize: "11px", fontWeight: 700, color: r.color }}>← 現在</span>}
+        <div style={{ position: "absolute", bottom: 80, left: "50%", transform: "translateX(-50%)", zIndex: 10, width: "calc(100% - 32px)", maxWidth: 360 }}>
+          <div style={{ background: "#fff", borderRadius: 16, padding: "16px 20px", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", textAlign: "center", marginBottom: recentPosts.length > 0 ? 10 : 0 }}>
+            <div style={{ fontSize: "28px", marginBottom: 6 }}>📡</div>
+            <div style={{ fontWeight: 800, fontSize: "14px" }}>現在地から探してみよう！</div>
+            <div style={{ fontSize: "12px", color: "#aaa", marginTop: 4 }}>「現在地から探す」ボタンを押すか<br />地図を動かして「この地図で探す」を押してください</div>
+          </div>
+          {recentPosts.length > 0 && (
+            <div style={{ background: "#fff", borderRadius: 16, padding: "14px 16px", boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}>
+              <div style={{ fontSize: "11px", fontWeight: 800, color: "#888", marginBottom: 10, letterSpacing: "0.5px" }}>🕐 みんなの最近の投稿</div>
+              {recentPosts.map((post, i) => (
+                <div key={post.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "7px 0", borderTop: i > 0 ? "1px solid #f0f0f0" : "none" }}>
+                  <span style={{ fontSize: "16px", flexShrink: 0 }}>{post.hasEatIn ? "🪑" : "✗"}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{post.placeName}</div>
+                    <div style={{ fontSize: "11px", color: post.hasEatIn ? "#2d6a4f" : "#999", fontWeight: 600 }}>{post.hasEatIn ? "イートインあり" : "イートインなし"}</div>
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
+          )}
         </div>
       )}
 
-      {/* 投稿履歴モーダル */}
-      {showHistory && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end" }} onClick={e => e.target === e.currentTarget && setShowHistory(false)}>
-          <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", padding: "24px 20px 40px", maxHeight: "80vh", overflowY: "auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-              <div style={{ fontWeight: 900, fontSize: "17px" }}>📋 投稿履歴</div>
-              <button onClick={() => setShowHistory(false)} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#aaa" }}>✕</button>
-            </div>
-            {(() => {
-              const entries = Object.entries(getReportedStores()).sort((a,b) => new Date(b[1].date||b[1]) - new Date(a[1].date||a[1]));
-              if (entries.length === 0) return <div style={{ textAlign: "center", padding: "32px 0", color: "#aaa" }}><div style={{ fontSize: "40px" }}>📭</div><div style={{ marginTop: 8, fontWeight: 700 }}>まだ投稿がありません</div></div>;
-              return <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {entries.map(([placeId, data]) => (
-                  <div key={placeId} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px", background: "#fafafa", borderRadius: 10, border: "1px solid #eee" }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 8, background: "#111", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "14px", flexShrink: 0 }}>{data.hasEatIn ? "🪑" : "✗"}</div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 700, fontSize: "12px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{data.storeName || "店舗名不明"}</div>
-                      <div style={{ fontSize: "11px", color: data.hasEatIn ? "#2d6a4f" : "#e63946", marginTop: 1, fontWeight: 700 }}>{data.hasEatIn ? "イートインあり" : "イートインなし"}</div>
-                    </div>
-                    <div style={{ fontSize: "10px", color: "#aaa" }}>{new Date(data.date).toLocaleDateString("ja-JP")}</div>
-                  </div>
-                ))}
-              </div>;
-            })()}
-          </div>
-        </div>
-      )}
 
       {/* 混雑モーダル */}
       {showCongestion && (
@@ -640,7 +576,11 @@ setToCache(`${lat},${lng}`, places);
               <div style={{ textAlign: "center", padding: "28px 0" }}>
                 <div style={{ fontSize: "52px" }}>🎉</div>
                 <div style={{ fontWeight: 900, fontSize: "18px", marginTop: 10 }}>確認済み登録完了！</div>
-                <div style={{ color: "#888", fontSize: "13px", marginTop: 4 }}>投稿数：{myReportCount}件</div>
+                <div style={{ color: "#888", fontSize: "13px", marginTop: 4 }}>ありがとうございます！</div>
+                <button onClick={() => shareOnX(reportTarget?.name, reportData.hasEatIn)} style={{ marginTop: 20, padding: "12px 28px", borderRadius: 30, border: "none", background: "#000", color: "#fff", fontWeight: 700, fontSize: "14px", cursor: "pointer", display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  𝕏 Xでシェアする
+                </button>
+                <button onClick={() => { setShowReport(false); setSubmitted(false); setReportStep(1); setReportData({ hasEatIn: null, outlet: false, wifi: false, seats: "", comment: "" }); }} style={{ display: "block", margin: "12px auto 0", padding: "8px 24px", borderRadius: 20, border: "1px solid #ddd", background: "#fff", color: "#aaa", fontSize: "12px", cursor: "pointer" }}>閉じる</button>
               </div>
             ) : (
               <>
