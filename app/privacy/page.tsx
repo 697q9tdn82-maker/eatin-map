@@ -1,6 +1,6 @@
 export default function PrivacyPolicy() {
   return (
-    <div style={{ fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif", minHeight: "100vh", background: "#fff9f9", padding: "0 0 80px" }}>
+    <div style={{ fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif", position: "fixed", inset: 0, overflowY: "auto", background: "#fff9f9", padding: "0 0 80px" }}>
 
       {/* ヘッダー */}
       <div style={{ background: "#e63946", padding: "28px 24px 24px" }}>

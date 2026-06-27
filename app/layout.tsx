@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,6 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  verification: {
+    google: "hd6AI8K-1PLP8HbJu6uXEPFLWu8SjVe3QmDoDnclfb0",
+  },
   title: "コンビニイートインマップ",
   description: "近くのコンビニのイートインスペースを探せるマップアプリ。物価高のいま、無料・登録不要で使えます。",
   openGraph: {
@@ -58,6 +62,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         {children}
+        <Analytics />
         <footer style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #eee", padding: "8px 16px", display: "flex", justifyContent: "center", gap: 20, zIndex: 50, fontSize: "11px" }}>
           <a href="/privacy" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>プライバシーポリシー</a>
           <a href="/terms" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>利用規約</a>
