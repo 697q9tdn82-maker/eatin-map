@@ -55,13 +55,21 @@ function sortByCreated(vers) {
 // （1件のイタズラ投稿で正しい情報が上書きされるのを防ぐ）
 function aggregateEatIn(vers, fallback) {
   if (!vers || vers.length === 0) return fallback ?? null;
-  const yes = vers.filter(v => v.hasEatIn === true).length;
-  const no = vers.filter(v => v.hasEatIn === false).length;
+  // 人の投稿を優先し、なければAI推定を使う
+  const human = vers.filter(v => v.source !== "ai");
+  const use = human.length > 0 ? human : vers;
+  const yes = use.filter(v => v.hasEatIn === true).length;
+  const no = use.filter(v => v.hasEatIn === false).length;
   if (yes > no) return true;
   if (no > yes) return false;
   // 同数なら最新の投稿を採用
-  const sorted = sortByCreated(vers);
+  const sorted = sortByCreated(use);
   return sorted[sorted.length - 1]?.hasEatIn ?? fallback ?? null;
+}
+
+// AI推定のみ（人の確認がまだない）かどうか
+function isAiOnly(store) {
+  return (store.verifications?.length || 0) > 0 && store.verifications.every(v => v.source === "ai");
 }
 
 // ピンカラー
@@ -551,7 +559,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                 )}
               </div>
               <div style={{ padding: "5px 10px", borderRadius: 20, flexShrink: 0, background: selected.hasEatIn ? "#e8f5e9" : selected.hasEatIn === false ? "#f5f5f5" : "#fff7f0", border: `1px solid ${selected.hasEatIn ? "#a5d6a7" : selected.hasEatIn === false ? "#eee" : "#fcd5a0"}`, color: selected.hasEatIn ? "#2d6a4f" : selected.hasEatIn === false ? "#ccc" : "#f4a261", fontSize: "12px", fontWeight: 700 }}>
-                {selected.hasEatIn ? "🪑 あり" : selected.hasEatIn === false ? "✗ なし" : "? 未確認"}
+                {selected.hasEatIn ? (isAiOnly(selected) ? "🪑 あり(AI推定)" : "🪑 あり") : selected.hasEatIn === false ? (isAiOnly(selected) ? "✗ なし(AI推定)" : "✗ なし") : "? 未確認"}
               </div>
             </div>
 
@@ -574,7 +582,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
             {/* 確認済みバッジ */}
             {selected.verifications && selected.verifications.length > 0 ? (
               <div style={{ background: "#fffbea", border: "1.5px solid #f4d03f44", borderRadius: 10, padding: "10px 12px", marginBottom: 10 }}>
-                <div style={{ fontSize: "11px", color: "#b7950b", fontWeight: 700, marginBottom: 6 }}>✅ ユーザー確認情報（{selected.verifications.length}件）</div>
+                <div style={{ fontSize: "11px", color: "#b7950b", fontWeight: 700, marginBottom: 6 }}>{isAiOnly(selected) ? "🤖 クチコミからのAI推定（実際に行ったら教えてください）" : `✅ ユーザー確認情報（${selected.verifications.length}件）`}</div>
                 {selected.verifications.slice(-2).reverse().map((v, i) => (
                   <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", padding: "4px 0", borderTop: i > 0 ? "1px solid #fdebd0" : "none" }}>
                     <div style={{ flex: 1, fontSize: "12px", color: "#555" }}>{v.comment || "確認済み"}</div>
