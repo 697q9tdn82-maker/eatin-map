@@ -1,6 +1,14 @@
 import { MetadataRoute } from "next";
+import { AREAS } from "../lib/areas";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const areaPages: MetadataRoute.Sitemap = Object.keys(AREAS).map((slug) => ({
+    url: `https://www.eatin-map.jp/area/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
   return [
     {
       url: "https://www.eatin-map.jp",
@@ -8,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 1,
     },
+    ...areaPages,
     {
       url: "https://www.eatin-map.jp/privacy",
       lastModified: new Date(),

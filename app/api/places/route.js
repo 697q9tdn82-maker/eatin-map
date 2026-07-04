@@ -2,8 +2,10 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const lat = searchParams.get("lat");
   const lng = searchParams.get("lng");
-  const radius = searchParams.get("radius") || "500";
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
+  // 検索半径は100〜2000mの範囲に制限（不正な値や高額請求を防ぐ）
+  const radius = Math.min(2000, Math.max(100, parseFloat(searchParams.get("radius") || "500") || 500));
+  // サーバー専用キー（GOOGLE_PLACES_API_KEY）を優先。なければ従来のキーを使う
+  const apiKey = process.env.GOOGLE_PLACES_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 
   if (!lat || !lng) return Response.json({ error: "lat/lng required" }, { status: 400 });
 
@@ -13,14 +15,14 @@ export async function GET(request) {
       headers: {
         "Content-Type": "application/json",
         "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.regularOpeningHours,places.reviews",
+        "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.regularOpeningHours",
       },
       body: JSON.stringify({
         includedTypes: ["convenience_store"],
         locationRestriction: {
           circle: {
             center: { latitude: parseFloat(lat), longitude: parseFloat(lng) },
-            radius: parseFloat(radius),
+            radius,
           },
         },
         languageCode: "ja",
