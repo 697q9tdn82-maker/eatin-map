@@ -39,8 +39,9 @@ const areaArg = (() => { const i = process.argv.indexOf("--area"); return i >= 0
 if (!PLACES_KEY) { console.error("❌ GOOGLE_PLACES_API_KEY がありません"); process.exit(1); }
 if (!ANTHROPIC_KEY) { console.error("❌ ANTHROPIC_API_KEY がありません"); process.exit(1); }
 
-// ---- エリア一覧（lib/areas.js と同じ内容） ----
+// ---- エリア一覧（lib/areas.js と同じ内容。追加時は両方に足すこと） ----
 const AREAS = {
+  // 主要ターミナル
   shinjuku:  { name: "新宿",       lat: 35.6896, lng: 139.7006 },
   shibuya:   { name: "渋谷",       lat: 35.6580, lng: 139.7016 },
   ikebukuro: { name: "池袋",       lat: 35.7295, lng: 139.7109 },
@@ -49,9 +50,46 @@ const AREAS = {
   akihabara: { name: "秋葉原",     lat: 35.6984, lng: 139.7731 },
   yokohama:  { name: "横浜",       lat: 35.4657, lng: 139.6222 },
   omiya:     { name: "大宮",       lat: 35.9063, lng: 139.6237 },
-  umeda:     { name: "梅田・大阪駅", lat: 34.7025, lng: 135.4959 },
-  namba:     { name: "難波",       lat: 34.6633, lng: 135.5021 },
-  tennoji:   { name: "天王寺",     lat: 34.6465, lng: 135.5133 },
+  // 東京23区の主要駅
+  ueno:          { name: "上野",       lat: 35.7138, lng: 139.7770 },
+  asakusa:       { name: "浅草",       lat: 35.7100, lng: 139.7976 },
+  kinshicho:     { name: "錦糸町",     lat: 35.6961, lng: 139.8143 },
+  kitasenju:     { name: "北千住",     lat: 35.7494, lng: 139.8048 },
+  nakano:        { name: "中野",       lat: 35.7059, lng: 139.6659 },
+  ogikubo:       { name: "荻窪",       lat: 35.7045, lng: 139.6202 },
+  ebisu:         { name: "恵比寿",     lat: 35.6466, lng: 139.7100 },
+  meguro:        { name: "目黒",       lat: 35.6339, lng: 139.7157 },
+  gotanda:       { name: "五反田",     lat: 35.6261, lng: 139.7232 },
+  kamata:        { name: "蒲田",       lat: 35.5622, lng: 139.7161 },
+  oimachi:       { name: "大井町",     lat: 35.6060, lng: 139.7343 },
+  jiyugaoka:     { name: "自由が丘",   lat: 35.6072, lng: 139.6690 },
+  shimokitazawa: { name: "下北沢",     lat: 35.6614, lng: 139.6667 },
+  sangenjaya:    { name: "三軒茶屋",   lat: 35.6437, lng: 139.6698 },
+  akabane:       { name: "赤羽",       lat: 35.7776, lng: 139.7210 },
+  sugamo:        { name: "巣鴨",       lat: 35.7335, lng: 139.7391 },
+  nippori:       { name: "日暮里",     lat: 35.7281, lng: 139.7707 },
+  takadanobaba:  { name: "高田馬場",   lat: 35.7123, lng: 139.7030 },
+  iidabashi:     { name: "飯田橋",     lat: 35.7021, lng: 139.7450 },
+  kanda:         { name: "神田",       lat: 35.6917, lng: 139.7708 },
+  ginza:         { name: "銀座",       lat: 35.6717, lng: 139.7640 },
+  shimbashi:     { name: "新橋",       lat: 35.6662, lng: 139.7583 },
+  roppongi:      { name: "六本木",     lat: 35.6627, lng: 139.7307 },
+  toyosu:        { name: "豊洲",       lat: 35.6544, lng: 139.7955 },
+  // 大阪市内の主要駅
+  umeda:        { name: "梅田・大阪駅", lat: 34.7025, lng: 135.4959 },
+  namba:        { name: "難波",         lat: 34.6633, lng: 135.5021 },
+  tennoji:      { name: "天王寺",       lat: 34.6465, lng: 135.5133 },
+  shinosaka:    { name: "新大阪",       lat: 34.7335, lng: 135.5000 },
+  shinsaibashi: { name: "心斎橋",       lat: 34.6740, lng: 135.5010 },
+  honmachi:     { name: "本町",         lat: 34.6817, lng: 135.4990 },
+  yodoyabashi:  { name: "淀屋橋",       lat: 34.6926, lng: 135.5012 },
+  kyobashi:     { name: "京橋",         lat: 34.6968, lng: 135.5343 },
+  tsuruhashi:   { name: "鶴橋",         lat: 34.6656, lng: 135.5310 },
+  fukushima:    { name: "福島（大阪）", lat: 34.6971, lng: 135.4861 },
+  juso:         { name: "十三",         lat: 34.7210, lng: 135.4818 },
+  nishikujo:    { name: "西九条",       lat: 34.6828, lng: 135.4661 },
+  shinimamiya:  { name: "新今宮",       lat: 34.6494, lng: 135.5011 },
+  // その他の都市
   kyoto:     { name: "京都駅周辺", lat: 34.9858, lng: 135.7585 },
   sannomiya: { name: "三宮・神戸", lat: 34.6938, lng: 135.1954 },
   nagoya:    { name: "名古屋駅周辺", lat: 35.1709, lng: 136.8815 },
