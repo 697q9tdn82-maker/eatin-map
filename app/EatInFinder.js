@@ -452,7 +452,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
       {/* ヘッダー */}
       <div style={{ background: "#fff", borderBottom: "2px solid #111", padding: "10px 14px", zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-        <Link href="/" style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", textDecoration: "none", color: "inherit", fontFamily: "inherit" }}>
+        <Link href="/" onClick={() => { setStores([]); setSelected(null); setMyLocation(null); setSearchArea(""); setGpsError(""); }} style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", textDecoration: "none", color: "inherit", fontFamily: "inherit" }}>
           🏪 <span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
         </Link>
         <button onClick={() => setShowFavorites(true)} style={{ background: "#fff7e6", border: "1.5px solid #f4d03f", borderRadius: 20, padding: "5px 12px", fontSize: "12px", fontWeight: 700, color: "#b7950b", cursor: "pointer" }}>⭐ お気に入り</button>
