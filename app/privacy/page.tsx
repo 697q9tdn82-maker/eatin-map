@@ -60,7 +60,7 @@ export default function PrivacyPolicy() {
 
         <div style={{ background: "#fff", borderRadius: 12, padding: "20px 24px", marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
           <h2 style={{ fontSize: "15px", fontWeight: 800, color: "#e63946", marginBottom: 10, marginTop: 0 }}>7. お問い合わせ</h2>
-          <p style={{ fontSize: "14px", color: "#555", margin: 0, lineHeight: 1.9 }}>本ポリシーに関するお問い合わせは、アプリ内の投稿機能または公式SNSよりご連絡ください。</p>
+          <p style={{ fontSize: "14px", color: "#555", margin: 0, lineHeight: 1.9 }}>本ポリシーおよび当サイトに関するお問い合わせは、公式Xアカウント（<a href="https://x.com/Eatin_map" target="_blank" rel="noopener noreferrer" style={{ color: "#e63946" }}>@Eatin_map</a>）のDMまたはリプライよりご連絡ください。</p>
         </div>
 
       </div>
