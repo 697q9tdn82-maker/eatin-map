@@ -291,6 +291,12 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // エリアページ用: ユーザーが手動で別の場所を検索したことをページ側に知らせる
+  // （エリアページのタイトルや店舗一覧が古い場所のまま残らないようにするため）
+  const notifyUserSearch = () => {
+    if (typeof window !== "undefined") window.dispatchEvent(new Event("eatinmap:usersearch"));
+  };
+
   // 駅名・エリア名のテキスト検索（Google Places Text Search利用）
   const handleTextSearch = useCallback(async () => {
     const q = searchArea.trim();
@@ -301,6 +307,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
       const data = await res.json();
       if (data.lat && data.lng) {
+        notifyUserSearch();
         setMapCenter({ lat: data.lat, lng: data.lng });
         setMapZoom(16);
         setSearchCenter({ lat: data.lat, lng: data.lng });
@@ -321,6 +328,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const { latitude: lat, longitude: lng } = pos.coords;
+        notifyUserSearch();
         setGpsLoading(false);
         setMapCenter({ lat, lng });
         setMapZoom(16);
@@ -349,6 +357,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       const ne = bounds.getNorthEast();
       radius = Math.round(Math.min(1500, Math.max(300, calcDistance(lat, lng, ne.lat(), ne.lng()) * 0.7)));
     }
+    notifyUserSearch();
     setSearchCenter({ lat, lng });
     searchPlaces(lat, lng, radius);
   }, [searchPlaces]);

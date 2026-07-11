@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import EatInFinder from "../../EatInFinder";
+import AreaInfo from "../AreaInfo";
 import { AREAS } from "../../../lib/areas";
 
 // エリア別ページ（例: /area/shinjuku）
@@ -222,7 +223,9 @@ export default async function AreaPage({ params }) {
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       )}
 
-      {/* SEO用の紹介文（検索エンジンに読まれる部分） */}
+      {/* SEO用の紹介文（検索エンジンに読まれる部分）
+          AreaInfoで包む＝地図で別の場所を検索したら自動で消える（古い情報が残らない） */}
+      <AreaInfo>
       <div style={{ background: "#fff", padding: "16px 16px 12px", borderBottom: "1px solid #eee" }}>
         <h1 style={{ fontSize: "16px", fontWeight: 900, margin: 0 }}>
           {area.name}のコンビニイートインマップ
@@ -235,12 +238,15 @@ export default async function AreaPage({ params }) {
           実際に行った方の投稿でマップが育ちます。
         </p>
       </div>
+      </AreaInfo>
 
       {/* 地図（開いた瞬間にこのエリアを自動検索） */}
       <EatInFinder initialLat={area.lat} initialLng={area.lng} />
 
-      {/* 店舗リスト（サーバー側で描画するのでGoogleに読まれる） */}
+      {/* 店舗リスト（サーバー側で描画するのでGoogleに読まれる）
+          こちらもAreaInfoで包み、別の場所を検索したら消えるようにする */}
       {stores.length > 0 && (
+        <AreaInfo>
         <div style={{ background: "#fff", padding: "16px", borderTop: "1px solid #eee" }}>
           <h2 style={{ fontSize: "14px", fontWeight: 900, margin: "0 0 10px" }}>
             {area.name}周辺のコンビニ イートイン情報一覧
@@ -274,6 +280,7 @@ export default async function AreaPage({ params }) {
             実際に訪れた際は、上の地図から「イートインあり/なし」をワンタップで教えてもらえると助かります。
           </p>
         </div>
+        </AreaInfo>
       )}
 
       {/* 他エリアへのリンク（内部リンクでSEO強化） */}
