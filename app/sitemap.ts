@@ -18,6 +18,36 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     ...areaPages,
     {
+      url: "https://www.eatin-map.jp/about",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: "https://www.eatin-map.jp/guide",
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: "https://www.eatin-map.jp/guide/manner",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: "https://www.eatin-map.jp/guide/chains",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: "https://www.eatin-map.jp/guide/break-spots",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
       url: "https://www.eatin-map.jp/privacy",
       lastModified: new Date(),
       changeFrequency: "monthly",

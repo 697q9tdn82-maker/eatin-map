@@ -9,13 +9,17 @@
 //   node scripts/seed-eatin.mjs --write        → 実際にFirestoreへ書き込む
 //   node scripts/seed-eatin.mjs --area umeda   → 梅田だけ対象（お試し）
 //   node scripts/seed-eatin.mjs --area umeda --write
+//   node scripts/seed-eatin.mjs --write --force → 実行済みの駅もやり直す
+//
+// 実行済みの駅・判定済みの店は scripts/seed-log.json に記録され、
+// 次回から自動でスキップされます（APIの二重支払い防止）
 //
 // 必要な設定（.env.local に記載）:
 //   GOOGLE_PLACES_API_KEY=...   （Places用サーバーキー）
 //   ANTHROPIC_API_KEY=...       （Claude APIキー）
 // ============================================================
 
-import { readFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import Anthropic from "@anthropic-ai/sdk";
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
@@ -34,7 +38,17 @@ try {
 const PLACES_KEY = process.env.GOOGLE_PLACES_API_KEY || process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 const ANTHROPIC_KEY = process.env.ANTHROPIC_API_KEY;
 const WRITE = process.argv.includes("--write");
+const FORCE = process.argv.includes("--force");
 const areaArg = (() => { const i = process.argv.indexOf("--area"); return i >= 0 ? process.argv[i + 1] : null; })();
+
+// ---- 実行ログ（同じ駅の再検索・同じ店の再判定を防ぐ） ----
+const LOG_PATH = new URL("./seed-log.json", import.meta.url);
+function loadLog() {
+  try { return JSON.parse(readFileSync(LOG_PATH, "utf8")); } catch { return { areas: {}, judged: {} }; }
+}
+function saveLog(log) {
+  try { writeFileSync(LOG_PATH, JSON.stringify(log, null, 2)); } catch {}
+}
 
 if (!PLACES_KEY) { console.error("❌ GOOGLE_PLACES_API_KEY がありません"); process.exit(1); }
 if (!ANTHROPIC_KEY) { console.error("❌ ANTHROPIC_API_KEY がありません"); process.exit(1); }
@@ -201,8 +215,13 @@ async function main() {
   const targets = areaArg ? { [areaArg]: AREAS[areaArg] } : AREAS;
   if (areaArg && !AREAS[areaArg]) { console.error(`❌ エリア「${areaArg}」がありません。指定できる値: ${Object.keys(AREAS).join(", ")}`); process.exit(1); }
 
+  const log = loadLog();
   let total = 0, judged = 0, written = 0;
   for (const [slug, area] of Object.entries(targets)) {
+    if (!FORCE && log.areas[slug]) {
+      console.log(`\n⏭️ ${area.name} (${slug}) は実行済み（${String(log.areas[slug]).slice(0, 10)}）— スキップ。やり直すには --force`);
+      continue;
+    }
     console.log(`\n📍 ${area.name} (${slug}) を検索中…`);
     let stores;
     try { stores = await fetchStores(area.lat, area.lng); }
@@ -212,25 +231,31 @@ async function main() {
     for (const store of stores) {
       total++;
       if (existing.has(store.placeId)) { console.log(`  ⏭️ ${store.name}（投稿済み）`); continue; }
+      if (!FORCE && store.placeId in log.judged) { console.log(`  ⏭️ ${store.name}（判定済み）`); continue; }
       const { hasEatIn, evidence } = await judgeEatIn(store);
       judged++;
       const mark = hasEatIn === true ? "🪑 あり" : hasEatIn === false ? "✗ なし" : "? 不明";
       console.log(`  ${mark} ${store.name} — ${evidence}`);
-      if (hasEatIn !== null && WRITE) {
-        await addDoc(collection(db, "verifications"), {
-          placeId: store.placeId,
-          placeName: store.name,
-          hasEatIn,
-          outlet: false, wifi: false, seats: null,
-          comment: `🤖 AI推定：${evidence}`,
-          source: "ai",
-          createdAt: new Date(),
-        });
-        written++;
-        existing.add(store.placeId);
+      if (WRITE) {
+        log.judged[store.placeId] = hasEatIn; // 「不明」も記録して再判定を防ぐ
+        if (hasEatIn !== null) {
+          await addDoc(collection(db, "verifications"), {
+            placeId: store.placeId,
+            placeName: store.name,
+            hasEatIn,
+            outlet: false, wifi: false, seats: null,
+            comment: `🤖 AI推定：${evidence}`,
+            source: "ai",
+            createdAt: new Date(),
+          });
+          written++;
+          existing.add(store.placeId);
+        }
       }
       await sleep(400); // API負荷を抑える
     }
+    // この駅を実行済みとして記録（お試しモードでは記録しない）
+    if (WRITE) { log.areas[slug] = new Date().toISOString(); saveLog(log); }
   }
 
   console.log(`\n===== 結果 =====`);
