@@ -157,6 +157,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [showHint, setShowHint] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [showPosts, setShowPosts] = useState(false);
   const [areaKeyword, setAreaKeyword] = useState("");
   const mapRef = useRef(null);
   const pendingSelectRef = useRef(initialPlace); // 共有リンクからの自動選択待ち
@@ -458,25 +459,23 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
       {/* 検索バー */}
       <div style={{ background: "#fff", padding: "10px 14px", borderBottom: "1px solid #eee", flexShrink: 0, zIndex: 50 }}>
-        {/* 駅名・エリア名検索 */}
-        <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+        {/* 検索バー（1行にまとめて地図を広く使う） */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
           <input
             value={searchArea}
             onChange={e => setSearchArea(e.target.value)}
             onKeyDown={e => { if (e.key === "Enter") handleTextSearch(); }}
             placeholder="駅名・エリア名で検索（例：新宿駅）"
-            style={{ flex: 1, minWidth: 0, padding: "9px 12px", borderRadius: 10, border: "1.5px solid #ddd", fontSize: "13px", outline: "none", fontFamily: "inherit" }}
+            style={{ flex: 1, minWidth: 0, padding: "8px 12px", borderRadius: 10, border: "1.5px solid #ddd", fontSize: "13px", outline: "none", fontFamily: "inherit" }}
           />
-          <button onClick={handleTextSearch} disabled={textSearching || loading} style={{ padding: "9px 16px", borderRadius: 10, border: "none", background: textSearching ? "#ddd" : "#111", color: "#fff", fontWeight: 700, fontSize: "13px", cursor: textSearching ? "default" : "pointer", whiteSpace: "nowrap" }}>
-            {textSearching ? "…" : "🔍 検索"}
+          <button onClick={handleTextSearch} disabled={textSearching || loading} aria-label="検索" style={{ padding: "8px 12px", borderRadius: 10, border: "none", background: textSearching ? "#ddd" : "#111", color: "#fff", fontWeight: 700, fontSize: "14px", cursor: textSearching ? "default" : "pointer" }}>
+            {textSearching ? "…" : "🔍"}
           </button>
-        </div>
-        <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-          <button onClick={handleGPS} disabled={gpsLoading || loading} style={{ flex: 1, padding: "9px", borderRadius: 10, border: "1.5px solid #ddd", background: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", color: "#333", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-            {gpsLoading ? <><span>⏳</span>取得中…</> : <><span>📡</span>現在地から探す</>}
+          <button onClick={handleGPS} disabled={gpsLoading || loading} aria-label="現在地から探す" title="現在地から探す" style={{ padding: "8px 12px", borderRadius: 10, border: "1.5px solid #ddd", background: "#fff", fontSize: "14px", cursor: "pointer", color: "#333" }}>
+            {gpsLoading ? "⏳" : "📡"}
           </button>
-          <button onClick={handleMapIdle} disabled={loading} style={{ padding: "9px 14px", borderRadius: 10, border: "none", background: loading ? "#ddd" : "#e63946", color: "#fff", fontWeight: 700, fontSize: "13px", cursor: loading ? "default" : "pointer", whiteSpace: "nowrap" }}>
-            {loading ? "検索中…" : "この地図で探す"}
+          <button onClick={handleMapIdle} disabled={loading} style={{ padding: "8px 12px", borderRadius: 10, border: "none", background: loading ? "#ddd" : "#e63946", color: "#fff", fontWeight: 700, fontSize: "12px", cursor: loading ? "default" : "pointer", whiteSpace: "nowrap" }}>
+            {loading ? "検索中" : "この地図で探す"}
           </button>
         </div>
         {gpsError && <div style={{ padding: "6px 10px", background: "#ffeaea", borderRadius: 8, fontSize: "11px", color: "#c0392b", marginBottom: 6 }}>⚠️ {gpsError}</div>}
@@ -704,22 +703,28 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         </div>
       )}
 
-      {/* 最近の投稿フィード（地図の下に表示） */}
+      {/* 最近の投稿（下端のバー。たたんでおくと地図が広く使える） */}
       {!loading && stores.length === 0 && recentPosts.length > 0 && (
-        <div style={{ background: "#fff", borderTop: "1px solid #eee", flexShrink: 0, overflowY: "auto", maxHeight: 200, paddingBottom: 48 }}>
-          <div style={{ fontSize: "11px", fontWeight: 800, color: "#888", padding: "10px 16px 6px", letterSpacing: "0.5px" }}>🕐 みんなの最近の投稿</div>
-          {recentPosts.map((post, i) => (
-            <div key={post.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", borderTop: i === 0 ? "none" : "1px solid #f0f0f0" }}>
-              <span style={{ fontSize: "18px", flexShrink: 0 }}>{post.hasEatIn ? "🪑" : "✗"}</span>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{post.placeName}</div>
-                <div style={{ fontSize: "11px", color: post.hasEatIn ? "#2d6a4f" : "#999", fontWeight: 600 }}>{post.hasEatIn ? "イートインあり" : "イートインなし"}</div>
-              </div>
+        <div style={{ background: "#fff", borderTop: "1px solid #eee", flexShrink: 0, paddingBottom: 40 }}>
+          <button onClick={() => setShowPosts(!showPosts)} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", padding: "8px 16px", cursor: "pointer", fontFamily: "inherit" }}>
+            <span style={{ fontSize: "11px", fontWeight: 800, color: "#888", letterSpacing: "0.5px" }}>🕐 みんなの最近の投稿</span>
+            <span style={{ fontSize: "10px", color: "#bbb" }}>{showPosts ? "▼ 閉じる" : "▲ 見る"}</span>
+          </button>
+          {showPosts && (
+            <div style={{ maxHeight: 180, overflowY: "auto" }}>
+              {recentPosts.map((post, i) => (
+                <div key={post.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", borderTop: i === 0 ? "1px solid #f0f0f0" : "1px solid #f0f0f0" }}>
+                  <span style={{ fontSize: "18px", flexShrink: 0 }}>{post.hasEatIn ? "🪑" : "✗"}</span>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{post.placeName}</div>
+                    <div style={{ fontSize: "11px", color: post.hasEatIn ? "#2d6a4f" : "#999", fontWeight: 600 }}>{post.hasEatIn ? "イートインあり" : "イートインなし"}</div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
       )}
-
 
       {/* メニュー（エリア一覧・各ページへのリンク） */}
       {showMenu && (
