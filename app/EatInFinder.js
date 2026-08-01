@@ -459,23 +459,25 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
       {/* 検索バー */}
       <div style={{ background: "#fff", padding: "10px 14px", borderBottom: "1px solid #eee", flexShrink: 0, zIndex: 50 }}>
-        {/* 検索バー（1行にまとめて地図を広く使う） */}
-        <div style={{ display: "flex", gap: 6, marginBottom: 6 }}>
+        {/* 駅名・エリア名検索 */}
+        <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
           <input
             value={searchArea}
             onChange={e => setSearchArea(e.target.value)}
             onKeyDown={e => { if (e.key === "Enter") handleTextSearch(); }}
             placeholder="駅名・エリア名で検索（例：新宿駅）"
-            style={{ flex: 1, minWidth: 0, padding: "8px 12px", borderRadius: 10, border: "1.5px solid #ddd", fontSize: "13px", outline: "none", fontFamily: "inherit" }}
+            style={{ flex: 1, minWidth: 0, padding: "9px 12px", borderRadius: 10, border: "1.5px solid #ddd", fontSize: "13px", outline: "none", fontFamily: "inherit" }}
           />
-          <button onClick={handleTextSearch} disabled={textSearching || loading} aria-label="検索" style={{ padding: "8px 12px", borderRadius: 10, border: "none", background: textSearching ? "#ddd" : "#111", color: "#fff", fontWeight: 700, fontSize: "14px", cursor: textSearching ? "default" : "pointer" }}>
-            {textSearching ? "…" : "🔍"}
+          <button onClick={handleTextSearch} disabled={textSearching || loading} style={{ padding: "9px 16px", borderRadius: 10, border: "none", background: textSearching ? "#ddd" : "#111", color: "#fff", fontWeight: 700, fontSize: "13px", cursor: textSearching ? "default" : "pointer", whiteSpace: "nowrap" }}>
+            {textSearching ? "…" : "🔍 検索"}
           </button>
-          <button onClick={handleGPS} disabled={gpsLoading || loading} aria-label="現在地から探す" title="現在地から探す" style={{ padding: "8px 12px", borderRadius: 10, border: "1.5px solid #ddd", background: "#fff", fontSize: "14px", cursor: "pointer", color: "#333" }}>
-            {gpsLoading ? "⏳" : "📡"}
+        </div>
+        <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+          <button onClick={handleGPS} disabled={gpsLoading || loading} style={{ flex: 1, padding: "9px", borderRadius: 10, border: "1.5px solid #ddd", background: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", color: "#333", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+            {gpsLoading ? <><span>⏳</span>取得中…</> : <><span>📡</span>現在地から探す</>}
           </button>
-          <button onClick={handleMapIdle} disabled={loading} style={{ padding: "8px 12px", borderRadius: 10, border: "none", background: loading ? "#ddd" : "#e63946", color: "#fff", fontWeight: 700, fontSize: "12px", cursor: loading ? "default" : "pointer", whiteSpace: "nowrap" }}>
-            {loading ? "検索中" : "この地図で探す"}
+          <button onClick={handleMapIdle} disabled={loading} style={{ padding: "9px 14px", borderRadius: 10, border: "none", background: loading ? "#ddd" : "#e63946", color: "#fff", fontWeight: 700, fontSize: "13px", cursor: loading ? "default" : "pointer", whiteSpace: "nowrap" }}>
+            {loading ? "検索中…" : "この地図で探す"}
           </button>
         </div>
         {gpsError && <div style={{ padding: "6px 10px", background: "#ffeaea", borderRadius: 8, fontSize: "11px", color: "#c0392b", marginBottom: 6 }}>⚠️ {gpsError}</div>}
