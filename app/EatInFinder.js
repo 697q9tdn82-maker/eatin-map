@@ -167,6 +167,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [showFavorites, setShowFavorites] = useState(false);
   const [showHint, setShowHint] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [areaKeyword, setAreaKeyword] = useState("");
   const [favorites, setFavorites] = useState({});
   const mapRef = useRef(null);
@@ -497,12 +498,26 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           </button>
         </div>
         {gpsError && <div style={{ padding: "6px 10px", background: "#ffeaea", borderRadius: 8, fontSize: "11px", color: "#c0392b", marginBottom: 6 }}>⚠️ {gpsError}</div>}
-        {/* フィルター */}
-        <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 2 }}>
-          {[[filterOpenNow, setFilterOpenNow, "🟢 営業中", "#2d6a4f"], [filterEatIn, setFilterEatIn, "🪑 イートインあり", "#e63946"], [filterVerified, setFilterVerified, "✅ 確認済み", "#b7950b"], [filterOutlet, setFilterOutlet, "🔌 コンセント", "#0077b6"], [filterWifi, setFilterWifi, "📶 Wi-Fi", "#6a4c93"]].map(([active, setter, label, ac]) => (
-            <button key={label} onClick={() => setter(!active)} style={{ padding: "4px 10px", borderRadius: 20, border: `1.5px solid ${active ? ac : "#ddd"}`, background: active ? `${ac}18` : "#fff", color: active ? ac : "#888", fontWeight: 700, fontSize: "11px", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>{label}</button>
-          ))}
-        </div>
+        {/* フィルター（普段は折りたたんで地図を広く使う） */}
+        {(() => {
+          const FILTERS = [[filterOpenNow, setFilterOpenNow, "🟢 営業中", "#2d6a4f"], [filterEatIn, setFilterEatIn, "🪑 イートインあり", "#e63946"], [filterVerified, setFilterVerified, "✅ 確認済み", "#b7950b"], [filterOutlet, setFilterOutlet, "🔌 コンセント", "#0077b6"], [filterWifi, setFilterWifi, "📶 Wi-Fi", "#6a4c93"]];
+          const activeCount = FILTERS.filter(f => f[0]).length;
+          return (
+            <>
+              <button onClick={() => setShowFilters(!showFilters)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 20, border: `1.5px solid ${activeCount > 0 ? "#e63946" : "#ddd"}`, background: activeCount > 0 ? "#ffeaea" : "#fff", color: activeCount > 0 ? "#e63946" : "#888", fontWeight: 700, fontSize: "11px", cursor: "pointer" }}>
+                <span>🔎 絞り込み{activeCount > 0 ? `（${activeCount}）` : ""}</span>
+                <span style={{ fontSize: "9px" }}>{showFilters ? "▲" : "▼"}</span>
+              </button>
+              {showFilters && (
+                <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 2, marginTop: 6 }}>
+                  {FILTERS.map(([active, setter, label, ac]) => (
+                    <button key={label} onClick={() => setter(!active)} style={{ padding: "4px 10px", borderRadius: 20, border: `1.5px solid ${active ? ac : "#ddd"}`, background: active ? `${ac}18` : "#fff", color: active ? ac : "#888", fontWeight: 700, fontSize: "11px", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0 }}>{label}</button>
+                  ))}
+                </div>
+              )}
+            </>
+          );
+        })()}
       </div>
 
       {/* 地図エリア */}

@@ -43,6 +43,14 @@ export async function generateMetadata({ params }) {
       siteName: "コンビニイートインマップ",
       locale: "ja_JP",
       type: "website",
+      images: ["https://www.eatin-map.jp/og-image.png"],
+    },
+    // Xでシェアしたときにエリア名が出るようにする（指定しないとトップページの文言が使われる）
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["https://www.eatin-map.jp/og-image.png"],
     },
   };
 }
@@ -62,7 +70,8 @@ async function fetchAreaStores(area) {
       body: JSON.stringify({
         includedTypes: ["convenience_store"],
         locationRestriction: {
-          circle: { center: { latitude: area.lat, longitude: area.lng }, radius: 1000 },
+          // 半径600m＝駅から徒歩7〜8分。隣の駅の店舗が混ざりにくく、ページごとの内容が重複しない
+          circle: { center: { latitude: area.lat, longitude: area.lng }, radius: 600 },
         },
         languageCode: "ja",
         regionCode: "JP",
