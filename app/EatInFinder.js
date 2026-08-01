@@ -26,16 +26,6 @@ function markAsReported(placeId, storeName, hasEatIn) {
 }
 function isReported(placeId) { return !!getReportedStores()[placeId]; }
 
-// お気に入り（端末に保存・登録不要）
-function getFavorites() { try { return JSON.parse(localStorage.getItem("favoriteStores") || "{}"); } catch { return {}; } }
-function toggleFavorite(store) {
-  const f = getFavorites();
-  if (f[store.place_id]) delete f[store.place_id];
-  else f[store.place_id] = { name: store.name || "", address: store.address || "", lat: store.lat, lng: store.lng, date: new Date().toISOString() };
-  localStorage.setItem("favoriteStores", JSON.stringify(f));
-  return f;
-}
-
 const CHAIN_COLORS = { "セブン-イレブン": "#e63946", "ファミリーマート": "#00a040", "ローソン": "#0b5ea8", "ミニストップ": "#f4a261" };
 function getChainColor(name) { for (const [k,v] of Object.entries(CHAIN_COLORS)) if (name.includes(k)) return v; return "#888"; }
 
@@ -164,12 +154,10 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [textSearching, setTextSearching] = useState(false);
   const [filterOutlet, setFilterOutlet] = useState(false);
   const [filterWifi, setFilterWifi] = useState(false);
-  const [showFavorites, setShowFavorites] = useState(false);
   const [showHint, setShowHint] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [areaKeyword, setAreaKeyword] = useState("");
-  const [favorites, setFavorites] = useState({});
   const mapRef = useRef(null);
   const pendingSelectRef = useRef(initialPlace); // 共有リンクからの自動選択待ち
 
@@ -231,9 +219,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   }, []);
 
   useEffect(() => { loadRecentPosts(); }, [loadRecentPosts]);
-
-  // お気に入りを端末から読み込む
-  useEffect(() => { setFavorites(getFavorites()); }, []);
 
   const shareOnX = (storeName, hasEatIn) => {
     const text = hasEatIn
@@ -468,10 +453,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         <Link href="/" onClick={() => { setStores([]); setSelected(null); setMyLocation(null); setSearchArea(""); setGpsError(""); }} style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", textDecoration: "none", color: "inherit", fontFamily: "inherit" }}>
           🏪 <span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
         </Link>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <button onClick={() => setShowFavorites(true)} style={{ background: "#fff7e6", border: "1.5px solid #f4d03f", borderRadius: 20, padding: "5px 12px", fontSize: "12px", fontWeight: 700, color: "#b7950b", cursor: "pointer" }}>⭐</button>
-          <button onClick={() => setShowMenu(true)} aria-label="メニュー" style={{ background: "#fff", border: "1.5px solid #ddd", borderRadius: 10, padding: "5px 10px", fontSize: "14px", cursor: "pointer", color: "#333", lineHeight: 1 }}>☰</button>
-        </div>
+        <button onClick={() => setShowMenu(true)} aria-label="メニュー" style={{ background: "#fff", border: "1.5px solid #ddd", borderRadius: 10, padding: "5px 11px", fontSize: "15px", cursor: "pointer", color: "#333", lineHeight: 1 }}>☰</button>
       </div>
 
       {/* 検索バー */}
@@ -690,9 +672,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
               <button onClick={() => copyStoreLink(selected)} style={{ display: "flex", alignItems: "center", gap: 6, background: linkCopied ? "#e8f5e9" : "#fff", border: `1.5px solid ${linkCopied ? "#a5d6a7" : "#e0e0e0"}`, borderRadius: 10, padding: "9px 12px", cursor: "pointer", fontSize: "12px", fontWeight: 600, color: linkCopied ? "#2d6a4f" : "#555", whiteSpace: "nowrap" }}>
                 {linkCopied ? "✓ コピーしました" : "🔗 この店を共有"}
               </button>
-              <button onClick={() => setFavorites(toggleFavorite(selected))} title="お気に入りに保存" style={{ background: favorites[selected.place_id] ? "#fff7e6" : "#fff", border: `1.5px solid ${favorites[selected.place_id] ? "#f4d03f" : "#e0e0e0"}`, borderRadius: 10, padding: "9px 12px", cursor: "pointer", fontSize: "14px", flexShrink: 0 }}>
-                {favorites[selected.place_id] ? "⭐" : "☆"}
-              </button>
             </div>
 
             {/* 助かった */}
@@ -788,31 +767,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
               ))}
               <a href="https://x.com/Eatin_map" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#333", textDecoration: "none", padding: "8px 0" }}>𝕏 お問い合わせ</a>
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* お気に入りモーダル */}
-      {showFavorites && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end" }} onClick={e => e.target === e.currentTarget && setShowFavorites(false)}>
-          <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", padding: "24px 20px 40px", maxHeight: "70vh", overflowY: "auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
-              <div style={{ fontWeight: 900, fontSize: "16px" }}>⭐ お気に入りの店舗</div>
-              <button onClick={() => setShowFavorites(false)} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#aaa" }}>✕</button>
-            </div>
-            {Object.keys(favorites).length === 0 ? (
-              <div style={{ textAlign: "center", color: "#aaa", fontSize: "13px", padding: "20px 0", lineHeight: 1.8 }}>まだお気に入りがありません。<br />店舗詳細の「☆」を押すと保存されます（この端末のみ）</div>
-            ) : (
-              Object.entries(favorites).map(([pid, f]) => (
-                <div key={pid} style={{ display: "flex", alignItems: "center", gap: 8, borderTop: "1px solid #f0f0f0", padding: "10px 0" }}>
-                  <button onClick={() => { setShowFavorites(false); setMapCenter({ lat: f.lat, lng: f.lng }); setMapZoom(17); setSearchCenter({ lat: f.lat, lng: f.lng }); pendingSelectRef.current = pid; searchPlaces(f.lat, f.lng); }} style={{ flex: 1, textAlign: "left", background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: "inherit" }}>
-                    <div style={{ fontSize: "13px", fontWeight: 700 }}>{f.name}</div>
-                    <div style={{ fontSize: "11px", color: "#999" }}>{f.address}</div>
-                  </button>
-                  <button onClick={() => setFavorites(toggleFavorite({ place_id: pid }))} style={{ background: "#fff", border: "1.5px solid #eee", borderRadius: 8, padding: "6px 10px", fontSize: "11px", color: "#c0392b", cursor: "pointer", flexShrink: 0 }}>削除</button>
-                </div>
-              ))
-            )}
           </div>
         </div>
       )}
