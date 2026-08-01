@@ -166,6 +166,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [filterWifi, setFilterWifi] = useState(false);
   const [showFavorites, setShowFavorites] = useState(false);
   const [showHint, setShowHint] = useState(true);
+  const [showMenu, setShowMenu] = useState(false);
+  const [areaKeyword, setAreaKeyword] = useState("");
   const [favorites, setFavorites] = useState({});
   const mapRef = useRef(null);
   const pendingSelectRef = useRef(initialPlace); // 共有リンクからの自動選択待ち
@@ -465,7 +467,10 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         <Link href="/" onClick={() => { setStores([]); setSelected(null); setMyLocation(null); setSearchArea(""); setGpsError(""); }} style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", textDecoration: "none", color: "inherit", fontFamily: "inherit" }}>
           🏪 <span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
         </Link>
-        <button onClick={() => setShowFavorites(true)} style={{ background: "#fff7e6", border: "1.5px solid #f4d03f", borderRadius: 20, padding: "5px 12px", fontSize: "12px", fontWeight: 700, color: "#b7950b", cursor: "pointer" }}>⭐ お気に入り</button>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <button onClick={() => setShowFavorites(true)} style={{ background: "#fff7e6", border: "1.5px solid #f4d03f", borderRadius: 20, padding: "5px 12px", fontSize: "12px", fontWeight: 700, color: "#b7950b", cursor: "pointer" }}>⭐</button>
+          <button onClick={() => setShowMenu(true)} aria-label="メニュー" style={{ background: "#fff", border: "1.5px solid #ddd", borderRadius: 10, padding: "5px 10px", fontSize: "14px", cursor: "pointer", color: "#333", lineHeight: 1 }}>☰</button>
+        </div>
       </div>
 
       {/* 検索バー */}
@@ -721,6 +726,56 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         </div>
       )}
 
+
+      {/* メニュー（エリア一覧・各ページへのリンク） */}
+      {showMenu && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 400, display: "flex", justifyContent: "flex-end" }} onClick={e => e.target === e.currentTarget && setShowMenu(false)}>
+          <div style={{ background: "#fff", width: "88%", maxWidth: 340, height: "100%", overflowY: "auto", display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 16px 12px", borderBottom: "1px solid #eee", position: "sticky", top: 0, background: "#fff", zIndex: 2 }}>
+              <div style={{ fontWeight: 900, fontSize: "15px" }}>🗾 エリアから探す</div>
+              <button onClick={() => setShowMenu(false)} aria-label="閉じる" style={{ background: "#f5f5f5", border: "none", borderRadius: "50%", width: 28, height: 28, cursor: "pointer", fontSize: "14px", color: "#888" }}>✕</button>
+            </div>
+
+            <div style={{ padding: "12px 16px 0" }}>
+              <input
+                value={areaKeyword}
+                onChange={e => setAreaKeyword(e.target.value)}
+                placeholder="エリア名で絞り込む（例：新宿）"
+                style={{ width: "100%", boxSizing: "border-box", padding: "9px 12px", borderRadius: 10, border: "1.5px solid #ddd", fontSize: "13px", outline: "none", fontFamily: "inherit" }}
+              />
+            </div>
+
+            <div style={{ padding: "12px 16px 20px", flex: 1 }}>
+              {(() => {
+                const kw = areaKeyword.trim();
+                const list = Object.entries(AREAS).filter(([slug, a]) => !kw || a.name.includes(kw) || (a.pref || "").includes(kw) || slug.includes(kw.toLowerCase()));
+                if (list.length === 0) return <div style={{ fontSize: "12px", color: "#aaa", padding: "12px 0" }}>該当するエリアがありません</div>;
+                // 都道府県ごとにまとめて表示
+                const byPref = {};
+                for (const [slug, a] of list) (byPref[a.pref || "その他"] ||= []).push([slug, a]);
+                return Object.entries(byPref).map(([pref, items]) => (
+                  <div key={pref} style={{ marginBottom: 14 }}>
+                    <div style={{ fontSize: "11px", fontWeight: 800, color: "#aaa", marginBottom: 6 }}>{pref}</div>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {items.map(([slug, a]) => (
+                        <Link key={slug} href={`/area/${slug}`} onClick={() => setShowMenu(false)} style={{ fontSize: "12px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "5px 11px", textDecoration: "none" }}>{a.name}</Link>
+                      ))}
+                    </div>
+                  </div>
+                ));
+              })()}
+            </div>
+
+            <div style={{ borderTop: "1px solid #eee", padding: "14px 16px 28px", background: "#fafafa" }}>
+              <div style={{ fontSize: "11px", fontWeight: 800, color: "#aaa", marginBottom: 8 }}>メニュー</div>
+              {[["/", "🗺️ マップ トップ"], ["/guide", "📖 イートイン活用ガイド"], ["/about", "ℹ️ このサイトについて"]].map(([href, label]) => (
+                <Link key={href} href={href} onClick={() => setShowMenu(false)} style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#333", textDecoration: "none", padding: "8px 0" }}>{label}</Link>
+              ))}
+              <a href="https://x.com/Eatin_map" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#333", textDecoration: "none", padding: "8px 0" }}>𝕏 お問い合わせ</a>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* お気に入りモーダル */}
       {showFavorites && (
