@@ -707,13 +707,13 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
       {/* 最近の投稿（下端のバー。たたんでおくと地図が広く使える） */}
       {!loading && stores.length === 0 && recentPosts.length > 0 && (
-        <div style={{ background: "#fff", borderTop: "1px solid #eee", flexShrink: 0, paddingBottom: 40 }}>
+        <div style={{ background: "#fff", borderTop: "1px solid #eee", flexShrink: 0, paddingBottom: 38 }}>
           <button onClick={() => setShowPosts(!showPosts)} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", padding: "8px 16px", cursor: "pointer", fontFamily: "inherit" }}>
             <span style={{ fontSize: "11px", fontWeight: 800, color: "#888", letterSpacing: "0.5px" }}>🕐 みんなの最近の投稿</span>
             <span style={{ fontSize: "10px", color: "#bbb" }}>{showPosts ? "▼ 閉じる" : "▲ 見る"}</span>
           </button>
           {showPosts && (
-            <div style={{ maxHeight: 180, overflowY: "auto" }}>
+            <div style={{ maxHeight: 170, overflowY: "auto" }}>
               {recentPosts.map((post, i) => (
                 <div key={post.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", borderTop: i === 0 ? "1px solid #f0f0f0" : "1px solid #f0f0f0" }}>
                   <span style={{ fontSize: "18px", flexShrink: 0 }}>{post.hasEatIn ? "🪑" : "✗"}</span>
