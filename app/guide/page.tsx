@@ -48,6 +48,7 @@ export default function GuideIndex() {
 
         <div style={{ background: "#fff", borderRadius: 12, padding: "20px 24px", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
           <div style={{ fontSize: "13px", color: "#777", lineHeight: 1.8 }}>
+            短い疑問への答えは<Link href="/faq" style={{ color: "#e63946", fontWeight: 700 }}>よくある質問</Link>にまとめています。
             記事で紹介しているイートインのあるコンビニは、<Link href="/" style={{ color: "#e63946", fontWeight: 700 }}>マップ</Link>から実際に探せます。エリア別のページは<Link href="/area/shinjuku" style={{ color: "#e63946", fontWeight: 700 }}>新宿</Link>・<Link href="/area/umeda" style={{ color: "#e63946", fontWeight: 700 }}>梅田</Link>など全国68か所に対応しています。
           </div>
         </div>

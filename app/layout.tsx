@@ -74,6 +74,7 @@ export default function RootLayout({
         <footer style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #eee", padding: "6px 8px", display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "nowrap", gap: 10, zIndex: 50, fontSize: "10px", overflowX: "auto", whiteSpace: "nowrap", height: 30, boxSizing: "border-box" }}>
           <a href="/about" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>サイトについて</a>
           <a href="/guide" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>活用ガイド</a>
+          <a href="/faq" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>よくある質問</a>
           <a href="/privacy" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>プライバシー</a>
           <a href="/terms" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>利用規約</a>
           <a href="https://x.com/Eatin_map" target="_blank" rel="noopener noreferrer" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>𝕏 問い合わせ</a>
