@@ -121,7 +121,7 @@ function StorePin({ store, isSelected, onClick }) {
 // initialLat / initialLng: URLやエリアページから渡される初期地点（自動検索する）
 // initialPlace: 共有リンクで開いたときに自動選択する店舗のplace_id
 // ============================================================
-export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null }) {
+export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null, storeCount = null, areaCount = null }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
   });
@@ -692,6 +692,9 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
               <div style={{ flex: 1, fontSize: "12px", color: "#666", lineHeight: 1.6 }}>
                 <span style={{ fontWeight: 800, color: "#1a1a1a" }}>📡 お店を探すには</span><br />
                 「現在地から探す」か駅名検索、地図を動かして「この地図で探す」でもOK
+                {storeCount && (
+                  <><br /><span style={{ color: "#e63946", fontWeight: 800 }}>🗾 全国{areaCount}エリア・{storeCount.toLocaleString()}店舗</span>の情報を掲載中</>
+                )}
               </div>
               <button onClick={() => setShowHint(false)} aria-label="閉じる" style={{ background: "#f5f5f5", border: "none", borderRadius: "50%", width: 22, height: 22, cursor: "pointer", fontSize: "11px", color: "#888", flexShrink: 0, lineHeight: 1 }}>✕</button>
             </div>

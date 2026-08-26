@@ -1,4 +1,6 @@
 import EatInFinder from "./EatInFinder";
+import { AREAS } from "../lib/areas";
+import { getStoreCount } from "../lib/stats";
 
 // トップページ（サーバー側でURLパラメータを読み、地図コンポーネントに渡す）
 // 例: /?lat=35.68&lng=139.70&place=ChIJxxxx ← 共有リンクで開くと自動でその店を表示
@@ -24,11 +26,16 @@ export default async function Home({ searchParams }) {
   const lng = parseFloat(params?.lng);
   const hasCoords = Number.isFinite(lat) && Number.isFinite(lng);
 
+  // 掲載店舗数（週1回だけ集計してキャッシュされる。実数をそのまま表示）
+  const storeCount = await getStoreCount();
+
   return (
     <EatInFinder
       initialLat={hasCoords ? lat : null}
       initialLng={hasCoords ? lng : null}
       initialPlace={typeof params?.place === "string" ? params.place : null}
+      storeCount={storeCount}
+      areaCount={Object.keys(AREAS).length}
     />
   );
 }
