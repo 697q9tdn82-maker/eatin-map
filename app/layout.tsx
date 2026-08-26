@@ -13,6 +13,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// iPhoneのホームバー部分（セーフエリア）を認識させる設定
+// これを入れると env(safe-area-inset-bottom) が使えるようになり、
+// 画面下のフッターが切れなくなる
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover" as const,
+};
+
 export const metadata: Metadata = {
   verification: {
     google: "hd6AI8K-1PLP8HbJu6uXEPFLWu8SjVe3QmDoDnclfb0",
@@ -71,7 +80,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <Analytics />
-        <footer style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #eee", padding: "6px 8px", display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "nowrap", gap: 10, zIndex: 50, fontSize: "10px", overflowX: "auto", whiteSpace: "nowrap", height: 30, boxSizing: "border-box" }}>
+        <footer style={{ position: "fixed", bottom: 0, left: 0, right: 0, background: "#fff", borderTop: "1px solid #eee", padding: "7px 8px calc(7px + env(safe-area-inset-bottom, 0px))", display: "flex", justifyContent: "center", alignItems: "center", flexWrap: "nowrap", gap: 10, zIndex: 50, fontSize: "10px", lineHeight: 1.6, overflowX: "auto", whiteSpace: "nowrap", boxSizing: "border-box" }}>
           <a href="/about" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>サイトについて</a>
           <a href="/guide" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>活用ガイド</a>
           <a href="/faq" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>よくある質問</a>

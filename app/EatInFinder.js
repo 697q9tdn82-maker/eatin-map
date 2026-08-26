@@ -553,7 +553,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         )}
 
         {/* 凡例 */}
-        <div style={{ position: "absolute", bottom: selected ? 320 : 16, right: 12, background: "#fff", borderRadius: 12, padding: "8px 12px", boxShadow: "0 2px 10px rgba(0,0,0,0.12)", fontSize: "11px", zIndex: 5, transition: "bottom 0.3s ease" }}>
+        <div style={{ position: "absolute", bottom: selected ? 320 : "calc(16px + env(safe-area-inset-bottom, 0px))", right: 12, background: "#fff", borderRadius: 12, padding: "8px 12px", boxShadow: "0 2px 10px rgba(0,0,0,0.12)", fontSize: "11px", zIndex: 5, transition: "bottom 0.3s ease" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}><div style={{ width: 12, height: 12, borderRadius: "50%", background: "#29b6f6" }} /><span>イートインあり</span></div>
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}><div style={{ width: 12, height: 12, borderRadius: "50%", background: "#aaa" }} /><span>イートインなし</span></div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}><div style={{ width: 12, height: 12, borderRadius: "50%", background: "#f4a261" }} /><span>未確認</span></div>
@@ -576,7 +576,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           </div>
           <button onClick={() => setSelected(null)} style={{ position: "absolute", top: 12, right: 14, background: "#f5f5f5", border: "none", borderRadius: "50%", width: 28, height: 28, cursor: "pointer", fontSize: "14px", color: "#888", display: "flex", alignItems: "center", justifyContent: "center" }}>✕</button>
 
-          <div style={{ padding: "0 16px 32px" }}>
+          <div style={{ padding: "0 16px", paddingBottom: "calc(32px + env(safe-area-inset-bottom, 0px))" }}>
             {/* 店舗名・基本情報 */}
             <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10 }}>
               <div style={{ width: 40, height: 40, borderRadius: 10, background: getChainColor(selected.name), flexShrink: 0 }} />
@@ -707,7 +707,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
       {/* 最近の投稿（下端のバー。たたんでおくと地図が広く使える） */}
       {!loading && stores.length === 0 && recentPosts.length > 0 && (
-        <div style={{ background: "#fff", borderTop: "1px solid #eee", flexShrink: 0, paddingBottom: 38 }}>
+        <div style={{ background: "#fff", borderTop: "1px solid #eee", flexShrink: 0, paddingBottom: "calc(40px + env(safe-area-inset-bottom, 0px))" }}>
           <button onClick={() => setShowPosts(!showPosts)} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", padding: "8px 16px", cursor: "pointer", fontFamily: "inherit" }}>
             <span style={{ fontSize: "11px", fontWeight: 800, color: "#888", letterSpacing: "0.5px" }}>🕐 みんなの最近の投稿</span>
             <span style={{ fontSize: "10px", color: "#bbb" }}>{showPosts ? "▼ 閉じる" : "▲ 見る"}</span>
@@ -781,7 +781,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       {/* 混雑モーダル */}
       {showCongestion && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end" }} onClick={e => e.target === e.currentTarget && setShowCongestion(null)}>
-          <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", padding: "24px 20px 40px" }}>
+          <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", padding: "24px 20px", paddingBottom: "calc(40px + env(safe-area-inset-bottom, 0px))" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
               <div style={{ fontWeight: 900, fontSize: "16px" }}>🟡 今の混雑状況を教えて</div>
               <button onClick={() => setShowCongestion(null)} style={{ background: "none", border: "none", fontSize: "20px", cursor: "pointer", color: "#aaa" }}>✕</button>
@@ -799,7 +799,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       {/* 投稿モーダル */}
       {showReport && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end" }} onClick={e => e.target === e.currentTarget && setShowReport(false)}>
-          <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", padding: "24px 20px 40px", maxHeight: "80vh", overflowY: "auto" }}>
+          <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", padding: "24px 20px", paddingBottom: "calc(40px + env(safe-area-inset-bottom, 0px))", maxHeight: "80vh", overflowY: "auto" }}>
             {submitted ? (
               <div style={{ textAlign: "center", padding: "28px 0" }}>
                 <div style={{ fontSize: "52px" }}>🎉</div>
