@@ -36,15 +36,49 @@ const CONGESTION = [
 ];
 
 const MAX_RESULTS = 20;
-const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+// 検索結果は端末にも7日間保存し、同じ場所を再訪したときにGoogleを呼ばずに済ませる
+// （Google側の規約に配慮して長期保存はしない）
+const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+const CACHE_MAX_ENTRIES = 30;
+const CACHE_STORAGE_KEY = "placesCacheV1";
 const searchCache = new Map();
-function getFromCache(key) {
-  const c = searchCache.get(key);
-  if (!c) return null;
-  if (Date.now() - c.timestamp > CACHE_TTL_MS) { searchCache.delete(key); return null; }
-  return c.data;
+
+function readStorageCache() {
+  try { return JSON.parse(localStorage.getItem(CACHE_STORAGE_KEY) || "{}"); } catch { return {}; }
 }
-function setToCache(key, data) { searchCache.set(key, { data, timestamp: Date.now() }); }
+
+function getFromCache(key) {
+  const mem = searchCache.get(key);
+  if (mem && Date.now() - mem.timestamp <= CACHE_TTL_MS) return mem.data;
+  const entry = readStorageCache()[key];
+  if (entry && Date.now() - entry.timestamp <= CACHE_TTL_MS) {
+    searchCache.set(key, entry);
+    return entry.data;
+  }
+  return null;
+}
+
+function setToCache(key, data) {
+  const entry = { data, timestamp: Date.now() };
+  searchCache.set(key, entry);
+  try {
+    const all = readStorageCache();
+    all[key] = entry;
+    // 古い順に整理して、保存しすぎないようにする
+    const trimmed = {};
+    Object.keys(all)
+      .filter(k => Date.now() - (all[k]?.timestamp || 0) <= CACHE_TTL_MS)
+      .sort((a, b) => all[b].timestamp - all[a].timestamp)
+      .slice(0, CACHE_MAX_ENTRIES)
+      .forEach(k => { trimmed[k] = all[k]; });
+    localStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(trimmed));
+  } catch { /* 保存できなくても動作に影響はない */ }
+}
+
+// これ以上近い場所で再検索してもGoogleは呼ばない距離（m）
+// 200mなら「連打・微調整」の無駄打ちは防ぎつつ、
+// 地図を動かしたときの取りこぼし（未検索エリア）は25%以内に収まる
+const RESEARCH_MIN_DISTANCE_M = 200;
 
 // 投稿を古い順に並べる（createdAtはFirestoreのTimestamp）
 function sortByCreated(vers) {
@@ -136,6 +170,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [mapZoom, setMapZoom] = useState(initialLat ? 16 : 15);
   const [gpsLoading, setGpsLoading] = useState(false);
   const [gpsError, setGpsError] = useState("");
+  const [infoMsg, setInfoMsg] = useState("");   // 「更新しました」などの控えめな通知
   const [filterEatIn, setFilterEatIn] = useState(false);
   const [filterVerified, setFilterVerified] = useState(false);
   const [filterOpenNow, setFilterOpenNow] = useState(false);
@@ -160,6 +195,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [areaKeyword, setAreaKeyword] = useState("");
   const mapRef = useRef(null);
   const pendingSelectRef = useRef(initialPlace); // 共有リンクからの自動選択待ち
+  const lastSearchRef = useRef(null);            // 直前にGoogleへ問い合わせた地点
+  const storesRef = useRef([]);                  // 最新の店舗一覧（コールバック内から参照する用）
 
   // Firestoreデータ読み込み（表示中の店舗分だけをまとめて取得＝読み取り回数を大幅削減）
   const loadFirestoreData = useCallback(async (placeIds) => {
@@ -194,6 +231,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       }));
     } catch (e) { console.error("Firestore読み込みエラー:", e); }
   }, []);
+
+  useEffect(() => { storesRef.current = stores; }, [stores]);
 
   useEffect(() => {
     if (stores.length > 0) loadFirestoreData(stores.map(s => s.place_id));
@@ -242,15 +281,43 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   };
 
   // Places API検索
-  const searchPlaces = useCallback(async (lat, lng, radius = 500) => {
+  const searchPlaces = useCallback(async (lat, lng, radius = 500, force = false) => {
+    // ほとんど動いていない場所での再検索は、Googleを呼ばずに投稿情報だけ最新化する
+    // （地図の微調整や連打でAPIを無駄に消費しないための節約。投稿の反映は保証される）
+    const prev = lastSearchRef.current;
+    const current = storesRef.current;
+    if (
+      !force && prev && current.length > 0 && prev.radius === radius &&
+      calcDistance(prev.lat, prev.lng, lat, lng) < RESEARCH_MIN_DISTANCE_M
+    ) {
+      setLoading(true);
+      setGpsError("");
+      await loadFirestoreData(current.map(s => s.place_id));
+      // 新しい中心から近い順に並べ替える（表示の整合性を保つ）
+      setStores(prevStores => [...prevStores].sort(
+        (a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng)
+      ));
+      setLoading(false);
+      setInfoMsg("この付近の最新情報に更新しました");
+      setTimeout(() => setInfoMsg(""), 2500);
+      return;
+    }
+
     setLoading(true);
     setStores([]);
     setSelected(null);
     setGpsError("");
+    setInfoMsg("");
     try {
-      const cacheKey = `${lat.toFixed(4)},${lng.toFixed(4)},${radius}`;
+      // サーバー側と同じ丸め方にしておくとキャッシュが噛み合う
+      const cacheKey = `${lat.toFixed(3)},${lng.toFixed(3)},${radius}`;
       const cached = getFromCache(cacheKey);
-      if (cached) { setStores(cached); setLoading(false); return; }
+      if (cached) {
+        lastSearchRef.current = { lat, lng, radius };
+        setStores(cached);
+        setLoading(false);
+        return;
+      }
       const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=${radius}`);
       const data = await res.json();
       // APIの上限超過などで取得できなかったときは理由を表示する
@@ -276,10 +343,11 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           .slice(0, MAX_RESULTS);
         setStores(places);
         setToCache(cacheKey, places);
+        lastSearchRef.current = { lat, lng, radius };
       }
     } catch (e) { console.error("検索エラー:", e); }
     setLoading(false);
-  }, []);
+  }, [loadFirestoreData]);
 
   // URL付きで開いた場合（共有リンク・エリアページ）は自動で検索する
   useEffect(() => {
@@ -490,6 +558,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           </button>
         </div>
         {gpsError && <div style={{ padding: "6px 10px", background: "#ffeaea", borderRadius: 8, fontSize: "11px", color: "#c0392b", marginBottom: 6 }}>⚠️ {gpsError}</div>}
+        {infoMsg && <div style={{ padding: "6px 10px", background: "#e8f5e9", borderRadius: 8, fontSize: "11px", color: "#2d6a4f", marginBottom: 6 }}>✓ {infoMsg}</div>}
         {/* フィルター（普段は折りたたんで地図を広く使う） */}
         {(() => {
           const FILTERS = [[filterOpenNow, setFilterOpenNow, "🟢 営業中", "#2d6a4f"], [filterEatIn, setFilterEatIn, "🪑 イートインあり", "#e63946"], [filterVerified, setFilterVerified, "✅ 確認済み", "#b7950b"], [filterOutlet, setFilterOutlet, "🔌 コンセント", "#0077b6"], [filterWifi, setFilterWifi, "📶 Wi-Fi", "#6a4c93"]];
