@@ -246,12 +246,22 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     setLoading(true);
     setStores([]);
     setSelected(null);
+    setGpsError("");
     try {
       const cacheKey = `${lat.toFixed(4)},${lng.toFixed(4)},${radius}`;
       const cached = getFromCache(cacheKey);
       if (cached) { setStores(cached); setLoading(false); return; }
       const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=${radius}`);
       const data = await res.json();
+      // APIの上限超過などで取得できなかったときは理由を表示する
+      if (data.userMessage) {
+        setGpsError(data.userMessage);
+        setLoading(false);
+        return;
+      }
+      if (data.places && data.places.length === 0) {
+        setGpsError("このあたりにコンビニが見つかりませんでした。少し移動して試してください");
+      }
       if (data.places && data.places.length > 0) {
         const places = data.places.map(p => ({
           ...p,
@@ -302,7 +312,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         setSearchCenter({ lat: data.lat, lng: data.lng });
         searchPlaces(data.lat, data.lng);
       } else {
-        setGpsError("場所が見つかりませんでした。駅名やエリア名で試してください");
+        setGpsError(data.userMessage || "場所が見つかりませんでした。駅名やエリア名で試してください");
       }
     } catch {
       setGpsError("検索に失敗しました。時間をおいて再度お試しください");
