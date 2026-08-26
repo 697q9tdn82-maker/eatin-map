@@ -154,7 +154,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [textSearching, setTextSearching] = useState(false);
   const [filterOutlet, setFilterOutlet] = useState(false);
   const [filterWifi, setFilterWifi] = useState(false);
-  const [showHint, setShowHint] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showPosts, setShowPosts] = useState(false);
@@ -501,6 +500,11 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
             </>
           );
         })()}
+        {storeCount && stores.length === 0 && !loading && (
+          <div style={{ fontSize: "10.5px", color: "#999", marginTop: 6, textAlign: "center", letterSpacing: "0.2px" }}>
+            🗾 全国{areaCount}エリア・<span style={{ color: "#e63946", fontWeight: 800 }}>{storeCount.toLocaleString()}店舗</span>のイートイン情報を掲載中
+          </div>
+        )}
       </div>
 
       {/* 地図エリア */}
@@ -512,7 +516,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
             zoom={mapZoom}
             options={mapOptions}
             onLoad={map => { mapRef.current = map; }}
-            onDragStart={() => setShowHint(false)}
           >
             {filtered.map(store => (
               <OverlayView
@@ -680,30 +683,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
               {selected.helpedByMe ? "👍 助かった！を送りました" : `👍 助かった！ ${selected.helpedCount > 0 ? `${selected.helpedCount}人が役に立ったと言っています` : "最初に押してみよう"}`}
             </button>
 
-          </div>
-        </div>
-      )}
-
-      {/* 初期状態の案内（地図の下部に控えめに表示。地図操作の邪魔にならないよう閉じられる） */}
-      {!loading && stores.length === 0 && showHint && (
-        <div style={{ position: "absolute", bottom: 16, left: 12, right: 12, zIndex: 10, display: "flex", justifyContent: "center", pointerEvents: "none" }}>
-          <div style={{ background: "rgba(255,255,255,0.97)", borderRadius: 14, padding: "10px 12px 12px", boxShadow: "0 4px 20px rgba(0,0,0,0.12)", width: "100%", maxWidth: 340, pointerEvents: "auto" }}>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
-              <div style={{ flex: 1, fontSize: "12px", color: "#666", lineHeight: 1.6 }}>
-                <span style={{ fontWeight: 800, color: "#1a1a1a" }}>📡 お店を探すには</span><br />
-                「現在地から探す」か駅名検索、地図を動かして「この地図で探す」でもOK
-                {storeCount && (
-                  <><br /><span style={{ color: "#e63946", fontWeight: 800 }}>🗾 全国{areaCount}エリア・{storeCount.toLocaleString()}店舗</span>の情報を掲載中</>
-                )}
-              </div>
-              <button onClick={() => setShowHint(false)} aria-label="閉じる" style={{ background: "#f5f5f5", border: "none", borderRadius: "50%", width: 22, height: 22, cursor: "pointer", fontSize: "11px", color: "#888", flexShrink: 0, lineHeight: 1 }}>✕</button>
-            </div>
-            <div style={{ display: "flex", gap: 6, overflowX: "auto", marginTop: 8, paddingBottom: 2 }}>
-              <span style={{ fontSize: "11px", fontWeight: 800, color: "#888", flexShrink: 0, alignSelf: "center" }}>🗾</span>
-              {Object.entries(AREAS).slice(0, 8).map(([slug, a]) => (
-                <Link key={slug} href={`/area/${slug}`} style={{ fontSize: "11px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "4px 10px", textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>{a.name}</Link>
-              ))}
-            </div>
           </div>
         </div>
       )}
