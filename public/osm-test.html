@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OSM版テスト｜コンビニイートインマップ</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+ *{box-sizing:border-box}
+ html,body{height:100%}
+ body{margin:0;font-family:'Noto Sans JP','Hiragino Sans',sans-serif;background:#f4f5f7;color:#1a1a1a;display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+ .head{background:#fff;border-bottom:2px solid #111;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+ .logo{font-weight:900;font-size:14px}.logo span{color:#e63946}
+ .tag{font-size:10px;background:#111;color:#fff;border-radius:20px;padding:3px 8px;font-weight:700}
+ .bar{background:#fff;padding:8px 14px;border-bottom:1px solid #eee;flex-shrink:0}
+ .row{display:flex;gap:6px;margin-bottom:6px}
+ input{flex:1;min-width:0;padding:8px 10px;border-radius:10px;border:1.5px solid #ddd;font-size:13px;outline:none;font-family:inherit}
+ button{padding:8px 12px;border-radius:10px;border:none;background:#111;color:#fff;font-weight:700;font-size:12px;cursor:pointer;white-space:nowrap}
+ button.ghost{background:#fff;border:1.5px solid #ddd;color:#333}
+ button.red{background:#e63946}
+ .stat{font-size:11px;color:#666;line-height:1.7;background:#fffbea;border:1px solid #f4d03f55;border-radius:8px;padding:6px 9px}
+ .stat b{color:#e63946}
+ #map{flex:1;min-height:0}
+ .pin{width:26px;height:26px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:2px solid #fff;
+      box-shadow:0 2px 6px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;cursor:pointer}
+ .pin i{transform:rotate(45deg);font-style:normal;font-size:11px}
+ .panel{background:#fff;border-top:1px solid #eee;padding:10px 14px;flex-shrink:0;max-height:34vh;overflow-y:auto}
+ .panel h3{margin:0 0 4px;font-size:14px}
+ .meta{font-size:11px;color:#999;margin-bottom:6px}
+ .badge{display:inline-block;font-size:11px;font-weight:700;border-radius:20px;padding:3px 9px;margin-right:6px;margin-bottom:4px}
+ .log{font-size:10px;color:#999;padding:6px 14px;background:#fafafa;border-top:1px solid #eee;max-height:70px;overflow-y:auto;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<div class="head">
+  <div class="logo">&#127978; <span>コンビニ</span>イートインマップ</div>
+  <div class="tag">OSM版テスト</div>
+</div>
+
+<div class="bar">
+  <div class="row">
+    <input id="q" placeholder="駅名で検索（例：池袋駅）" />
+    <button id="btnSearch">&#128269;</button>
+    <button id="btnGps" class="ghost">&#128225;</button>
+    <button id="btnHere" class="red">この地図で探す</button>
+  </div>
+  <div class="stat" id="stat">「この地図で探す」または駅名検索を押してください（初期表示：梅田）</div>
+</div>
+
+<div id="map"></div>
+<div class="panel" id="panel" style="display:none"></div>
+<div class="log" id="log"></div>
+
+<script>
+const AREAS = {"shinjuku": {"name": "新宿", "lat": 35.6896, "lng": 139.7006, "pref": "東京都"}, "shibuya": {"name": "渋谷", "lat": 35.658, "lng": 139.7016, "pref": "東京都"}, "ikebukuro": {"name": "池袋", "lat": 35.7295, "lng": 139.7109, "pref": "東京都"}, "tokyo": {"name": "東京駅周辺", "lat": 35.6812, "lng": 139.7671, "pref": "東京都"}, "shinagawa": {"name": "品川", "lat": 35.6285, "lng": 139.7387, "pref": "東京都"}, "akihabara": {"name": "秋葉原", "lat": 35.6984, "lng": 139.7731, "pref": "東京都"}, "yokohama": {"name": "横浜", "lat": 35.4657, "lng": 139.6222, "pref": "神奈川県"}, "omiya": {"name": "大宮", "lat": 35.9063, "lng": 139.6237, "pref": "埼玉県"}, "ueno": {"name": "上野", "lat": 35.7138, "lng": 139.777, "pref": "東京都"}, "asakusa": {"name": "浅草", "lat": 35.71, "lng": 139.7976, "pref": "東京都"}, "kinshicho": {"name": "錦糸町", "lat": 35.6961, "lng": 139.8143, "pref": "東京都"}, "kitasenju": {"name": "北千住", "lat": 35.7494, "lng": 139.8048, "pref": "東京都"}, "nakano": {"name": "中野", "lat": 35.7059, "lng": 139.6659, "pref": "東京都"}, "ogikubo": {"name": "荻窪", "lat": 35.7045, "lng": 139.6202, "pref": "東京都"}, "ebisu": {"name": "恵比寿", "lat": 35.6466, "lng": 139.71, "pref": "東京都"}, "meguro": {"name": "目黒", "lat": 35.6339, "lng": 139.7157, "pref": "東京都"}, "gotanda": {"name": "五反田", "lat": 35.6261, "lng": 139.7232, "pref": "東京都"}, "kamata": {"name": "蒲田", "lat": 35.5622, "lng": 139.7161, "pref": "東京都"}, "oimachi": {"name": "大井町", "lat": 35.606, "lng": 139.7343, "pref": "東京都"}, "jiyugaoka": {"name": "自由が丘", "lat": 35.6072, "lng": 139.669, "pref": "東京都"}, "shimokitazawa": {"name": "下北沢", "lat": 35.6614, "lng": 139.6667, "pref": "東京都"}, "sangenjaya": {"name": "三軒茶屋", "lat": 35.6437, "lng": 139.6698, "pref": "東京都"}, "akabane": {"name": "赤羽", "lat": 35.7776, "lng": 139.721, "pref": "東京都"}, "sugamo": {"name": "巣鴨", "lat": 35.7335, "lng": 139.7391, "pref": "東京都"}, "nippori": {"name": "日暮里", "lat": 35.7281, "lng": 139.7707, "pref": "東京都"}, "takadanobaba": {"name": "高田馬場", "lat": 35.7123, "lng": 139.703, "pref": "東京都"}, "iidabashi": {"name": "飯田橋", "lat": 35.7021, "lng": 139.745, "pref": "東京都"}, "kanda": {"name": "神田", "lat": 35.6917, "lng": 139.7708, "pref": "東京都"}, "ginza": {"name": "銀座", "lat": 35.6717, "lng": 139.764, "pref": "東京都"}, "shimbashi": {"name": "新橋", "lat": 35.6662, "lng": 139.7583, "pref": "東京都"}, "roppongi": {"name": "六本木", "lat": 35.6627, "lng": 139.7307, "pref": "東京都"}, "toyosu": {"name": "豊洲", "lat": 35.6544, "lng": 139.7955, "pref": "東京都"}, "otemachi": {"name": "大手町", "lat": 35.6853, "lng": 139.7633, "pref": "東京都"}, "nihombashi": {"name": "日本橋", "lat": 35.6821, "lng": 139.7747, "pref": "東京都"}, "mitsukoshimae": {"name": "三越前", "lat": 35.6872, "lng": 139.7736, "pref": "東京都"}, "kyobashi-tokyo": {"name": "京橋（東京）", "lat": 35.6767, "lng": 139.77, "pref": "東京都"}, "kayabacho": {"name": "茅場町", "lat": 35.6799, "lng": 139.7802, "pref": "東京都"}, "hatchobori": {"name": "八丁堀", "lat": 35.6746, "lng": 139.7769, "pref": "東京都"}, "shiodome": {"name": "汐留", "lat": 35.6629, "lng": 139.76, "pref": "東京都"}, "hamamatsucho": {"name": "浜松町", "lat": 35.6554, "lng": 139.7571, "pref": "東京都"}, "tamachi": {"name": "田町", "lat": 35.6457, "lng": 139.7476, "pref": "東京都"}, "osaki": {"name": "大崎", "lat": 35.6199, "lng": 139.7282, "pref": "東京都"}, "akasaka": {"name": "赤坂", "lat": 35.6722, "lng": 139.7364, "pref": "東京都"}, "tameikesanno": {"name": "溜池山王", "lat": 35.6721, "lng": 139.7414, "pref": "東京都"}, "toranomon": {"name": "虎ノ門", "lat": 35.6701, "lng": 139.7501, "pref": "東京都"}, "kamiyacho": {"name": "神谷町", "lat": 35.6631, "lng": 139.7452, "pref": "東京都"}, "kasumigaseki": {"name": "霞ケ関", "lat": 35.674, "lng": 139.7511, "pref": "東京都"}, "uchisaiwaicho": {"name": "内幸町", "lat": 35.6694, "lng": 139.7553, "pref": "東京都"}, "ochanomizu": {"name": "御茶ノ水", "lat": 35.6997, "lng": 139.7644, "pref": "東京都"}, "ichigaya": {"name": "市ケ谷", "lat": 35.691, "lng": 139.7356, "pref": "東京都"}, "umeda": {"name": "梅田・大阪駅", "lat": 34.7025, "lng": 135.4959, "pref": "大阪府"}, "namba": {"name": "難波", "lat": 34.6633, "lng": 135.5021, "pref": "大阪府"}, "tennoji": {"name": "天王寺", "lat": 34.6465, "lng": 135.5133, "pref": "大阪府"}, "shinosaka": {"name": "新大阪", "lat": 34.7335, "lng": 135.5, "pref": "大阪府"}, "shinsaibashi": {"name": "心斎橋", "lat": 34.674, "lng": 135.501, "pref": "大阪府"}, "honmachi": {"name": "本町", "lat": 34.6817, "lng": 135.499, "pref": "大阪府"}, "yodoyabashi": {"name": "淀屋橋", "lat": 34.6926, "lng": 135.5012, "pref": "大阪府"}, "kyobashi": {"name": "京橋", "lat": 34.6968, "lng": 135.5343, "pref": "大阪府"}, "tsuruhashi": {"name": "鶴橋", "lat": 34.6656, "lng": 135.531, "pref": "大阪府"}, "fukushima": {"name": "福島（大阪）", "lat": 34.6971, "lng": 135.4861, "pref": "大阪府"}, "juso": {"name": "十三", "lat": 34.721, "lng": 135.4818, "pref": "大阪府"}, "nishikujo": {"name": "西九条", "lat": 34.6828, "lng": 135.4661, "pref": "大阪府"}, "shinimamiya": {"name": "新今宮", "lat": 34.6494, "lng": 135.5011, "pref": "大阪府"}, "kyoto": {"name": "京都駅周辺", "lat": 34.9858, "lng": 135.7585, "pref": "京都府"}, "sannomiya": {"name": "三宮・神戸", "lat": 34.6938, "lng": 135.1954, "pref": "兵庫県"}, "nagoya": {"name": "名古屋駅周辺", "lat": 35.1709, "lng": 136.8815, "pref": "愛知県"}, "sapporo": {"name": "札幌駅周辺", "lat": 43.0687, "lng": 141.3508, "pref": "北海道"}, "hakata": {"name": "博多・天神", "lat": 33.5902, "lng": 130.4207, "pref": "福岡県"}};
+const FIREBASE = { pid:"eatin-map-ee417", key:"AIzaSyB5eSZLCsrCCuUKXdmKwZyUxqlNbPBpZoI" };
+const OVERPASS = ["https://overpass-api.de/api/interpreter","https://overpass.kumi.systems/api/interpreter","https://overpass.private.coffee/api/interpreter"];
+
+let map, markers = [], verifyByName = null;
+
+function log(msg){ const el=document.getElementById("log"); el.innerHTML = new Date().toLocaleTimeString()+" "+msg+"<br>"+el.innerHTML; }
+function setStat(html){ document.getElementById("stat").innerHTML = html; }
+
+// 店名を照合しやすい形に整える
+function normName(s){
+  return (s||"")
+    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0)-0xFEE0); })
+    .replace(/[\s　・･\-ー―－'"()（）]/g, "")
+    .replace(/店$/, "")
+    .toLowerCase();
+}
+
+// Firestoreから既存のイートイン情報を読む（1回だけ）
+async function loadVerifications(){
+  if(verifyByName) return verifyByName;
+  log("Firestoreから既存の投稿を読み込み中…");
+  const res = await fetch("https://firestore.googleapis.com/v1/projects/"+FIREBASE.pid+"/databases/(default)/documents:runQuery?key="+FIREBASE.key,{
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({ structuredQuery:{ from:[{collectionId:"verifications"}] } })
+  });
+  const rows = await res.json();
+  const m = new Map();
+  let n=0;
+  for(const r of (Array.isArray(rows)?rows:[])){
+    const f = r.document && r.document.fields; if(!f) continue;
+    const name = f.placeName && f.placeName.stringValue; if(!name) continue;
+    const hasEatIn = f.hasEatIn && f.hasEatIn.booleanValue;
+    const source = (f.source && f.source.stringValue) || "human";
+    const seats = f.seats && f.seats.integerValue ? parseInt(f.seats.integerValue) : null;
+    const key = normName(name);
+    const cur = m.get(key) || { yes:0, no:0, human:0, seats:null, name:name };
+    if(hasEatIn===true) cur.yes++; else if(hasEatIn===false) cur.no++;
+    if(source!=="ai") cur.human++;
+    if(seats) cur.seats = seats;
+    m.set(key, cur); n++;
+  }
+  verifyByName = m;
+  log("投稿 "+n+"件 / 店名 "+m.size+"種類 を読み込みました");
+  return m;
+}
+
+// OSMからコンビニを取得
+async function fetchStores(lat, lng, radius){
+  radius = radius || 600;
+  const q = "[out:json][timeout:30];nwr[\"shop\"=\"convenience\"](around:"+radius+","+lat+","+lng+");out center tags;";
+  for(const url of OVERPASS){
+    try{
+      const res = await fetch(url,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:"data="+encodeURIComponent(q)});
+      if(!res.ok) throw new Error("HTTP "+res.status);
+      const j = await res.json();
+      return (j.elements||[]).map(function(e){
+        const t = e.tags||{};
+        return { id:e.type+"/"+e.id, name:t["name:ja"]||t.name||t.brand||"（名称なし）",
+                 brand:t.brand||t.operator||"", lat:(e.lat!=null?e.lat:(e.center&&e.center.lat)),
+                 lng:(e.lon!=null?e.lon:(e.center&&e.center.lon)), hours:t.opening_hours||"" };
+      }).filter(function(s){ return s.lat && s.lng; });
+    }catch(err){ log("⚠️ "+new URL(url).hostname+" 失敗: "+err.message); }
+  }
+  throw new Error("すべてのOSMサーバーに接続できませんでした");
+}
+
+function matchStore(store, vmap){
+  const key = normName(store.name);
+  if(vmap.has(key)) return vmap.get(key);
+  for(const entry of vmap){
+    const k = entry[0];
+    if(k.length>6 && key.length>6 && (k.indexOf(key)>=0 || key.indexOf(k)>=0)) return entry[1];
+  }
+  return null;
+}
+function eatInOf(v){ if(!v) return null; if(v.yes>v.no) return true; if(v.no>v.yes) return false; return null; }
+function pinColor(s){ return s===true?"#29b6f6":s===false?"#aaa":"#f4a261"; }
+function pinEmoji(s){ return s===true?"🪑":s===false?"✗":"?"; }
+
+async function search(lat,lng,radius){
+  setStat("検索中…");
+  markers.forEach(function(m){ m.remove(); }); markers=[];
+  document.getElementById("panel").style.display="none";
+  try{
+    const r = await Promise.all([loadVerifications(), fetchStores(lat,lng,radius)]);
+    const vmap = r[0], stores = r[1];
+    let matched=0, yes=0, no=0, unknown=0;
+    stores.forEach(function(s){
+      const v = matchStore(s, vmap);
+      const state = eatInOf(v);
+      if(v) matched++;
+      if(state===true) yes++; else if(state===false) no++; else unknown++;
+      const el=document.createElement("div");
+      el.className="pin"; el.style.background=pinColor(state);
+      el.innerHTML="<i>"+pinEmoji(state)+"</i>";
+      const mk = new maplibregl.Marker({element:el}).setLngLat([s.lng,s.lat]).addTo(map);
+      el.onclick = function(){ showPanel(s, v, state); };
+      markers.push(mk);
+    });
+    const rate = stores.length? Math.round(matched/stores.length*100):0;
+    setStat("OSM店舗 <b>"+stores.length+"</b>店　|　既存データと照合できた <b>"+matched+"</b>店（"+rate+"%）<br>"
+      +"&#129681;あり "+yes+"　&#10007;なし "+no+"　?未確認 "+unknown);
+    log("検索完了: "+stores.length+"店（照合"+matched+"店 / "+rate+"%）");
+  }catch(e){
+    setStat("❌ "+e.message); log("エラー: "+e.message);
+  }
+}
+
+function showPanel(s,v,state){
+  const p=document.getElementById("panel");
+  const label = state===true?"&#129681; イートインあり":state===false?"&#10007; イートインなし":"? 未確認";
+  const color = pinColor(state);
+  p.innerHTML = "<h3>"+s.name+"</h3>"
+   + '<div class="meta">OSM ID: '+s.id+(s.brand?" ／ ブランド: "+s.brand:"")+"</div>"
+   + '<span class="badge" style="background:'+color+'22;color:'+color+'">'+label+"</span>"
+   + (v? '<span class="badge" style="background:#eee;color:#666">既存データ照合OK（あり'+v.yes+"/なし"+v.no+"）</span>"
+       : '<span class="badge" style="background:#ffeaea;color:#c0392b">既存データなし</span>')
+   + ((v&&v.seats)? '<span class="badge" style="background:#f0f0f0;color:#555">&#129681; '+v.seats+"席</span>":"")
+   + (s.hours? '<div class="meta" style="margin-top:6px">&#128336; '+s.hours+"</div>"
+             : '<div class="meta" style="margin-top:6px">&#128336; 営業時間データなし</div>');
+  p.style.display="block";
+}
+
+async function geocode(q){
+  const url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=jp&q="+encodeURIComponent(q);
+  const res = await fetch(url,{headers:{"Accept":"application/json"}});
+  const j = await res.json();
+  if(!j.length) throw new Error("場所が見つかりません");
+  return { lat: parseFloat(j[0].lat), lng: parseFloat(j[0].lon), name: j[0].display_name };
+}
+
+map = new maplibregl.Map({
+  container:'map',
+  style:{ version:8, sources:{ osm:{ type:'raster', tiles:['https://tile.openstreetmap.org/{z}/{x}/{y}.png'], tileSize:256, attribution:'&copy; OpenStreetMap contributors' } },
+          layers:[{id:'osm',type:'raster',source:'osm'}] },
+  center:[135.4959,34.7025], zoom:15
+});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+
+document.getElementById("btnHere").onclick = function(){ const c=map.getCenter(); search(c.lat,c.lng); };
+document.getElementById("btnSearch").onclick = async function(){
+  const q=document.getElementById("q").value.trim(); if(!q) return;
+  try{ const r=await geocode(q); map.flyTo({center:[r.lng,r.lat],zoom:16}); log("移動: "+r.name.slice(0,40)); setTimeout(function(){ search(r.lat,r.lng); },600); }
+  catch(e){ setStat("❌ "+e.message); }
+};
+document.getElementById("q").addEventListener("keydown",function(e){ if(e.key==="Enter") document.getElementById("btnSearch").click(); });
+document.getElementById("btnGps").onclick = function(){
+  if(!navigator.geolocation){ setStat("GPS非対応"); return; }
+  setStat("現在地を取得中…");
+  navigator.geolocation.getCurrentPosition(
+    function(p){ map.flyTo({center:[p.coords.longitude,p.coords.latitude],zoom:16}); setTimeout(function(){ search(p.coords.latitude,p.coords.longitude); },600); },
+    function(){ setStat("現在地を取得できませんでした"); }, {enableHighAccuracy:true,timeout:10000});
+};
+log("準備完了。Google APIは一切使いません（OSM + Firestore読み取りのみ）");
+</script>
+</body>
+</html>

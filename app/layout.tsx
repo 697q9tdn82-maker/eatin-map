@@ -23,6 +23,7 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.eatin-map.jp"),
   verification: {
     google: "hd6AI8K-1PLP8HbJu6uXEPFLWu8SjVe3QmDoDnclfb0",
   },
@@ -86,7 +87,7 @@ export default function RootLayout({
           <a href="/faq" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>よくある質問</a>
           <a href="/privacy" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>プライバシー</a>
           <a href="/terms" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>利用規約</a>
-          <a href="https://x.com/Eatin_map" target="_blank" rel="noopener noreferrer" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>𝕏 問い合わせ</a>
+          <a href="/contact" style={{ color: "#aaa", textDecoration: "none", fontWeight: 700 }}>お問い合わせ</a>
         </footer>
       </body>
     </html>

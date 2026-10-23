@@ -517,6 +517,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     streetViewControl: false,
     fullscreenControl: false,
     clickableIcons: false,
+    // 地図の下に読みものがあってページがスクロールできても、地図は1本指で動かせるようにする
+    gestureHandling: "greedy",
     styles: [
       { featureType: "poi", stylers: [{ visibility: "off" }] },
       { featureType: "transit", stylers: [{ visibility: "simplified" }] },
@@ -830,10 +832,10 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
             <div style={{ borderTop: "1px solid #eee", padding: "14px 16px 28px", background: "#fafafa" }}>
               <div style={{ fontSize: "11px", fontWeight: 800, color: "#aaa", marginBottom: 8 }}>メニュー</div>
-              {[["/", "🗺️ マップ トップ"], ["/guide", "📖 イートイン活用ガイド"], ["/about", "ℹ️ このサイトについて"]].map(([href, label]) => (
+              {[["/", "🗺️ マップ トップ"], ["/area", "🗾 エリア一覧"], ["/guide", "📖 イートイン活用ガイド"], ["/report", "📊 イートイン設置率レポート"], ["/about", "ℹ️ このサイトについて"], ["/contact", "✉️ お問い合わせ"]].map(([href, label]) => (
                 <Link key={href} href={href} onClick={() => setShowMenu(false)} style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#333", textDecoration: "none", padding: "8px 0" }}>{label}</Link>
               ))}
-              <a href="https://x.com/Eatin_map" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#333", textDecoration: "none", padding: "8px 0" }}>𝕏 お問い合わせ</a>
+              <a href="https://x.com/Eatin_map" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#333", textDecoration: "none", padding: "8px 0" }}>𝕏 公式アカウント</a>
             </div>
           </div>
         </div>

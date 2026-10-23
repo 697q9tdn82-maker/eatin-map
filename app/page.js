@@ -1,4 +1,5 @@
 import EatInFinder from "./EatInFinder";
+import HomeContent from "./HomeContent";
 import { AREAS } from "../lib/areas";
 import { getStoreCount } from "../lib/stats";
 
@@ -30,12 +31,16 @@ export default async function Home({ searchParams }) {
   const storeCount = await getStoreCount();
 
   return (
-    <EatInFinder
-      initialLat={hasCoords ? lat : null}
-      initialLng={hasCoords ? lng : null}
-      initialPlace={typeof params?.place === "string" ? params.place : null}
-      storeCount={storeCount}
-      areaCount={Object.keys(AREAS).length}
-    />
+    <>
+      <EatInFinder
+        initialLat={hasCoords ? lat : null}
+        initialLng={hasCoords ? lng : null}
+        initialPlace={typeof params?.place === "string" ? params.place : null}
+        storeCount={storeCount}
+        areaCount={Object.keys(AREAS).length}
+      />
+      {/* 地図の下の読みもの（サービス紹介・エリア・ガイド） */}
+      <HomeContent storeCount={storeCount} areaCount={Object.keys(AREAS).length} />
+    </>
   );
 }

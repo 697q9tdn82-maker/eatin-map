@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OSM網羅性チェック｜コンビニイートインマップ</title>
+<style>
+ *{box-sizing:border-box}
+ body{margin:0;font-family:'Noto Sans JP','Hiragino Sans',sans-serif;background:#f4f5f7;color:#1a1a1a;padding:16px}
+ h1{font-size:18px;margin:0 0 4px}
+ .sub{font-size:12px;color:#777;margin:0 0 12px;line-height:1.8}
+ .alert{background:#fffbea;border:1.5px solid #f4d03f66;border-radius:10px;padding:12px 14px;font-size:12px;line-height:1.9;margin-bottom:14px}
+ .alert b{color:#b7950b}
+ code{background:#f0f0f0;padding:2px 6px;border-radius:4px;font-size:11px}
+ .ctrl{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+ button{padding:9px 16px;border-radius:10px;border:none;background:#e63946;color:#fff;font-weight:700;font-size:13px;cursor:pointer}
+ button.ghost{background:#fff;border:1.5px solid #ddd;color:#333}
+ button:disabled{background:#ddd;cursor:default}
+ .sum{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.06);font-size:13px;line-height:2}
+ .sum b{font-size:20px;color:#e63946}
+ table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);font-size:12px}
+ th,td{padding:7px 10px;text-align:left;border-bottom:1px solid #f0f0f0}
+ th{background:#fafafa;font-size:11px;color:#888}
+ td.num{text-align:right;font-variant-numeric:tabular-nums}
+ .ok{color:#2d6a4f;font-weight:700}
+ .warn{color:#b7950b;font-weight:700}
+ .ng{color:#c0392b;font-weight:700}
+ .err{color:#c0392b;font-size:10px}
+ .bar{height:6px;background:#eee;border-radius:3px;overflow:hidden;margin-bottom:12px}
+ .bar>div{height:100%;background:#e63946;width:0;transition:width .3s}
+ .note{font-size:11px;color:#999;margin-top:12px;line-height:1.8}
+</style>
+</head>
+<body>
+
+<h1>OpenStreetMap 網羅性チェック</h1>
+<p class="sub">68エリアで、OSMに登録されているコンビニが半径600m以内に何店あるかを実測します。現在のGoogle版は1エリア最大20店表示なので、<b>15店以上あれば実用上ほぼ同等</b>です。</p>
+
+<div class="alert" id="howto">
+ <b>⚠️ ファイルを直接開くと動きません（CORS制限）</b><br />
+ このページはブラウザから外部サーバーに問い合わせるため、<code>file://</code> で開くとブロックされます。次のどちらかで開いてください。<br /><br />
+ <b>方法A：開発サーバーで開く（おすすめ）</b><br />
+ 1. このファイルを <code>eatin-map/public/</code> フォルダにコピー<br />
+ 2. ターミナルで <code>npm run dev</code><br />
+ 3. ブラウザで <code>http://localhost:3000/osm-check.html</code> を開く<br />
+ 　（コピーするときファイル名を <code>osm-check.html</code> に変えてください）<br /><br />
+ <b>方法B：簡易サーバーを立てる</b><br />
+ このファイルがあるフォルダで <code>npx serve</code> を実行し、表示されたURLを開く
+</div>
+
+<div class="ctrl">
+ <button id="run">計測をはじめる</button>
+ <button id="stop" class="ghost" disabled>中止</button>
+ <button id="csv" class="ghost" disabled>CSVで保存</button>
+ <button id="test" class="ghost">接続テストだけ実行</button>
+</div>
+
+<div class="sum" id="sum">まず「接続テストだけ実行」を押して、サーバーに繋がるか確認してください</div>
+<div class="bar"><div id="prog"></div></div>
+
+<table id="tbl">
+ <thead><tr><th>エリア</th><th>都道府県</th><th class="num">OSM店舗数</th><th class="num">店名あり</th><th class="num">チェーン判別</th><th>判定</th></tr></thead>
+ <tbody></tbody>
+</table>
+
+<p class="note">※ OSMの公共サーバー(Overpass API)に、1件ずつ間隔をあけて問い合わせます。混雑時は失敗することがあるので、その場合は時間をおいて再実行してください。</p>
+
+<script>
+const AREAS = {"shinjuku": {"name": "新宿", "lat": 35.6896, "lng": 139.7006, "pref": "東京都"}, "shibuya": {"name": "渋谷", "lat": 35.658, "lng": 139.7016, "pref": "東京都"}, "ikebukuro": {"name": "池袋", "lat": 35.7295, "lng": 139.7109, "pref": "東京都"}, "tokyo": {"name": "東京駅周辺", "lat": 35.6812, "lng": 139.7671, "pref": "東京都"}, "shinagawa": {"name": "品川", "lat": 35.6285, "lng": 139.7387, "pref": "東京都"}, "akihabara": {"name": "秋葉原", "lat": 35.6984, "lng": 139.7731, "pref": "東京都"}, "yokohama": {"name": "横浜", "lat": 35.4657, "lng": 139.6222, "pref": "神奈川県"}, "omiya": {"name": "大宮", "lat": 35.9063, "lng": 139.6237, "pref": "埼玉県"}, "ueno": {"name": "上野", "lat": 35.7138, "lng": 139.777, "pref": "東京都"}, "asakusa": {"name": "浅草", "lat": 35.71, "lng": 139.7976, "pref": "東京都"}, "kinshicho": {"name": "錦糸町", "lat": 35.6961, "lng": 139.8143, "pref": "東京都"}, "kitasenju": {"name": "北千住", "lat": 35.7494, "lng": 139.8048, "pref": "東京都"}, "nakano": {"name": "中野", "lat": 35.7059, "lng": 139.6659, "pref": "東京都"}, "ogikubo": {"name": "荻窪", "lat": 35.7045, "lng": 139.6202, "pref": "東京都"}, "ebisu": {"name": "恵比寿", "lat": 35.6466, "lng": 139.71, "pref": "東京都"}, "meguro": {"name": "目黒", "lat": 35.6339, "lng": 139.7157, "pref": "東京都"}, "gotanda": {"name": "五反田", "lat": 35.6261, "lng": 139.7232, "pref": "東京都"}, "kamata": {"name": "蒲田", "lat": 35.5622, "lng": 139.7161, "pref": "東京都"}, "oimachi": {"name": "大井町", "lat": 35.606, "lng": 139.7343, "pref": "東京都"}, "jiyugaoka": {"name": "自由が丘", "lat": 35.6072, "lng": 139.669, "pref": "東京都"}, "shimokitazawa": {"name": "下北沢", "lat": 35.6614, "lng": 139.6667, "pref": "東京都"}, "sangenjaya": {"name": "三軒茶屋", "lat": 35.6437, "lng": 139.6698, "pref": "東京都"}, "akabane": {"name": "赤羽", "lat": 35.7776, "lng": 139.721, "pref": "東京都"}, "sugamo": {"name": "巣鴨", "lat": 35.7335, "lng": 139.7391, "pref": "東京都"}, "nippori": {"name": "日暮里", "lat": 35.7281, "lng": 139.7707, "pref": "東京都"}, "takadanobaba": {"name": "高田馬場", "lat": 35.7123, "lng": 139.703, "pref": "東京都"}, "iidabashi": {"name": "飯田橋", "lat": 35.7021, "lng": 139.745, "pref": "東京都"}, "kanda": {"name": "神田", "lat": 35.6917, "lng": 139.7708, "pref": "東京都"}, "ginza": {"name": "銀座", "lat": 35.6717, "lng": 139.764, "pref": "東京都"}, "shimbashi": {"name": "新橋", "lat": 35.6662, "lng": 139.7583, "pref": "東京都"}, "roppongi": {"name": "六本木", "lat": 35.6627, "lng": 139.7307, "pref": "東京都"}, "toyosu": {"name": "豊洲", "lat": 35.6544, "lng": 139.7955, "pref": "東京都"}, "otemachi": {"name": "大手町", "lat": 35.6853, "lng": 139.7633, "pref": "東京都"}, "nihombashi": {"name": "日本橋", "lat": 35.6821, "lng": 139.7747, "pref": "東京都"}, "mitsukoshimae": {"name": "三越前", "lat": 35.6872, "lng": 139.7736, "pref": "東京都"}, "kyobashi-tokyo": {"name": "京橋（東京）", "lat": 35.6767, "lng": 139.77, "pref": "東京都"}, "kayabacho": {"name": "茅場町", "lat": 35.6799, "lng": 139.7802, "pref": "東京都"}, "hatchobori": {"name": "八丁堀", "lat": 35.6746, "lng": 139.7769, "pref": "東京都"}, "shiodome": {"name": "汐留", "lat": 35.6629, "lng": 139.76, "pref": "東京都"}, "hamamatsucho": {"name": "浜松町", "lat": 35.6554, "lng": 139.7571, "pref": "東京都"}, "tamachi": {"name": "田町", "lat": 35.6457, "lng": 139.7476, "pref": "東京都"}, "osaki": {"name": "大崎", "lat": 35.6199, "lng": 139.7282, "pref": "東京都"}, "akasaka": {"name": "赤坂", "lat": 35.6722, "lng": 139.7364, "pref": "東京都"}, "tameikesanno": {"name": "溜池山王", "lat": 35.6721, "lng": 139.7414, "pref": "東京都"}, "toranomon": {"name": "虎ノ門", "lat": 35.6701, "lng": 139.7501, "pref": "東京都"}, "kamiyacho": {"name": "神谷町", "lat": 35.6631, "lng": 139.7452, "pref": "東京都"}, "kasumigaseki": {"name": "霞ケ関", "lat": 35.674, "lng": 139.7511, "pref": "東京都"}, "uchisaiwaicho": {"name": "内幸町", "lat": 35.6694, "lng": 139.7553, "pref": "東京都"}, "ochanomizu": {"name": "御茶ノ水", "lat": 35.6997, "lng": 139.7644, "pref": "東京都"}, "ichigaya": {"name": "市ケ谷", "lat": 35.691, "lng": 139.7356, "pref": "東京都"}, "umeda": {"name": "梅田・大阪駅", "lat": 34.7025, "lng": 135.4959, "pref": "大阪府"}, "namba": {"name": "難波", "lat": 34.6633, "lng": 135.5021, "pref": "大阪府"}, "tennoji": {"name": "天王寺", "lat": 34.6465, "lng": 135.5133, "pref": "大阪府"}, "shinosaka": {"name": "新大阪", "lat": 34.7335, "lng": 135.5, "pref": "大阪府"}, "shinsaibashi": {"name": "心斎橋", "lat": 34.674, "lng": 135.501, "pref": "大阪府"}, "honmachi": {"name": "本町", "lat": 34.6817, "lng": 135.499, "pref": "大阪府"}, "yodoyabashi": {"name": "淀屋橋", "lat": 34.6926, "lng": 135.5012, "pref": "大阪府"}, "kyobashi": {"name": "京橋", "lat": 34.6968, "lng": 135.5343, "pref": "大阪府"}, "tsuruhashi": {"name": "鶴橋", "lat": 34.6656, "lng": 135.531, "pref": "大阪府"}, "fukushima": {"name": "福島（大阪）", "lat": 34.6971, "lng": 135.4861, "pref": "大阪府"}, "juso": {"name": "十三", "lat": 34.721, "lng": 135.4818, "pref": "大阪府"}, "nishikujo": {"name": "西九条", "lat": 34.6828, "lng": 135.4661, "pref": "大阪府"}, "shinimamiya": {"name": "新今宮", "lat": 34.6494, "lng": 135.5011, "pref": "大阪府"}, "kyoto": {"name": "京都駅周辺", "lat": 34.9858, "lng": 135.7585, "pref": "京都府"}, "sannomiya": {"name": "三宮・神戸", "lat": 34.6938, "lng": 135.1954, "pref": "兵庫県"}, "nagoya": {"name": "名古屋駅周辺", "lat": 35.1709, "lng": 136.8815, "pref": "愛知県"}, "sapporo": {"name": "札幌駅周辺", "lat": 43.0687, "lng": 141.3508, "pref": "北海道"}, "hakata": {"name": "博多・天神", "lat": 33.5902, "lng": 130.4207, "pref": "福岡県"}};
+
+// 複数のサーバーを順に試す（1つが混雑・停止していても計測できるように）
+const ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+  "https://overpass.private.coffee/api/interpreter",
+  "https://overpass.osm.jp/api/interpreter"
+];
+let endpoint = null;
+let stopped = false;
+const rows = [];
+const CHAINS = ["セブン","ファミリーマート","ファミマ","ローソン","ミニストップ","デイリー","ヤマザキ","ポプラ","セイコーマート","7-Eleven","FamilyMart","Lawson"];
+
+async function ask(url, q){
+  const res = await fetch(url, {
+    method:"POST",
+    headers:{"Content-Type":"application/x-www-form-urlencoded"},
+    body:"data="+encodeURIComponent(q)
+  });
+  if(!res.ok) throw new Error("HTTP "+res.status);
+  return res.json();
+}
+
+// 使えるサーバーを1つ見つける
+async function findEndpoint(){
+  const q = '[out:json][timeout:20];nwr["shop"="convenience"](around:300,35.6896,139.7006);out count;';
+  for(const url of ENDPOINTS){
+    try {
+      const j = await ask(url, q);
+      const n = j.elements?.[0]?.tags?.total ?? "?";
+      return { url, sample:n };
+    } catch(e){
+      console.warn(url, e.message);
+    }
+  }
+  return null;
+}
+
+async function queryArea(a){
+  const q = `[out:json][timeout:30];nwr["shop"="convenience"](around:600,${a.lat},${a.lng});out tags;`;
+  const json = await ask(endpoint, q);
+  const els = json.elements || [];
+  const named = els.filter(e=>e.tags && (e.tags.name || e.tags["name:ja"] || e.tags.brand));
+  const chained = els.filter(e=>{
+    const t = e.tags||{};
+    const s = [t.name,t["name:ja"],t.brand,t.operator].filter(Boolean).join(" ");
+    return CHAINS.some(c=>s.includes(c));
+  });
+  return { total: els.length, named: named.length, chained: chained.length };
+}
+
+function verdict(n){
+  if(n>=15) return '<span class="ok">◎ 十分</span>';
+  if(n>=8)  return '<span class="warn">△ やや少ない</span>';
+  return '<span class="ng">✕ 不足</span>';
+}
+
+document.getElementById("test").onclick = async () => {
+  document.getElementById("sum").textContent = "接続を確認しています…";
+  const found = await findEndpoint();
+  if(found){
+    endpoint = found.url;
+    document.getElementById("howto").style.display = "none";
+    document.getElementById("sum").innerHTML =
+      `✅ 接続できました（${new URL(found.url).hostname}）<br>新宿駅300m以内のOSMコンビニ数：<b>${found.sample}</b> 店<br>「計測をはじめる」を押してください`;
+  } else {
+    document.getElementById("sum").innerHTML =
+      `❌ どのサーバーにも接続できませんでした。<br>上の案内どおり <code>localhost</code> 経由で開いているか確認してください。`;
+  }
+};
+
+document.getElementById("run").onclick = async () => {
+  if(!endpoint){
+    const found = await findEndpoint();
+    if(!found){ document.getElementById("sum").innerHTML = "❌ サーバーに接続できません。上の案内を確認してください。"; return; }
+    endpoint = found.url;
+    document.getElementById("howto").style.display = "none";
+  }
+  stopped = false;
+  rows.length = 0;
+  document.querySelector("#tbl tbody").innerHTML = "";
+  document.getElementById("run").disabled = true;
+  document.getElementById("stop").disabled = false;
+
+  const entries = Object.entries(AREAS);
+  let done=0, sumTotal=0, okCount=0, ngCount=0, failCount=0;
+
+  for(const [slug,a] of entries){
+    if(stopped) break;
+    let r, errMsg = "";
+    try { r = await queryArea(a); }
+    catch(e){ r = { total:-1, named:0, chained:0 }; errMsg = e.message; failCount++; }
+    done++;
+    if(r.total>=0){ sumTotal += r.total; if(r.total>=15) okCount++; if(r.total<8) ngCount++; }
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${a.name}</td><td>${a.pref}</td>`
+      + `<td class="num">${r.total>=0?r.total:"-"}</td>`
+      + `<td class="num">${r.named}</td><td class="num">${r.chained}</td>`
+      + `<td>${r.total>=0?verdict(r.total):'<span class="err">失敗: '+errMsg+'</span>'}</td>`;
+    document.querySelector("#tbl tbody").appendChild(tr);
+    rows.push([a.name,a.pref,r.total,r.named,r.chained]);
+
+    const okDone = done - failCount;
+    document.getElementById("prog").style.width = (done/entries.length*100)+"%";
+    document.getElementById("sum").innerHTML =
+      `進捗 ${done}/${entries.length}　|　平均 <b>${okDone?(sumTotal/okDone).toFixed(1):"-"}</b> 店/エリア`
+      + `　|　十分 ${okCount}　|　不足 ${ngCount}　|　失敗 ${failCount}`;
+    await new Promise(r=>setTimeout(r,1300));
+  }
+  document.getElementById("run").disabled = false;
+  document.getElementById("stop").disabled = true;
+  document.getElementById("csv").disabled = false;
+};
+
+document.getElementById("stop").onclick = ()=>{ stopped = true; };
+document.getElementById("csv").onclick = ()=>{
+  const csv = "エリア,都道府県,OSM店舗数,店名あり,チェーン判別\n" + rows.map(r=>r.join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "osm-coverage.csv";
+  a.click();
+};
+</script>
+</body>
+</html>
