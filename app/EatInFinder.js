@@ -242,7 +242,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [filterWifi, setFilterWifi] = useState(false);
   const [filterNeedsCheck, setFilterNeedsCheck] = useState(false);
   const [showList, setShowList] = useState(false);      // 近い順の一覧
-  const [mapMoved, setMapMoved] = useState(false);      // 前回探した場所から地図が動いたか（「このエリアで探す」を出す）
   const [showMenu, setShowMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [showPosts, setShowPosts] = useState(false);
@@ -250,7 +249,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const mapRef = useRef(null);
   const pendingSelectRef = useRef(initialPlace); // 共有リンクからの自動選択待ち
   const lastSearchRef = useRef(null);            // 直前にGoogleへ問い合わせた地点
-  const searchTargetRef = useRef(null);          // 最後に「探した」地点（地図が動いたかの判定用）
   const storesRef = useRef([]);                  // 最新の店舗一覧（コールバック内から参照する用）
 
   // Firestoreデータ読み込み（表示中の店舗分だけをまとめて取得＝読み取り回数を大幅削減）
@@ -345,8 +343,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     // （地図の微調整や連打でAPIを無駄に消費しないための節約。投稿の反映は保証される）
     const prev = lastSearchRef.current;
     const current = storesRef.current;
-    searchTargetRef.current = { lat, lng, radius };
-    setMapMoved(false);
     if (
       !force && prev && current.length > 0 && prev.radius === radius &&
       calcDistance(prev.lat, prev.lng, lat, lng) < RESEARCH_MIN_DISTANCE_M
@@ -376,6 +372,15 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       if (cached) {
         lastSearchRef.current = { lat, lng, radius };
         setStores(cached);
+        setLoading(false);
+        return;
+      }
+      // ぴったり同じ場所でなくても、250m以内で「前回のほうが広い範囲を探していた」なら使い回す（Googleを呼ばない）
+      const near = findNearbyCache(lat, lng);
+      // （前回の円が今回の円をまるごと含むときだけ。取りこぼしを防ぐ）
+      if (near && near.radius >= radius + near.d) {
+        lastSearchRef.current = { lat: near.lat, lng: near.lng, radius: near.radius };
+        setStores([...near.data].sort((a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng)));
         setLoading(false);
         return;
       }
@@ -431,8 +436,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       const hit = findNearbyCache(lat, lng);
       if (!hit) return false;
       lastSearchRef.current = { lat: hit.lat, lng: hit.lng, radius: hit.radius };
-      searchTargetRef.current = { lat, lng, radius: hit.radius };
-      setMapMoved(false);
       setSearchCenter({ lat, lng });
       setStores([...hit.data].sort((a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng)));
       return true;
@@ -487,17 +490,10 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     return { lat, lng, radius };
   }, []);
 
-  // 地図が止まったとき：位置を覚えておく＋前回探した場所から動いたかを判定
+  // 地図が止まったとき：位置を覚えておく（次回はここから表示）
   const handleIdle = useCallback(() => {
     const view = getViewArea();
-    if (!view) return;
-    saveLastView(view.lat, view.lng, mapRef.current.getZoom());
-    const last = searchTargetRef.current;
-    setMapMoved(
-      !last ||
-      calcDistance(last.lat, last.lng, view.lat, view.lng) > RESEARCH_MIN_DISTANCE_M ||
-      view.radius > (last.radius || 500) * 1.6 // 大きくズームアウトした
-    );
+    if (view) saveLastView(view.lat, view.lng, mapRef.current.getZoom());
   }, [getViewArea]);
 
   // 店舗を選んで地図をその店へ移動する（一覧・おすすめから使う）
@@ -703,6 +699,9 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           <button onClick={handleGPS} disabled={gpsLoading || loading} style={{ flex: 1, padding: "9px", borderRadius: 10, border: "1.5px solid #ddd", background: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", color: "#333", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
             {gpsLoading ? <><span>⏳</span>取得中…</> : <><span>📡</span>現在地から探す</>}
           </button>
+          <button onClick={handleMapIdle} disabled={loading} style={{ padding: "9px 14px", borderRadius: 10, border: "none", background: loading ? "#ddd" : "#e63946", color: "#fff", fontWeight: 700, fontSize: "13px", cursor: loading ? "default" : "pointer", whiteSpace: "nowrap" }}>
+            {loading ? "検索中…" : "この地図で探す"}
+          </button>
         </div>
         {gpsError && <div style={{ padding: "6px 10px", background: "#ffeaea", borderRadius: 8, fontSize: "11px", color: "#c0392b", marginBottom: 6 }}>⚠️ {gpsError}</div>}
         {infoMsg && <div style={{ padding: "6px 10px", background: "#e8f5e9", borderRadius: 8, fontSize: "11px", color: "#2d6a4f", marginBottom: 6 }}>✓ {infoMsg}</div>}
@@ -812,12 +811,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           </button>
         )}
 
-        {/* 「このエリアで探す」：まだ何も表示していないとき、または地図を動かしたときだけ出す */}
-        {isLoaded && !loading && !selected && (stores.length === 0 || mapMoved) && (
-          <button onClick={handleMapIdle} style={{ position: "absolute", bottom: "calc(72px + env(safe-area-inset-bottom, 0px))", left: "50%", transform: "translateX(-50%)", background: "#e63946", color: "#fff", border: "none", borderRadius: 24, padding: "10px 20px", boxShadow: "0 4px 14px rgba(230,57,70,0.35)", fontSize: "14px", fontWeight: 800, cursor: "pointer", zIndex: 6, whiteSpace: "nowrap", fontFamily: "inherit" }}>
-            🔍 このエリアで探す
-          </button>
-        )}
       </div>
 
       {/* 店舗詳細パネル（下から出てくる） */}
