@@ -4,7 +4,7 @@ import RelatedGuides from "../../components/RelatedGuides";
 
 export const metadata = {
   title: "コンビニイートインマップの使い方と投稿のしかた｜コンビニイートインマップ",
-  description: "コンビニイートインマップの使い方ガイド。現在地・駅名での検索、ピンの色の意味、絞り込み、イートイン情報の投稿、混雑の報告、店舗の共有までを解説します。",
+  description: "コンビニイートインマップの使い方ガイド。現在地・駅名での検索、ピンの色の意味、絞り込み、イートイン情報の投稿、近い順の一覧、店舗の共有までを解説します。",
   alternates: { canonical: "https://www.eatin-map.jp/guide/how-to-use" },
 };
 
@@ -28,10 +28,10 @@ export default function HowToUse() {
 
       <div style={card}>
         <h2 style={h2}>イートインがあるコンビニを探す</h2>
-        <div style={step}><div style={num}>1</div><p style={{ ...p, margin: 0 }}><strong>場所を決める</strong>：画面上部の「現在地から探す」を押すと、いる場所の周りのコンビニを表示します。行き先が決まっているときは「新宿駅」のように駅名やエリア名を入れて検索します。地図を動かしてから「この地図で探す」を押すと、表示している範囲で探し直せます。</p></div>
-        <div style={step}><div style={num}>2</div><p style={{ ...p, margin: 0 }}><strong>ピンの色を見る</strong>：青いピンはイートインあり、グレーはイートインなし、オレンジはまだ情報がない未確認の店です。「AI推定」と表示される店は、利用者の投稿がなく、公開クチコミをもとにAIが推定した情報です。</p></div>
-        <div style={step}><div style={num}>3</div><p style={{ ...p, margin: 0 }}><strong>絞り込む</strong>：「絞り込み」を開くと、営業中・イートインあり・確認済み・コンセント・Wi-Fiの条件で店を絞り込めます。昼休みに確実に座りたいときは「イートインあり」と「営業中」、充電したいときは「コンセント」が便利です。</p></div>
-        <div style={{ ...step, marginBottom: 0 }}><div style={num}>4</div><p style={{ ...p, margin: 0 }}><strong>店舗の詳細を見る</strong>：ピンを押すと、店名・営業時間・席数・コンセントやWi-Fiの有無、投稿されたコメント、混雑状況が表示されます。「Googleマップ」ボタンから道順も調べられます。</p></div>
+        <div style={step}><div style={num}>1</div><p style={{ ...p, margin: 0 }}><strong>場所を決める</strong>：画面上部の「現在地から探す」を押すと、いる場所の周りのコンビニを表示します。行き先が決まっているときは「新宿駅」のように駅名やエリア名を入れて検索します。地図を動かしてから「この地図で探す」を押すと、表示している範囲で探し直せます。次に開いたときは、前回見ていた場所から表示されます。</p></div>
+        <div style={step}><div style={num}>2</div><p style={{ ...p, margin: 0 }}><strong>ピンの色を見る</strong>：濃い青のピンはイートインあり、グレーはイートインなし、点滅しているオレンジはまだ情報がない未確認の店です。薄い色で点線のふちのピンは「たぶんあり／たぶんなし（AI推定）」で、利用者の投稿がなく、公開クチコミをもとにAIが推定した情報です。</p></div>
+        <div style={step}><div style={num}>3</div><p style={{ ...p, margin: 0 }}><strong>近い順・絞り込み</strong>：地図の左上の「📋 近い順」で、店を近い順の一覧で見られます。「いちばん近い座れる店」ボタンを押せば、最寄りのイートインありの店にすぐ移動します。「絞り込み」では、営業中・イートインあり・確認済み・コンセント・Wi-Fi・要確認の条件で店を絞り込めます。</p></div>
+        <div style={{ ...step, marginBottom: 0 }}><div style={num}>4</div><p style={{ ...p, margin: 0 }}><strong>店舗の詳細を見る</strong>：ピンを押すと、店名・営業時間・席数・コンセントやWi-Fiの有無、投稿されたコメントが表示されます。「Googleマップ」ボタンから道順も調べられます。</p></div>
       </div>
 
       <div style={card}>
@@ -48,8 +48,8 @@ export default function HowToUse() {
       </div>
 
       <div style={card}>
-        <h2 style={h2}>混雑状況・「助かった」・共有</h2>
-        <p style={p}>・<strong>混雑状況</strong>：店舗の詳細から「空いてる／普通／混んでる」を報告できます。次に向かう人の参考になります。</p>
+        <h2 style={h2}>近くの未確認の店・「助かった」・共有</h2>
+        <p style={p}>・<strong>近くの未確認の店</strong>：投稿すると、近くでまだ確認されていない店が表示されます。通り道にあれば、ついでに教えてもらえるとマップがどんどん正確になります。「絞り込み」の「要確認」で、未確認とAI推定の店だけを表示することもできます。</p>
         <p style={p}>・<strong>助かった！</strong>：情報が役に立ったら「助かった！」を押してください。投稿してくれた人への感謝が伝わります。</p>
         <p style={{ ...p, margin: 0 }}>・<strong>この店を共有</strong>：店舗の詳細から共有用リンクをコピーできます。同僚や友だちに「ここ座れるよ」と送るときに便利です。</p>
       </div>

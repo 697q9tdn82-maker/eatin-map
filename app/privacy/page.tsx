@@ -20,7 +20,7 @@ export default function PrivacyPolicy() {
           <ul style={{ fontSize: "14px", color: "#555", paddingLeft: 20, margin: 0, lineHeight: 2 }}>
             <li>位置情報（現在地から探す機能を使用した場合）</li>
             <li>投稿内容（イートインの有無・席数・コンセント・Wi-Fi・コメント）</li>
-            <li>混雑情報・「助かった」のカウント</li>
+            <li>「助かった」のカウント</li>
             <li>お問い合わせフォームに入力された内容（お名前・メールアドレス・お問い合わせ内容）</li>
             <li>アクセス状況（閲覧ページ・参照元・端末の種類など。個人を特定しない統計情報）</li>
           </ul>
