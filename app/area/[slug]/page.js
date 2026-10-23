@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import EatInFinder from "../../EatInFinder";
 import AreaInfo from "../AreaInfo";
 import { AREAS } from "../../../lib/areas";
-import { getAreaData, nearbyAreas, AREA_RADIUS } from "../../../lib/area-data";
+import { getAreaData, nearbyAreas, stationName, AREA_RADIUS } from "../../../lib/area-data";
 import { formatJaDate } from "../../../lib/eatin-data";
 
 // エリア別ページ（例: /area/shinjuku）
@@ -28,13 +28,14 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const area = AREAS[slug];
   if (!area) return {};
+  const st = stationName(area);
   const data = await loadArea(slug);
   const yesCount = data?.yes.length || 0;
   const title = yesCount > 0
-    ? `${area.name}駅周辺のイートインがあるコンビニ${yesCount}店｜座れるコンビニマップ`
-    : `${area.name}駅周辺のコンビニイートイン情報｜座れるコンビニマップ`;
+    ? `${st}周辺のイートインがあるコンビニ${yesCount}店｜座れるコンビニマップ`
+    : `${st}周辺のコンビニイートイン情報｜座れるコンビニマップ`;
   const description = data && data.stores.length > 0
-    ? `${area.name}駅から徒歩圏内のコンビニ${data.stores.length}店舗を調査。イートインあり${yesCount}店・なし${data.no.length}店を一覧と地図で紹介。席数やコンセントの有無、実際に行った人のコメントも掲載。`
+    ? `${st}から徒歩圏内のコンビニ${data.stores.length}店舗を調査。イートインあり${yesCount}店・なし${data.no.length}店を一覧と地図で紹介。席数やコンセントの有無、実際に行った人のコメントも掲載。`
     : `${area.pref}${area.name}エリアでイートイン席のあるコンビニを地図で検索。ランチや休憩に使える座れるコンビニが見つかります。`;
   return {
     title,
@@ -74,6 +75,7 @@ export default async function AreaPage({ params }) {
   const { slug } = await params;
   const area = AREAS[slug];
   if (!area) notFound();
+  const st = stationName(area);
 
   const data = await loadArea(slug);
   const { stores, yes, no, unknown, humanConfirmedYes, chainCounts, withOutlet, withSeats, lastPostedAt } = data;
@@ -89,19 +91,19 @@ export default async function AreaPage({ params }) {
   const faqs = [];
   if (stores.length > 0) {
     faqs.push({
-      q: `${area.name}駅の近くでイートインがあるコンビニはどこですか？`,
+      q: `${st}の近くでイートインがあるコンビニはどこですか？`,
       a: yes.length > 0
         ? `駅から半径約${AREA_RADIUS}mの範囲では、${yes.slice(0, 5).map(s => s.name).join("、")}${yes.length > 5 ? `など${yes.length}店` : ""}にイートイン席があるという情報が寄せられています。最新の状況は店舗で確認してください。`
         : `駅から半径約${AREA_RADIUS}mの範囲では、現時点でイートイン席があると確認できた店舗はありません。未確認の店舗が${unknown.length}店あるため、訪れた方の情報をお待ちしています。`,
     });
     faqs.push({
-      q: `${area.name}駅周辺のコンビニでコンセントが使える店はありますか？`,
+      q: `${st}周辺のコンビニでコンセントが使える店はありますか？`,
       a: withOutlet.length > 0
         ? `利用者の投稿では、${withOutlet.slice(0, 3).map(s => s.name).join("、")}でコンセント付きの席があると報告されています。利用可否は店内の掲示に従ってください。`
         : `現時点ではコンセントの有無について投稿がありません。地図から店舗を選んで「コンセントあり」を投稿していただくと、次に探す人の役に立ちます。`,
     });
     faqs.push({
-      q: `${area.name}駅周辺のイートイン情報はどれくらい正確ですか？`,
+      q: `${st}周辺のイートイン情報はどれくらい正確ですか？`,
       a: `掲載している${stores.length}店舗のうち、${humanConfirmedYes.length + no.filter(s => !s.aiOnly).length}店は実際に訪れた利用者の投稿で確認された情報、${stores.filter(s => s.aiOnly).length}店は公開クチコミをもとにしたAI推定です。${lastPostedAt ? `このエリアの最新の投稿は${formatJaDate(lastPostedAt)}です。` : ""}イートインは店舗の判断で休止・再開されることがあるため、参考情報としてご利用ください。`,
     });
   }
@@ -110,7 +112,7 @@ export default async function AreaPage({ params }) {
     stores.length > 0 && {
       "@context": "https://schema.org",
       "@type": "ItemList",
-      name: `${area.name}駅周辺のコンビニ イートイン情報`,
+      name: `${st}周辺のコンビニ イートイン情報`,
       numberOfItems: stores.length,
       itemListElement: stores.map((s, i) => ({
         "@type": "ListItem",
@@ -143,11 +145,11 @@ export default async function AreaPage({ params }) {
             <Link href="/" style={{ color: "#999" }}>トップ</Link> ＞ <Link href="/area" style={{ color: "#999" }}>エリア一覧</Link> ＞ {area.name}
           </nav>
           <h1 style={{ fontSize: "17px", fontWeight: 900, margin: 0, lineHeight: 1.5 }}>
-            {area.name}駅周辺のイートインがあるコンビニ
+            {st}周辺のイートインがあるコンビニ
           </h1>
           {stores.length > 0 ? (
             <p style={{ fontSize: "12.5px", color: "#555", margin: "8px 0 0", lineHeight: 1.8 }}>
-              {area.pref}・{area.name}駅から半径約{AREA_RADIUS}m（徒歩7〜8分圏）にあるコンビニ<strong>{stores.length}店舗</strong>のうち、
+              {area.pref}・{st}から半径約{AREA_RADIUS}m（徒歩7〜8分圏）にあるコンビニ<strong>{stores.length}店舗</strong>のうち、
               イートイン席があるのは<strong style={{ color: "#0077b6" }}>{yes.length}店</strong>、ないのは{no.length}店、未確認は{unknown.length}店です
               {lastPostedAt && <>（最新の投稿：{formatJaDate(lastPostedAt)}）</>}。一覧は地図の下にあります。
             </p>
@@ -167,9 +169,9 @@ export default async function AreaPage({ params }) {
           <>
             {/* エリアのまとめ（データから自動で作る固有の解説） */}
             <section style={sectionStyle}>
-              <h2 style={h2Style}>{area.name}駅周辺のイートイン事情</h2>
+              <h2 style={h2Style}>{st}周辺のイートイン事情</h2>
               <p style={pStyle}>
-                {area.name}駅の半径約{AREA_RADIUS}m以内では、Googleマップに登録されているコンビニが{stores.length}店舗見つかりました。
+                {st}の半径約{AREA_RADIUS}m以内では、Googleマップに登録されているコンビニが{stores.length}店舗見つかりました。
                 そのうちイートイン有無の情報があるのは{yes.length + no.length}店で、
                 イートインありの割合は{yes.length + no.length > 0 ? Math.round((yes.length / (yes.length + no.length)) * 100) : 0}%です。
                 {yes.length > 0 && <>イートインがある店をチェーン別に見ると、{chainSentence(chainCounts)}となっています。</>}
@@ -209,7 +211,7 @@ export default async function AreaPage({ params }) {
 
             {/* 店舗リスト */}
             <section style={sectionStyle}>
-              <h2 style={h2Style}>{area.name}駅周辺のコンビニ イートイン情報一覧（{stores.length}店）</h2>
+              <h2 style={h2Style}>{st}周辺のコンビニ イートイン情報一覧（{stores.length}店）</h2>
               <ul style={{ listStyle: "none", margin: 0, padding: 0 }}>
                 {stores.map(s => (
                   <li key={s.placeId} style={{ borderBottom: "1px solid #f0f0f0", padding: "10px 0" }}>
@@ -245,7 +247,7 @@ export default async function AreaPage({ params }) {
 
             {/* エリアFAQ */}
             <section style={sectionStyle}>
-              <h2 style={h2Style}>{area.name}駅周辺のイートインに関する質問</h2>
+              <h2 style={h2Style}>{st}周辺のイートインに関する質問</h2>
               {faqs.map((f, i) => (
                 <div key={i} style={{ marginBottom: 12 }}>
                   <h3 style={{ fontSize: "13px", fontWeight: 800, margin: "0 0 4px", color: "#e63946" }}>Q. {f.q}</h3>
