@@ -226,7 +226,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [infoMsg, setInfoMsg] = useState("");   // 「更新しました」などの控えめな通知
   const [filterEatIn, setFilterEatIn] = useState(false);
   const [filterVerified, setFilterVerified] = useState(false);
-  const [filterOpenNow, setFilterOpenNow] = useState(false);
   const [showReport, setShowReport] = useState(false);
   const [reportTarget, setReportTarget] = useState(null);
   const [reportStep, setReportStep] = useState(1);
@@ -625,7 +624,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const filtered = stores.filter(s => {
     if (filterEatIn && !s.hasEatIn) return false;
     if (filterVerified && (!s.verifications || s.verifications.length === 0)) return false;
-    if (filterOpenNow && s.isOpenNow === false) return false;
     if (filterOutlet && !s.outlet) return false;
     if (filterWifi && !s.wifi) return false;
     if (filterNeedsCheck && !needsCheck(s)) return false;
@@ -707,7 +705,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         {infoMsg && <div style={{ padding: "6px 10px", background: "#e8f5e9", borderRadius: 8, fontSize: "11px", color: "#2d6a4f", marginBottom: 6 }}>✓ {infoMsg}</div>}
         {/* フィルター（普段は折りたたんで地図を広く使う） */}
         {(() => {
-          const FILTERS = [[filterOpenNow, setFilterOpenNow, "🟢 営業中", "#2d6a4f"], [filterEatIn, setFilterEatIn, "🪑 イートインあり", "#e63946"], [filterVerified, setFilterVerified, "✅ 確認済み", "#b7950b"], [filterOutlet, setFilterOutlet, "🔌 コンセント", "#0077b6"], [filterWifi, setFilterWifi, "📶 Wi-Fi", "#6a4c93"], [filterNeedsCheck, setFilterNeedsCheck, "❓ 要確認（投稿募集中）", "#f57c00"]];
+          const FILTERS = [[filterEatIn, setFilterEatIn, "🪑 イートインあり", "#e63946"], [filterVerified, setFilterVerified, "✅ 確認済み", "#b7950b"], [filterOutlet, setFilterOutlet, "🔌 コンセント", "#0077b6"], [filterWifi, setFilterWifi, "📶 Wi-Fi", "#6a4c93"], [filterNeedsCheck, setFilterNeedsCheck, "❓ 要確認（投稿募集中）", "#f57c00"]];
           const activeCount = FILTERS.filter(f => f[0]).length;
           return (
             <>
@@ -829,11 +827,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 800, fontSize: "14px", lineHeight: 1.4 }}>{selected.name}</div>
                 <div style={{ fontSize: "11px", color: "#999", marginTop: 2 }}>📍 {selected.address}</div>
-                {selected.isOpenNow !== null && (
-                  <div style={{ fontSize: "11px", marginTop: 2, fontWeight: 700, color: selected.isOpenNow ? "#2d6a4f" : "#e63946" }}>
-                    {selected.isOpenNow ? "🟢 営業中" : "🔴 営業時間外"}
-                  </div>
-                )}
                 {searchCenter && (
                   <div style={{ fontSize: "11px", color: "#0077b6", marginTop: 1 }}>
                     🚶 {(() => { const d = calcDistance(searchCenter.lat, searchCenter.lng, selected.lat, selected.lng); return d < 1000 ? `${Math.round(d)}m` : `${(d/1000).toFixed(1)}km`; })()}
@@ -876,8 +869,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                       : "📝 実際に行った方は教えてください！"}
                 </div>
                 <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-                  <button onClick={e => handleQuickReport(selected, true, e)} style={{ flex: 1, padding: "12px", borderRadius: 12, border: "2px solid #a5d6a7", background: "#e8f5e9", color: "#2d6a4f", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}>🪑 イートインあった！</button>
-                  <button onClick={e => handleQuickReport(selected, false, e)} style={{ flex: 1, padding: "12px", borderRadius: 12, border: "2px solid #ffcdd2", background: "#ffeaea", color: "#c0392b", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}>✗ なかった</button>
+                  <button onClick={e => handleQuickReport(selected, true, e)} style={{ flex: 1, borderRadius: 12, border: "2px solid #a5d6a7", background: "#e8f5e9", color: "#2d6a4f", fontSize: "13.5px", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap", padding: "12px 6px" }}>🪑 イートインあった！</button>
+                  <button onClick={e => handleQuickReport(selected, false, e)} style={{ flex: 1, borderRadius: 12, border: "2px solid #ffcdd2", background: "#ffeaea", color: "#c0392b", fontSize: "13.5px", fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap", padding: "12px 6px" }}>✗ なかった</button>
                 </div>
                 <button onClick={e => { e.stopPropagation(); setReportTarget(selected); setShowReport(true); }} style={{ width: "100%", padding: "8px", borderRadius: 10, border: "1.5px solid #ddd", background: "#fff", fontSize: "12px", color: "#888", cursor: "pointer", fontWeight: 600 }}>席数・コンセント・Wi-Fiも詳しく登録する →</button>
               </>
@@ -900,21 +893,11 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
               </div>
             )}
 
-            {/* 営業時間 */}
-            {selected.openingHours && selected.openingHours.length > 0 && (
-              <div style={{ background: "#fafafa", border: "1.5px solid #eee", borderRadius: 10, padding: "10px 12px", marginBottom: 10 }}>
-                <div style={{ fontSize: "11px", color: "#aaa", fontWeight: 700, marginBottom: 6 }}>🕐 営業時間</div>
-                {selected.openingHours.map((h, i) => (
-                  <div key={i} style={{ fontSize: "11px", color: "#555", padding: "2px 0" }}>{h}</div>
-                ))}
-              </div>
-            )}
-
             {/* Googleマップで開く・リンクコピー */}
             <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
               <a href={`https://maps.google.com/?q=${encodeURIComponent(selected.name + " " + selected.address)}`} target="_blank" rel="noopener noreferrer" style={{ flex: 1, display: "flex", alignItems: "center", gap: 8, background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 10, padding: "9px 12px", textDecoration: "none" }}>
                 <span style={{ fontSize: "16px" }}>📍</span>
-                <div style={{ fontSize: "12px", color: "#0077b6", fontWeight: 600 }}>Googleマップ →</div>
+                <div style={{ fontSize: "12px", color: "#0077b6", fontWeight: 600, lineHeight: 1.3 }}>Googleマップ →<div style={{ fontSize: "10px", color: "#999", fontWeight: 500 }}>道順・営業時間</div></div>
               </a>
               <button onClick={() => copyStoreLink(selected)} style={{ display: "flex", alignItems: "center", gap: 6, background: linkCopied ? "#e8f5e9" : "#fff", border: `1.5px solid ${linkCopied ? "#a5d6a7" : "#e0e0e0"}`, borderRadius: 10, padding: "9px 12px", cursor: "pointer", fontSize: "12px", fontWeight: 600, color: linkCopied ? "#2d6a4f" : "#555", whiteSpace: "nowrap" }}>
                 {linkCopied ? "✓ コピーしました" : "🔗 この店を共有"}
@@ -1029,8 +1012,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.name}</div>
                       <div style={{ fontSize: "11px", color: "#999", marginTop: 1 }}>
-                        {s.isOpenNow === false ? "🔴 営業時間外" : s.isOpenNow ? "🟢 営業中" : ""}
-                        {s.seats ? `　🪑${s.seats}席` : ""}{s.outlet ? "　🔌" : ""}{s.wifi ? "　📶" : ""}
+                        {[s.seats ? `🪑${s.seats}席` : "", s.outlet ? "🔌" : "", s.wifi ? "📶" : ""].filter(Boolean).join("　")}
                       </div>
                     </div>
                     <span style={{ fontSize: "10.5px", fontWeight: 800, background: st[1], color: st[2], borderRadius: 10, padding: "3px 8px", flexShrink: 0 }}>{st[0]}</span>
