@@ -78,7 +78,7 @@ export default async function AreaPage({ params }) {
   const st = stationName(area);
 
   const data = await loadArea(slug);
-  const { stores, yes, no, unknown, humanConfirmedYes, chainCounts, withOutlet, withSeats, lastPostedAt } = data;
+  const { stores, yes, no, unknown, humanConfirmedYes, chainCounts, withOutlet, withSeats, lastPostedAt, mapStores } = data;
   const near = nearbyAreas(slug, 8);
   const top = yes.slice(0, 3);
 
@@ -162,7 +162,7 @@ export default async function AreaPage({ params }) {
       </AreaInfo>
 
       {/* 地図（開いた瞬間にこのエリアを自動検索） */}
-      <EatInFinder initialLat={area.lat} initialLng={area.lng} />
+      <EatInFinder initialLat={area.lat} initialLng={area.lng} initialStores={mapStores} />
 
       <AreaInfo>
         {stores.length > 0 && (
