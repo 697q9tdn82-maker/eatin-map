@@ -429,8 +429,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           outlet: false,
           wifi: false,
           seats: null,
-        })).sort((a, b) => calcDistance(initialLat, initialLng, a.lat, a.lng) - calcDistance(initialLat, initialLng, b.lat, b.lng))
-          .slice(0, MAX_RESULTS);
+        })).sort((a, b) => calcDistance(initialLat, initialLng, a.lat, a.lng) - calcDistance(initialLat, initialLng, b.lat, b.lng));
+        // ↑ エリアページは作り置きの全店を表示（20店の制限は「現在地・地図から探す」だけ）
         lastSearchRef.current = { lat: initialLat, lng: initialLng, radius: 500 };
         setStores(places);
         return;
