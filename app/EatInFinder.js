@@ -207,7 +207,8 @@ function NextStoreSuggest({ list, origin, onPick }) {
 // initialLat / initialLng: URLやエリアページから渡される初期地点（自動検索する）
 // initialPlace: 共有リンクで開いたときに自動選択する店舗のplace_id
 // ============================================================
-export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null, storeCount = null, areaCount = null }) {
+// initialStores: エリアページから渡される作り置きの店舗リスト（あればGoogleを呼ばずに表示する）
+export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null, initialStores = null, storeCount = null, areaCount = null }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
   });
@@ -417,6 +418,23 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   useEffect(() => {
     if (initialLat && initialLng) {
       setSearchCenter({ lat: initialLat, lng: initialLng });
+      // エリアページ：作り置きの店舗リストをそのまま表示（Googleは呼ばない＝0円）
+      // 投稿情報（イートイン有無など）は店舗がセットされた後に自動でFirestoreから読み込まれる
+      if (Array.isArray(initialStores) && initialStores.length > 0) {
+        const places = initialStores.map(p => ({
+          ...p,
+          verifications: [],
+          helpedCount: 0,
+          hasEatIn: null,
+          outlet: false,
+          wifi: false,
+          seats: null,
+        })).sort((a, b) => calcDistance(initialLat, initialLng, a.lat, a.lng) - calcDistance(initialLat, initialLng, b.lat, b.lng))
+          .slice(0, MAX_RESULTS);
+        lastSearchRef.current = { lat: initialLat, lng: initialLng, radius: 500 };
+        setStores(places);
+        return;
+      }
       searchPlaces(initialLat, initialLng);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
