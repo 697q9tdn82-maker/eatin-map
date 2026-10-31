@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-30T15:44:46.153Z",
+ "updatedAt": "2026-10-31T15:13:07.435Z",
  "areas": {
   "akabane": {
    "v": 2,
@@ -3265,7 +3265,9 @@
    ]
   },
   "ichigaya": {
-   "fetchedAt": "2026-10-24T11:23:20.860Z",
+   "v": 2,
+   "fetchedAt": "2026-10-31T15:13:07.435Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJN5HNlGCMGGARTyuJo419p7Q",
@@ -3371,6 +3373,13 @@
      "address": "〒102-0084 東京都千代田区二番町４−５",
      "lat": 35.68635,
      "lng": 139.7359
+    },
+    {
+     "place_id": "ChIJg33Tj2OMGGARlkiCRUVOX4k",
+     "name": "セブン‐イレブン麹町駅前店",
+     "address": "〒102-0084 東京都千代田区二番町４−３",
+     "lat": 35.6862384,
+     "lng": 139.7365874
     },
     {
      "place_id": "ChIJawz9zWeMGGARpr_kJ_CSccU",
@@ -4745,7 +4754,9 @@
    ]
   },
   "kamiyacho": {
-   "fetchedAt": "2026-10-24T11:23:14.057Z",
+   "v": 2,
+   "fetchedAt": "2026-10-31T15:12:29.569Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJq2Gp3ZaLGGARX1DSYkS4Jhc",
@@ -4867,11 +4878,32 @@
      "lng": 139.7436239
     },
     {
+     "place_id": "ChIJ10OQCwCLGGARD3CEBOeB1Pc",
+     "name": "ファミリーマート 東京タワー通り店",
+     "address": "〒105-0011 東京都港区芝公園３丁目５−１２",
+     "lat": 35.6597501,
+     "lng": 139.7443937
+    },
+    {
      "place_id": "ChIJfZl6dZGLGGAR9NjaGhQwx0c",
      "name": "セブン-イレブン 虎ノ門３７森ビル店",
      "address": "〒105-0001 東京都港区虎ノ門３丁目５−１ 虎ノ門３７森ビル",
      "lat": 35.6665381,
      "lng": 139.7460183
+    },
+    {
+     "place_id": "ChIJF_maiJeLGGARnm3p5WAgF7g",
+     "name": "セブン‐イレブン港区飯倉店",
+     "address": "〒106-0041 東京都港区麻布台１丁目９−８ 霊友会第三ビル",
+     "lat": 35.659836999999996,
+     "lng": 139.74268849999999
+    },
+    {
+     "place_id": "ChIJDUG5VwCLGGARmSlMZGciJB0",
+     "name": "ナチュラルローソン 慈恵大学病分店",
+     "address": "〒105-0003 東京都港区西新橋３丁目２５−８ 中央棟 8階",
+     "lat": 35.6625916,
+     "lng": 139.7500741
     },
     {
      "place_id": "ChIJ0SdBliSLGGARiVPTocWcTlI",
@@ -4886,6 +4918,104 @@
      "address": "〒105-0001 東京都港区虎ノ門２丁目１０−１",
      "lat": 35.6673623,
      "lng": 139.745092
+    },
+    {
+     "place_id": "ChIJI-GYhZOLGGARbDi5yKAwom8",
+     "name": "ミニストップ 愛宕１丁目店",
+     "address": "〒105-0002 東京都港区愛宕１丁目３−４",
+     "lat": 35.6660696,
+     "lng": 139.7493486
+    },
+    {
+     "place_id": "ChIJW5LespuLGGAR4j25KsK2TxY",
+     "name": "ファミリーマート 六本木一丁目店",
+     "address": "〒106-0032 東京都港区六本木１丁目８−７ MFPR六本木麻布台ビル",
+     "lat": 35.6633491,
+     "lng": 139.7396702
+    },
+    {
+     "place_id": "ChIJQd_-KL2LGGARklq68oRdVyo",
+     "name": "ローソン Ｓ東京タワー店",
+     "address": "〒105-0011 東京都港区芝公園４丁目２−８ 東京タワー 2F",
+     "lat": 35.6585769,
+     "lng": 139.7454506
+    },
+    {
+     "place_id": "ChIJF4_aZ8aLGGARvdyH66oxMMY",
+     "name": "ローソン オークラプレステージタワー店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目１０−４",
+     "lat": 35.6675233,
+     "lng": 139.7439906
+    },
+    {
+     "place_id": "ChIJ3-Gkbb6LGGARY9Pg0asLAI8",
+     "name": "ローソン Ｓ東京プリンスホテル店",
+     "address": "〒105-0011 東京都港区芝公園３丁目３−１",
+     "lat": 35.6590051,
+     "lng": 139.7480807
+    },
+    {
+     "place_id": "ChIJhXXIx3WLGGAR1qkLGfqvBLk",
+     "name": "セブン‐イレブン虎ノ門ヒルズステーションタワー店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目６−３ 7F",
+     "lat": 35.667477,
+     "lng": 139.7474801
+    },
+    {
+     "place_id": "ChIJrw-WKQCLGGARKovTexaEpMg",
+     "name": "セブン‐イレブン麻布台ヒルズ店",
+     "address": "〒106-0041 東京都港区麻布台１丁目１−２",
+     "lat": 35.66264960000001,
+     "lng": 139.7393102
+    },
+    {
+     "place_id": "ChIJ-c-f38GLGGAREu--Ent2tgI",
+     "name": "ファミマ!! 麻布台ヒルズ店",
+     "address": "〒106-0041 東京都港区麻布台１丁目３−１ タワープラザ ４階",
+     "lat": 35.660722899999996,
+     "lng": 139.7400481
+    },
+    {
+     "place_id": "ChIJy9Em0n2LGGARQrA9ETLeIw4",
+     "name": "ナチュラルローソン 慈恵大学病院店",
+     "address": "〒105-0003 東京都港区西新橋３丁目１９−１８",
+     "lat": 35.6630817,
+     "lng": 139.7512634
+    },
+    {
+     "place_id": "ChIJ4apZHpWLGGARkfs4is4uBpU",
+     "name": "ローソン 慈恵医大本館店",
+     "address": "〒105-0003 東京都港区西新橋３丁目１９−１８",
+     "lat": 35.6635679,
+     "lng": 139.7513257
+    },
+    {
+     "place_id": "ChIJT2Ib3r-LGGARBaApX35WNII",
+     "name": "ローソン 御成門駅前店",
+     "address": "〒105-0003 東京都港区西新橋３丁目２４−９",
+     "lat": 35.6613773,
+     "lng": 139.7509869
+    },
+    {
+     "place_id": "ChIJa2Y2HJuLGGARgEYQQI_akHo",
+     "name": "リーベンハウス 泉ガーデンタワー店",
+     "address": "〒106-0032 東京都港区六本木１丁目６−１ 泉ガーデンタワー １階",
+     "lat": 35.6644714,
+     "lng": 139.739135
+    },
+    {
+     "place_id": "ChIJybEbopOLGGAR0jmOf5I7gT0",
+     "name": "ファミマ!! 虎ノ門ヒルズ店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目２３−３ 虎ノ門ヒルズ森タワー 3F",
+     "lat": 35.6669537,
+     "lng": 139.74974659999998
+    },
+    {
+     "place_id": "ChIJQ8RrQgCLGGARXuQFs0Syyxs",
+     "name": "セブン‐イレブン御成門店",
+     "address": "〒105-0003 東京都港区西新橋３丁目２３−５",
+     "lat": 35.6620537,
+     "lng": 139.7517062
     }
    ]
   },
@@ -5268,7 +5398,9 @@
    ]
   },
   "kasumigaseki": {
-   "fetchedAt": "2026-10-24T11:23:15.764Z",
+   "v": 2,
+   "fetchedAt": "2026-10-31T15:12:38.962Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJy3XL2oyLGGARtpHgTfrLdtc",
@@ -5397,6 +5529,20 @@
      "lng": 139.7488632
     },
     {
+     "place_id": "ChIJe0ADEO2LGGARGcMNU2N38ss",
+     "name": "ナチュラルローソン 日比谷国際ビル店",
+     "address": "〒100-0011 東京都千代田区内幸町２丁目２−３",
+     "lat": 35.6703262,
+     "lng": 139.754314
+    },
+    {
+     "place_id": "ChIJId3vqO2LGGARKzKqOkOBV3c",
+     "name": "ファミリーマート 内幸町富国生命ビル店",
+     "address": "〒100-0011 東京都千代田区内幸町２丁目２−２ 富国生命ビル 地下１階",
+     "lat": 35.6707523,
+     "lng": 139.755168
+    },
+    {
      "place_id": "ChIJ-4XX0o6LGGARQph03mUSayo",
      "name": "セブン-イレブン 中央合同庁舎８号館店",
      "address": "〒100-0014 東京都千代田区永田町１丁目６−１ 中央合同庁舎第8号館",
@@ -5404,11 +5550,39 @@
      "lng": 139.7454291
     },
     {
+     "place_id": "ChIJlc2eR-uLGGARVQREQl2Ktpg",
+     "name": "ファミリーマート 虎ノ門一丁目店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目１２−１",
+     "lat": 35.669215799999996,
+     "lng": 139.750009
+    },
+    {
+     "place_id": "ChIJWV4_3uyLGGAR0KuJjtrTWcs",
+     "name": "ファミリーマート 西新橋一丁目店",
+     "address": "〒105-0003 東京都港区西新橋１丁目５−１１ １１東洋海事ビル",
+     "lat": 35.669215799999996,
+     "lng": 139.753547
+    },
+    {
      "place_id": "ChIJfbya9Y6LGGARomhvvJEZWFI",
      "name": "セブン-イレブン 特許庁店",
      "address": "〒100-0013 東京都千代田区霞が関３丁目４−３ B1F",
      "lat": 35.671242299999996,
      "lng": 139.7456757
+    },
+    {
+     "place_id": "ChIJazi2DZKLGGARgu4Qxh6u8TE",
+     "name": "ローソン 虎ノ門駅南店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目２−１０ 虎ノ門桜田通ビル 2F",
+     "lat": 35.6692227,
+     "lng": 139.74836399999998
+    },
+    {
+     "place_id": "ChIJ2dAnLvSLGGARQRUdUt7yW2E",
+     "name": "ローソン 西新橋愛宕下通店",
+     "address": "〒105-0003 東京都港区西新橋１丁目２４−１６",
+     "lat": 35.668715999999996,
+     "lng": 139.751329
     }
    ]
   },
@@ -8700,7 +8874,9 @@
    ]
   },
   "ochanomizu": {
-   "fetchedAt": "2026-10-24T11:23:19.167Z",
+   "v": 2,
+   "fetchedAt": "2026-10-31T15:12:57.788Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJxZ8e6xmMGGARTrDBtDmvYG8",
@@ -8822,11 +8998,32 @@
      "lng": 139.7632446
     },
     {
+     "place_id": "ChIJubLw9hqMGGARtuAlRFB4Ta0",
+     "name": "セブン-イレブン ＡＩＭ三井住友海上駿河台ビル店",
+     "address": "〒101-0062 東京都千代田区神田駿河台３丁目９",
+     "lat": 35.6964131,
+     "lng": 139.7647191
+    },
+    {
      "place_id": "ChIJ3zjqchiMGGARejApCwfxAj0",
      "name": "ファミリーマート 湯島一丁目店",
      "address": "〒113-0034 東京都文京区湯島１丁目６−３",
      "lat": 35.7030477,
      "lng": 139.7640003
+    },
+    {
+     "place_id": "ChIJv5p9AhiMGGAR38WX7Z9de_I",
+     "name": "ナチュラルローソン 順天堂医院1号館店",
+     "address": "〒113-0033 東京都文京区本郷３丁目１−３",
+     "lat": 35.702625399999995,
+     "lng": 139.76219039999998
+    },
+    {
+     "place_id": "ChIJA5OcMy-NGGAR1oh59mJ8uGg",
+     "name": "ナチュラルローソン順天堂医院B棟店",
+     "address": "〒113-0033 東京都文京区本郷３丁目３−３ 順天堂大学医学部附属順天堂医院 B棟 1階",
+     "lat": 35.703009900000005,
+     "lng": 139.76286190000002
     },
     {
      "place_id": "ChIJXSsGVHS7JhURAGuxTbiTWzQ",
@@ -8836,11 +9033,165 @@
      "lng": 139.76882329999998
     },
     {
+     "place_id": "ChIJK1F7twOMGGARO7k-Yq4cpPg",
+     "name": "ファミリーマート 神田淡路町二丁目店",
+     "address": "〒101-0063 東京都千代田区神田淡路町２丁目２３−２３ 菅山ビル 1F",
+     "lat": 35.6964919,
+     "lng": 139.7664517
+    },
+    {
+     "place_id": "ChIJlzbNsgSMGGARqhfBIvUdZDk",
+     "name": "セブン‐イレブン神田淡路町ワテラス店",
+     "address": "〒101-0063 東京都千代田区神田淡路町２丁目１０５ ワテラスモール ３階",
+     "lat": 35.6973816,
+     "lng": 139.7678374
+    },
+    {
+     "place_id": "ChIJidVtjRqMGGARW0X9UG-k_x4",
+     "name": "ファミリーマート 神田駿河台三丁目店",
+     "address": "〒101-0062 東京都千代田区神田駿河台３丁目５−４ １０１",
+     "lat": 35.696033299999996,
+     "lng": 139.7638445
+    },
+    {
+     "place_id": "ChIJnUkMFQCNGGAR1TZ_4X-2qEQ",
+     "name": "デイリーヤマザキ 神田小川町店",
+     "address": "〒101-0052 東京都千代田区神田小川町３丁目２０−４ 第2龍名館ビル",
+     "lat": 35.69679120000001,
+     "lng": 139.7615111
+    },
+    {
+     "place_id": "ChIJqX1z9xeMGGAR3Xa8aLEk4Ts",
+     "name": "ナチュラルローソン 順天堂医院Ｂ棟店",
+     "address": "〒113-0033 東京都文京区本郷３丁目１−３",
+     "lat": 35.7024395,
+     "lng": 139.7612673
+    },
+    {
      "place_id": "ChIJW1iYxBiMGGARbQFq8FKyMbE",
      "name": "ファミリーマート 清水坂下店",
      "address": "〒113-0034 東京都文京区湯島３丁目１−９",
      "lat": 35.7029989,
      "lng": 139.7668281
+    },
+    {
+     "place_id": "ChIJ7bdVfWSMGGARprSYJLIqAyQ",
+     "name": "ファミリーマート ホテルマイステイズ御茶ノ水店",
+     "address": "〒101-0063 東京都千代田区神田淡路町２丁目１０−１０",
+     "lat": 35.6973872,
+     "lng": 139.7684017
+    },
+    {
+     "place_id": "ChIJhWAhi4CNGGARsJ1EogPehXM",
+     "name": "ＡＯｃａｆé × ｃｉｓｃａ",
+     "address": "〒101-0021 東京都千代田区外神田１丁目５−１ 秋葉原ファーストビル 13階",
+     "lat": 35.6992318,
+     "lng": 139.7693057
+    },
+    {
+     "place_id": "ChIJjRlh9FWNGGARCkVnzRxdynw",
+     "name": "ローソン 文京サッカー通り店",
+     "address": "〒113-0034 東京都文京区湯島２丁目５−１０",
+     "lat": 35.7041731,
+     "lng": 139.7643527
+    },
+    {
+     "place_id": "ChIJ_5RuJqiOGGARlqLzuNjjiJ4",
+     "name": "ファミリーマート 外神田一丁目店",
+     "address": "〒101-0021 東京都千代田区外神田１丁目７−５",
+     "lat": 35.6996495,
+     "lng": 139.7699614
+    },
+    {
+     "place_id": "ChIJ3axXvRiMGGARVQQ_1HTGFyk",
+     "name": "セブン‐イレブン文京湯島２丁目店",
+     "address": "〒113-0034 東京都文京区湯島２丁目８−９",
+     "lat": 35.7038367,
+     "lng": 139.7668792
+    },
+    {
+     "place_id": "ChIJMSV_IBGMGGAR9ymj2weNgoU",
+     "name": "ミニストップ 神田神保町１丁目店",
+     "address": "〒101-0051 東京都千代田区神田神保町１丁目２−５",
+     "lat": 35.6963729,
+     "lng": 139.7601046
+    },
+    {
+     "place_id": "ChIJn2zTtB2MGGARRTlS-pYohXQ",
+     "name": "ローソン 外神田三丁目店",
+     "address": "〒101-0021 東京都千代田区外神田３丁目１−１０",
+     "lat": 35.7001767,
+     "lng": 139.7703211
+    },
+    {
+     "place_id": "ChIJiwmJaQCNGGARXhtBPMHvcHo",
+     "name": "ローソン 神田小川町一丁目店",
+     "address": "〒101-0052 東京都千代田区神田小川町１丁目８−１３",
+     "lat": 35.69490750000001,
+     "lng": 139.76565779999999
+    },
+    {
+     "place_id": "ChIJK9mlMT2MGGARB9Xhl-rhO4I",
+     "name": "セブン‐イレブン文京本郷３丁目店",
+     "address": "〒113-0033 東京都文京区本郷３丁目５−８",
+     "lat": 35.7042573,
+     "lng": 139.76215489999998
+    },
+    {
+     "place_id": "ChIJrXJYtxqMGGARq_rmqX96y2Q",
+     "name": "ファミリーマート 千代田小川町店",
+     "address": "〒101-0052 東京都千代田区神田小川町２丁目４−１７ 大宮第1ビル",
+     "lat": 35.694783699999995,
+     "lng": 139.7635603
+    },
+    {
+     "place_id": "ChIJ05GX6B6MGGARj0a8BbFJNFI",
+     "name": "セブン‐イレブン外神田２丁目妻恋坂店",
+     "address": "〒101-0021 東京都千代田区外神田２丁目１４−７",
+     "lat": 35.7027427,
+     "lng": 139.7693074
+    },
+    {
+     "place_id": "ChIJD5Td1BqMGGAR8K31Q6IUQx0",
+     "name": "セブン‐イレブン神田小川町２丁目店",
+     "address": "〒101-0052 東京都千代田区神田小川町２丁目２−８",
+     "lat": 35.6946795,
+     "lng": 139.76490090000001
+    },
+    {
+     "place_id": "ChIJFVG5ugSMGGARxItOQa4y5NQ",
+     "name": "ファミリーマート 神田淡路町店",
+     "address": "〒101-0052 東京都千代田区神田小川町１丁目１−１６ 山甚ビル",
+     "lat": 35.6949827,
+     "lng": 139.7669436
+    },
+    {
+     "place_id": "ChIJAWrm0wSMGGARpkizbYVuAW8",
+     "name": "ファミリーマート 都営小川町店",
+     "address": "〒101-0052 東京都千代田区神田小川町１丁目６ B1",
+     "lat": 35.6945872,
+     "lng": 139.7655749
+    },
+    {
+     "place_id": "ChIJi7ZdLx-NGGARAkwJg6Ko2Uk",
+     "name": "NewDays 神田万世橋ビル",
+     "address": "〒101-0041 東京都千代田区神田須田町１丁目２５",
+     "lat": 35.697013,
+     "lng": 139.769894
+    },
+    {
+     "place_id": "ChIJZ-JicceNGGARmivLgdkReSE",
+     "name": "ファミリーマート 神田須田町一丁目店",
+     "address": "〒101-0041 東京都千代田区神田須田町１丁目８−４",
+     "lat": 35.6955467,
+     "lng": 139.7683686
+    },
+    {
+     "place_id": "ChIJCciMMgOMGGARm30sUi6yrlc",
+     "name": "セブン‐イレブン神田万世橋南店",
+     "address": "〒101-0041 東京都千代田区神田須田町１丁目９−１",
+     "lat": 35.6964908,
+     "lng": 139.7695936
     }
    ]
   },
@@ -14288,7 +14639,9 @@
    ]
   },
   "tameikesanno": {
-   "fetchedAt": "2026-10-24T11:23:10.632Z",
+   "v": 2,
+   "fetchedAt": "2026-10-31T15:12:10.216Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJKfRrcEOLGGARJ7LRO1LtUq0",
@@ -14347,6 +14700,13 @@
      "lng": 139.73894270000002
     },
     {
+     "place_id": "ChIJdQEL9GOLGGARMYUclyViKqQ",
+     "name": "セブン‐イレブンヴィアイン赤坂店",
+     "address": "〒107-0052 東京都港区赤坂２丁目６−１７",
+     "lat": 35.6724296,
+     "lng": 139.73895009999998
+    },
+    {
      "place_id": "ChIJk_qzNeCLGGARNOeGn5dnvAo",
      "name": "ファミリーマート 溜池山王駅南店",
      "address": "〒107-0052 東京都港区赤坂２丁目１０−１１ フォーシーズ溜池山王ビル １階",
@@ -14368,6 +14728,13 @@
      "lng": 139.7433156
     },
     {
+     "place_id": "ChIJORa_woaLGGARtYWLOzD32hY",
+     "name": "デイリーヤマザキ 赤坂２丁目店",
+     "address": "〒107-0052 東京都港区赤坂２丁目１４−９",
+     "lat": 35.6719577,
+     "lng": 139.7383305
+    },
+    {
      "place_id": "ChIJsTsoCwCLGGARiruqAmtYvBY",
      "name": "セブンイレブン 衆議院第一議員会館内店",
      "address": "〒100-8981 東京都千代田区永田町２丁目２−１",
@@ -14387,6 +14754,13 @@
      "address": "〒107-0052 東京都港区赤坂２丁目１７−２２ 赤坂トラストタワ ２階",
      "lat": 35.669537,
      "lng": 139.7407424
+    },
+    {
+     "place_id": "ChIJs1DoIoeLGGARsICGM2atAXY",
+     "name": "セブン‐イレブン赤坂２丁目店",
+     "address": "〒107-0052 東京都港区赤坂２丁目１３−１",
+     "lat": 35.6730415,
+     "lng": 139.7382785
     },
     {
      "place_id": "ChIJibWZY4iLGGARSJ5_raeT3_g",
@@ -14417,6 +14791,20 @@
      "lng": 139.7446501
     },
     {
+     "place_id": "ChIJTdkyp4aLGGARLPs2G4ROq_g",
+     "name": "セブン‐イレブン港区赤坂駅南店",
+     "address": "〒107-0052 東京都港区赤坂２丁目１７−５４",
+     "lat": 35.6702523,
+     "lng": 139.7380556
+    },
+    {
+     "place_id": "ChIJ6dJjyBSLGGARbRCEqOQ2YG8",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 港区赤坂駅南店",
+     "address": "〒107-0052 東京都港区赤坂２丁目１７−５４",
+     "lat": 35.6702291,
+     "lng": 139.7380677
+    },
+    {
      "place_id": "ChIJ-4XX0o6LGGARQph03mUSayo",
      "name": "セブン-イレブン 中央合同庁舎８号館店",
      "address": "〒100-0014 東京都千代田区永田町１丁目６−１ 中央合同庁舎第8号館",
@@ -14424,11 +14812,179 @@
      "lng": 139.7454291
     },
     {
+     "place_id": "ChIJF7QINIGLGGARGODuRZe6vtI",
+     "name": "ローソン 赤坂氷川公園前店",
+     "address": "〒107-0052 東京都港区赤坂６丁目２−４",
+     "lat": 35.6714105,
+     "lng": 139.7371393
+    },
+    {
+     "place_id": "ChIJhwp3LgCLGGARep01q5b41vM",
+     "name": "セブンイレブン 衆議院第二議員会館店",
+     "address": "地下1F, ２丁目-１-2 永田町 千代田区 東京都 100-0014",
+     "lat": 35.6755195,
+     "lng": 139.7425821
+    },
+    {
      "place_id": "ChIJfbya9Y6LGGARomhvvJEZWFI",
      "name": "セブン-イレブン 特許庁店",
      "address": "〒100-0013 東京都千代田区霞が関３丁目４−３ B1F",
      "lat": 35.671242299999996,
      "lng": 139.7456757
+    },
+    {
+     "place_id": "ChIJk_K8rICLGGAR5Mu6pSUtBAQ",
+     "name": "ファミリーマート 赤坂三丁目店",
+     "address": "〒107-0052 東京都港区赤坂３丁目１４−９ 赤坂清水ビル １階",
+     "lat": 35.6739544,
+     "lng": 139.73697199999998
+    },
+    {
+     "place_id": "ChIJ6cMEyoCLGGAR_XWrIXppNX0",
+     "name": "セブン‐イレブン赤坂Ｂｉｚタワー店",
+     "address": "〒107-0052 東京都港区赤坂５丁目３−１ ＢｉｚタワーＳＨＯＰＳ＆ＤＩＮＩＮＧ 地下１階",
+     "lat": 35.6728363,
+     "lng": 139.73643920000004
+    },
+    {
+     "place_id": "ChIJ35Jpr3iMGGARaLj3JUa_Trg",
+     "name": "ファミリーマート エスプラナード赤坂店",
+     "address": "〒107-0052 東京都港区赤坂３丁目７−１３",
+     "lat": 35.6749533,
+     "lng": 139.73768170000002
+    },
+    {
+     "place_id": "ChIJx_Tfko6LGGARtwq_Knz8444",
+     "name": "ナチュラルローソン 新霞が関ビル店",
+     "address": "〒100-0013 東京都千代田区霞が関３丁目３−２",
+     "lat": 35.671975499999995,
+     "lng": 139.7465707
+    },
+    {
+     "place_id": "ChIJk3Gd-4SLGGARADp785PsraY",
+     "name": "ナチュラルローソン アークヒルズフロントタワー店",
+     "address": "〒107-0052 東京都港区赤坂２丁目２３−１ アークヒルズフロントタワ 1F",
+     "lat": 35.6681635,
+     "lng": 139.7394999
+    },
+    {
+     "place_id": "ChIJlwSdMe2LGGARmsLpsZ1g4qA",
+     "name": "ローソン 虎ノ門二丁目店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目２−１ 住友不動産虎ノ門タワー 1F",
+     "lat": 35.669745999999996,
+     "lng": 139.745737
+    },
+    {
+     "place_id": "ChIJky1z4RGNGGARoXjbaPu4Cb4",
+     "name": "セブン‐イレブンプルデンシャルタワー店",
+     "address": "〒100-0014 東京都千代田区永田町２丁目１３−１０",
+     "lat": 35.6758684,
+     "lng": 139.7387005
+    },
+    {
+     "place_id": "ChIJl_v7mDWLGGARExmjgd5MZ2o",
+     "name": "ナチュラルローソン 虎の門病院２階店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目２−２",
+     "lat": 35.6687118,
+     "lng": 139.7447893
+    },
+    {
+     "place_id": "ChIJQdP4JNKLGGARh4eU-_ebWDU",
+     "name": "ファミリーマート 参議院／Ｓ店",
+     "address": "〒100-0014 東京都千代田区永田町１丁目７−１",
+     "lat": 35.6760959,
+     "lng": 139.74400749999998
+    },
+    {
+     "place_id": "ChIJtxccDgCLGGARqgXubbPBuFg",
+     "name": "ナチュラルローソン 虎の門病院９階店",
+     "address": "〒105-8470 東京都港区虎ノ門２丁目２−２ 虎の門病院 ９Ｆ",
+     "lat": 35.6686427,
+     "lng": 139.74516599999998
+    },
+    {
+     "place_id": "ChIJIwRu-HeMGGARGPrauQhBk0s",
+     "name": "セブン-イレブン 参議院議員会館店",
+     "address": "〒100-0014 東京都千代田区永田町２丁目１−１",
+     "lat": 35.676654,
+     "lng": 139.742552
+    },
+    {
+     "place_id": "ChIJjWLGH4GLGGAREfr-VKySdEo",
+     "name": "ファミリーマート 赤坂六丁目店",
+     "address": "〒107-0052 東京都港区赤坂６丁目３−２０",
+     "lat": 35.671422299999996,
+     "lng": 139.735668
+    },
+    {
+     "place_id": "ChIJW_gLAZOLGGARM-0nMmg3mFc",
+     "name": "ファミマ!! 霞が関ビルディング店",
+     "address": "〒100-0013 東京都千代田区霞が関３丁目２−５ ビルディング霞ダイニング",
+     "lat": 35.6711859,
+     "lng": 139.7471945
+    },
+    {
+     "place_id": "ChIJD1fqWn-MGGARa6ACFi1JGTo",
+     "name": "セブン‐イレブン赤坂３丁目一ツ木通り店",
+     "address": "〒107-0052 東京都港区赤坂３丁目１６−７",
+     "lat": 35.674687999999996,
+     "lng": 139.736422
+    },
+    {
+     "place_id": "ChIJGTLMm5mNGGARyyN3CkqDdYs",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 赤坂3丁目一ツ木通り店",
+     "address": "〒107-0052 東京都港区赤坂３丁目１６−７",
+     "lat": 35.6746577,
+     "lng": 139.73635
+    },
+    {
+     "place_id": "ChIJxeU4f2qLGGAR5EVHqSNYBjg",
+     "name": "ファミリーマート 虎ノ門アルセアタワー店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目２−３ アルセアタワ ２階",
+     "lat": 35.6690951,
+     "lng": 139.7461801
+    },
+    {
+     "place_id": "ChIJ-QnrGfmLGGARP4M6X-qMlTc",
+     "name": "cisca 霞が関コモンゲートビル店",
+     "address": "〒100-0013 東京都千代田区霞が関３丁目２−１",
+     "lat": 35.671833,
+     "lng": 139.7474513
+    },
+    {
+     "place_id": "ChIJcQ9Y5x2NGGARURc2shgno5E",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 赤坂3丁目みすじ通り店",
+     "address": "〒107-0052 東京都港区赤坂３丁目１０−１２",
+     "lat": 35.6754702,
+     "lng": 139.7368602
+    },
+    {
+     "place_id": "ChIJFYruwniMGGARCl-6jF5b54U",
+     "name": "ファミリーマート 永田町店",
+     "address": "〒100-0014 東京都千代田区永田町２丁目１４−２ 1F",
+     "lat": 35.6762492,
+     "lng": 139.7379575
+    },
+    {
+     "place_id": "ChIJAzovNH-MGGARwD5ka0Qr_ds",
+     "name": "セブン‐イレブン赤坂３丁目みすじ通り店",
+     "address": "〒107-0052 東京都港区赤坂３丁目１０−１２",
+     "lat": 35.675530099999996,
+     "lng": 139.7369132
+    },
+    {
+     "place_id": "ChIJF4_aZ8aLGGARvdyH66oxMMY",
+     "name": "ローソン オークラプレステージタワー店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目１０−４",
+     "lat": 35.6675233,
+     "lng": 139.7439906
+    },
+    {
+     "place_id": "ChIJqVum7oSLGGAReUAcj4a3FwY",
+     "name": "ファミリーマート アークヒルズ前店",
+     "address": "〒106-0032 東京都港区六本木２丁目２−８ ＫＤＸ六本木 ２２８ビル",
+     "lat": 35.6672211,
+     "lng": 139.7388097
     }
    ]
   },
@@ -15194,7 +15750,9 @@
    ]
   },
   "toranomon": {
-   "fetchedAt": "2026-10-24T11:23:12.337Z",
+   "v": 2,
+   "fetchedAt": "2026-10-31T15:12:19.973Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJj6yKgZKLGGAR4VYFkuuSq-E",
@@ -15335,6 +15893,174 @@
      "address": "〒105-0001 東京都港区虎ノ門２丁目２−３ アルセアタワ ２階",
      "lat": 35.6690951,
      "lng": 139.7461801
+    },
+    {
+     "place_id": "ChIJhXXIx3WLGGAR1qkLGfqvBLk",
+     "name": "セブン‐イレブン虎ノ門ヒルズステーションタワー店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目６−３ 7F",
+     "lat": 35.667477,
+     "lng": 139.7474801
+    },
+    {
+     "place_id": "ChIJx_Tfko6LGGARtwq_Knz8444",
+     "name": "ナチュラルローソン 新霞が関ビル店",
+     "address": "〒100-0013 東京都千代田区霞が関３丁目３−２",
+     "lat": 35.671975499999995,
+     "lng": 139.7465707
+    },
+    {
+     "place_id": "ChIJe0ADEO2LGGARGcMNU2N38ss",
+     "name": "ナチュラルローソン 日比谷国際ビル店",
+     "address": "〒100-0011 東京都千代田区内幸町２丁目２−３",
+     "lat": 35.6703262,
+     "lng": 139.754314
+    },
+    {
+     "place_id": "ChIJlwSdMe2LGGARmsLpsZ1g4qA",
+     "name": "ローソン 虎ノ門二丁目店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目２−１ 住友不動産虎ノ門タワー 1F",
+     "lat": 35.669745999999996,
+     "lng": 139.745737
+    },
+    {
+     "place_id": "ChIJtaTdluyLGGAR_ljjBpyu4YY",
+     "name": "セブン‐イレブン西新橋１丁目店",
+     "address": "〒105-0003 東京都港区西新橋１丁目１４−９",
+     "lat": 35.6681436,
+     "lng": 139.75395
+    },
+    {
+     "place_id": "ChIJLUfoKeqLGGARqdf8bCj9IqA",
+     "name": "ファミリーマート 西新橋スクエア店",
+     "address": "〒105-0003 東京都港区西新橋１丁目３−１",
+     "lat": 35.6691514,
+     "lng": 139.7545589
+    },
+    {
+     "place_id": "ChIJfbya9Y6LGGARomhvvJEZWFI",
+     "name": "セブン-イレブン 特許庁店",
+     "address": "〒100-0013 東京都千代田区霞が関３丁目４−３ B1F",
+     "lat": 35.671242299999996,
+     "lng": 139.7456757
+    },
+    {
+     "place_id": "ChIJIRQW0PKLGGARXic_6_QY9dw",
+     "name": "セブン-イレブン 中央合同庁舎５号館",
+     "address": "〒100-0013 東京都千代田区霞が関１丁目２−２",
+     "lat": 35.673325,
+     "lng": 139.75299329999999
+    },
+    {
+     "place_id": "ChIJy3XL2oyLGGARtpHgTfrLdtc",
+     "name": "ローソン 農林水産省店",
+     "address": "〒100-0013 東京都千代田区霞が関１丁目２−１ 農林水産省北別館 B1",
+     "lat": 35.673894,
+     "lng": 139.75169599999998
+    },
+    {
+     "place_id": "ChIJI-GYhZOLGGARbDi5yKAwom8",
+     "name": "ミニストップ 愛宕１丁目店",
+     "address": "〒105-0002 東京都港区愛宕１丁目３−４",
+     "lat": 35.6660696,
+     "lng": 139.7493486
+    },
+    {
+     "place_id": "ChIJId3vqO2LGGARKzKqOkOBV3c",
+     "name": "ファミリーマート 内幸町富国生命ビル店",
+     "address": "〒100-0011 東京都千代田区内幸町２丁目２−２ 富国生命ビル 地下１階",
+     "lat": 35.6707523,
+     "lng": 139.755168
+    },
+    {
+     "place_id": "ChIJtxccDgCLGGARqgXubbPBuFg",
+     "name": "ナチュラルローソン 虎の門病院９階店",
+     "address": "〒105-8470 東京都港区虎ノ門２丁目２−２ 虎の門病院 ９Ｆ",
+     "lat": 35.6686427,
+     "lng": 139.74516599999998
+    },
+    {
+     "place_id": "ChIJ0SdBliSLGGARiVPTocWcTlI",
+     "name": "セブン‐イレブン虎ノ門ヒルズレジデンシャルタワー店",
+     "address": "〒105-0002 東京都港区愛宕１丁目１−１",
+     "lat": 35.6659042,
+     "lng": 139.7487438
+    },
+    {
+     "place_id": "ChIJe1Py0pOLGGARq9LeHmCeWVQ",
+     "name": "ファミリーマート 特許庁前店",
+     "address": "〒107-0052 東京都港区赤坂１丁目３−９",
+     "lat": 35.6702969,
+     "lng": 139.7446501
+    },
+    {
+     "place_id": "ChIJp3O-5XeLGGARU549FoGpIu0",
+     "name": "セブン‐イレブン西新橋２丁目西店",
+     "address": "〒105-0003 東京都港区西新橋２丁目２０−１",
+     "lat": 35.6659943,
+     "lng": 139.7521903
+    },
+    {
+     "place_id": "ChIJ9U3_ZuyLGGAR_5zBoMDfzIo",
+     "name": "ミニストップ 新橋１丁目店",
+     "address": "〒105-0004 東京都港区新橋１丁目１８−１",
+     "lat": 35.6690553,
+     "lng": 139.7554207
+    },
+    {
+     "place_id": "ChIJdVxugOyLGGAROcuoSp5tYh8",
+     "name": "ローソン 新橋日比谷通店",
+     "address": "〒105-0004 東京都港区新橋２丁目２−９",
+     "lat": 35.667812399999995,
+     "lng": 139.75484269999998
+    },
+    {
+     "place_id": "ChIJl_v7mDWLGGARExmjgd5MZ2o",
+     "name": "ナチュラルローソン 虎の門病院２階店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目２−２",
+     "lat": 35.6687118,
+     "lng": 139.7447893
+    },
+    {
+     "place_id": "ChIJ2UqmOOuLGGARYiegiVJOZYs",
+     "name": "セブン‐イレブン西新橋２丁目店",
+     "address": "〒105-0003 東京都港区西新橋２丁目７−４",
+     "lat": 35.666654099999995,
+     "lng": 139.7538569
+    },
+    {
+     "place_id": "ChIJ-4XX0o6LGGARQph03mUSayo",
+     "name": "セブン-イレブン 中央合同庁舎８号館店",
+     "address": "〒100-0014 東京都千代田区永田町１丁目６−１ 中央合同庁舎第8号館",
+     "lat": 35.672726100000006,
+     "lng": 139.7454291
+    },
+    {
+     "place_id": "ChIJfZl6dZGLGGAR9NjaGhQwx0c",
+     "name": "セブン-イレブン 虎ノ門３７森ビル店",
+     "address": "〒105-0001 東京都港区虎ノ門３丁目５−１ 虎ノ門３７森ビル",
+     "lat": 35.6665381,
+     "lng": 139.7460183
+    },
+    {
+     "place_id": "ChIJp39tyZGLGGARXA6j_jWR-ZI",
+     "name": "ファミリーマート 虎ノ門ツインビル店",
+     "address": "〒105-0001 東京都港区虎ノ門２丁目１０−１",
+     "lat": 35.6673623,
+     "lng": 139.745092
+    },
+    {
+     "place_id": "ChIJjUUtPJqLGGARcPeHrP0X54w",
+     "name": "ファミリーマート 弁護士会館／Ｓ店",
+     "address": "〒100-0013 東京都千代田区霞が関１丁目１−３",
+     "lat": 35.6742498,
+     "lng": 139.7536893
+    },
+    {
+     "place_id": "ChIJdyDWSPOLGGARmomqv-0y9x4",
+     "name": "ファミリーマート 東京高等裁判所内店",
+     "address": "〒100-0013 東京都千代田区霞が関１丁目１−４ B1",
+     "lat": 35.6748753,
+     "lng": 139.7527518
     }
    ]
   },
@@ -15659,7 +16385,9 @@
    ]
   },
   "uchisaiwaicho": {
-   "fetchedAt": "2026-10-24T11:23:17.465Z",
+   "v": 2,
+   "fetchedAt": "2026-10-31T15:12:48.163Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJ9U3_ZuyLGGAR_5zBoMDfzIo",
@@ -15795,11 +16523,291 @@
      "lng": 139.7585643
     },
     {
+     "place_id": "ChIJv-hcouuLGGARtXG3-6Wx4es",
+     "name": "ローソン 新橋烏森通店",
+     "address": "〒105-0004 東京都港区新橋２丁目１４−６",
+     "lat": 35.6667091,
+     "lng": 139.75544019999998
+    },
+    {
      "place_id": "ChIJw52odCiLGGAR8fSakr0FVT8",
      "name": "セブン‐イレブン内幸町１丁目店",
      "address": "〒100-0011 東京都千代田区内幸町１丁目６−６",
      "lat": 35.6694803,
      "lng": 139.7586143
+    },
+    {
+     "place_id": "ChIJE6Bv2-uLGGAR-6HxKq5SxpI",
+     "name": "セブン‐イレブン新橋ＳＬ広場前店",
+     "address": "〒105-0004 東京都港区新橋２丁目８−９ 新橋ＳＬ広場前ビル B1",
+     "lat": 35.6670291,
+     "lng": 139.75709519999998
+    },
+    {
+     "place_id": "ChIJEZFwNwCLGGARsUPn01rdm1g",
+     "name": "2-15-17, Shinbashi, Minato-ku, Tokyo",
+     "address": "〒105-0004 東京都港区新橋２丁目１５−１７",
+     "lat": 35.6665978,
+     "lng": 139.7562193
+    },
+    {
+     "place_id": "ChIJT4NapWaLGGARrozwnO-igTw",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 新橋駅前店",
+     "address": "〒105-0004 東京都港区新橋１丁目１３−７",
+     "lat": 35.6677047,
+     "lng": 139.7582319
+    },
+    {
+     "place_id": "ChIJweGCaOmLGGARYHmP0GIAFtk",
+     "name": "セブン‐イレブン新橋駅前店",
+     "address": "〒105-0004 東京都港区新橋１丁目１３−７",
+     "lat": 35.6677028,
+     "lng": 139.7582512
+    },
+    {
+     "place_id": "ChIJ2UqmOOuLGGARYiegiVJOZYs",
+     "name": "セブン‐イレブン西新橋２丁目店",
+     "address": "〒105-0003 東京都港区西新橋２丁目７−４",
+     "lat": 35.666654099999995,
+     "lng": 139.7538569
+    },
+    {
+     "place_id": "ChIJy6UyuOuLGGAR1qH10fR_Mvk",
+     "name": "ファミリーマート 新橋烏森通り店",
+     "address": "〒105-0004 東京都港区新橋２丁目１５−１７",
+     "lat": 35.6663828,
+     "lng": 139.75613250000004
+    },
+    {
+     "place_id": "ChIJ2dAnLvSLGGARQRUdUt7yW2E",
+     "name": "ローソン 西新橋愛宕下通店",
+     "address": "〒105-0003 東京都港区西新橋１丁目２４−１６",
+     "lat": 35.668715999999996,
+     "lng": 139.751329
+    },
+    {
+     "place_id": "ChIJX7BcVMKLGGARMLop8tK7tBI",
+     "name": "ファミリーマート 新橋駅西店",
+     "address": "〒105-0004 東京都港区新橋２丁目１５−９ エスプラザ弥生ビル ２",
+     "lat": 35.6662333,
+     "lng": 139.75665469999998
+    },
+    {
+     "place_id": "ChIJ5aK98SiLGGARTR7teAFp21E",
+     "name": "NewDays 新橋北改札内",
+     "address": "〒105-0004 東京都港区新橋２丁目１７−１４ ＪＲ新橋駅 北改札内",
+     "lat": 35.6668266,
+     "lng": 139.7580097
+    },
+    {
+     "place_id": "ChIJafMaJOmLGGARJYghL575A-g",
+     "name": "ローソン 銀座八丁目店",
+     "address": "〒104-0061 東京都中央区銀座８丁目４−９",
+     "lat": 35.668849800000004,
+     "lng": 139.7597382
+    },
+    {
+     "place_id": "ChIJlaNw1MKLGGARdA_9X_qX0Js",
+     "name": "ファミリーマート メトロ新橋駅店",
+     "address": "〒105-0004 東京都港区新橋１丁目１１−７ 新橋センタープレイス",
+     "lat": 35.6674685,
+     "lng": 139.7591783
+    },
+    {
+     "place_id": "ChIJD7Wem5KLGGARg9BiiqcHjjw",
+     "name": "ファミリーマート 虎ノ門霞ケ関店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目１−２０",
+     "lat": 35.6704034,
+     "lng": 139.7507844
+    },
+    {
+     "place_id": "ChIJ3SrtmemLGGARSuxcVDL__hk",
+     "name": "Kiosk新橋改札内",
+     "address": "〒105-0004 東京都港区新橋２丁目１７−１７ JR新橋駅構内 地下1 地下汐留口改札内横須賀線ホーム連絡通路",
+     "lat": 35.666764199999996,
+     "lng": 139.7587191
+    },
+    {
+     "place_id": "ChIJk4aKqcOLGGARVAKqfAc6jU4",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 銀座8丁目店",
+     "address": "〒104-0061 東京都中央区銀座８丁目５−１２ 第2ウルワシビル 1F",
+     "lat": 35.6684741,
+     "lng": 139.759897
+    },
+    {
+     "place_id": "ChIJbV0wH--LGGARQ0-z6nH3x4U",
+     "name": "セブン‐イレブン銀座８丁目店",
+     "address": "〒104-0061 東京都中央区銀座８丁目５−１２",
+     "lat": 35.6684716,
+     "lng": 139.7599627
+    },
+    {
+     "place_id": "ChIJaaOuMsKLGGARcXjYIJ61GXo",
+     "name": "ファミリーマート 新橋赤レンガ通り店",
+     "address": "〒105-0004 東京都港区新橋３丁目７−９",
+     "lat": 35.6654524,
+     "lng": 139.7550282
+    },
+    {
+     "place_id": "ChIJ63qzTDaLGGARPAzdiQU5CRA",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 銀座7丁目店",
+     "address": "〒104-0061 東京都中央区銀座７丁目２−１８ GRANBELL SQUARE 1F",
+     "lat": 35.6707477,
+     "lng": 139.7600117
+    },
+    {
+     "place_id": "ChIJbV0wH--LGGARi2XNyWOIk2g",
+     "name": "セブン‐イレブン銀座７丁目店",
+     "address": "〒104-0061 東京都中央区銀座７丁目２−１８",
+     "lat": 35.6707477,
+     "lng": 139.7600117
+    },
+    {
+     "place_id": "ChIJhagdX_GLGGARDSgXcIlhurs",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 銀座ナイン店",
+     "address": "〒104-0061 東京都中央区銀座８丁目５−７",
+     "lat": 35.6678014,
+     "lng": 139.76002649999998
+    },
+    {
+     "place_id": "ChIJo9e3YIqLGGAR2wX9NNzMiJE",
+     "name": "セブン‐イレブン銀座ナイン店",
+     "address": "〒104-0061 東京都中央区銀座８丁目５−７",
+     "lat": 35.667792899999995,
+     "lng": 139.7600239
+    },
+    {
+     "place_id": "ChIJZZm74uiLGGAR4Kj206MNAjA",
+     "name": "ファミリーマート Ｋ２銀座八丁目店",
+     "address": "〒104-0061 東京都中央区銀座８丁目６−１５",
+     "lat": 35.668080499999995,
+     "lng": 139.7602578
+    },
+    {
+     "place_id": "ChIJp3O-5XeLGGARU549FoGpIu0",
+     "name": "セブン‐イレブン西新橋２丁目西店",
+     "address": "〒105-0003 東京都港区西新橋２丁目２０−１",
+     "lat": 35.6659943,
+     "lng": 139.7521903
+    },
+    {
+     "place_id": "ChIJj6yKgZKLGGAR4VYFkuuSq-E",
+     "name": "セブン‐イレブン虎ノ門駅前店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目１−２３ 虎ノ門東宝ビル",
+     "lat": 35.6703313,
+     "lng": 139.7502015
+    },
+    {
+     "place_id": "ChIJKbKQXcaLGGARwCmXPZel09c",
+     "name": "アーバン・ファミマ‼ 虎ノ門ヒルズ ビジネスタワー店",
+     "address": "〒105-6402 東京都港区虎ノ門１丁目１７−１ 虎ノ門ヒルズ ビジネスタワー 2F",
+     "lat": 35.6679528,
+     "lng": 139.75036319999998
+    },
+    {
+     "place_id": "ChIJXRqPr-mLGGARGn4jabCzA5Y",
+     "name": "ファミリーマート 新橋二丁目店",
+     "address": "〒105-0004 東京都港区新橋２丁目１９−２ ディプロ新橋",
+     "lat": 35.6668606,
+     "lng": 139.7595165
+    },
+    {
+     "place_id": "ChIJlc2eR-uLGGARVQREQl2Ktpg",
+     "name": "ファミリーマート 虎ノ門一丁目店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目１２−１",
+     "lat": 35.669215799999996,
+     "lng": 139.750009
+    },
+    {
+     "place_id": "ChIJIRQW0PKLGGARXic_6_QY9dw",
+     "name": "セブン-イレブン 中央合同庁舎５号館",
+     "address": "〒100-0013 東京都千代田区霞が関１丁目２−２",
+     "lat": 35.673325,
+     "lng": 139.75299329999999
+    },
+    {
+     "place_id": "ChIJBS3eVACLGGARF1hYjo8Y68M",
+     "name": "セブンイレブン新橋１丁目店",
+     "address": "〒105-0004 東京都港区新橋１丁目９−5KDX 地先 1F",
+     "lat": 35.6670466,
+     "lng": 139.75999869999998
+    },
+    {
+     "place_id": "ChIJEYiZP-qLGGARjmx4-MiDjGs",
+     "name": "ローソン 新橋四丁目店",
+     "address": "〒105-0004 東京都港区新橋４丁目１０−２",
+     "lat": 35.6649847,
+     "lng": 139.75632389999998
+    },
+    {
+     "place_id": "ChIJPf3YttKLGGAROcG2KYTx-NM",
+     "name": "ファミリーマート 新橋桜田公園前店",
+     "address": "〒105-0004 東京都港区新橋４丁目１１−１",
+     "lat": 35.6649009,
+     "lng": 139.7564884
+    },
+    {
+     "place_id": "ChIJaYvL3JCLGGARuheSRSXkn9s",
+     "name": "セブン‐イレブン虎ノ門１丁目店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目１４−１",
+     "lat": 35.6686759,
+     "lng": 139.74940519999998
+    },
+    {
+     "place_id": "ChIJjUUtPJqLGGARcPeHrP0X54w",
+     "name": "ファミリーマート 弁護士会館／Ｓ店",
+     "address": "〒100-0013 東京都千代田区霞が関１丁目１−３",
+     "lat": 35.6742498,
+     "lng": 139.7536893
+    },
+    {
+     "place_id": "ChIJybEbopOLGGAR0jmOf5I7gT0",
+     "name": "ファミマ!! 虎ノ門ヒルズ店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目２３−３ 虎ノ門ヒルズ森タワー 3F",
+     "lat": 35.6669537,
+     "lng": 139.74974659999998
+    },
+    {
+     "place_id": "ChIJzZNZRJKLGGARfylkhUR84v4",
+     "name": "ローソン 虎ノ門一丁目店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目１６−４",
+     "lat": 35.6684753,
+     "lng": 139.74899109999998
+    },
+    {
+     "place_id": "ChIJ7wqrRuiLGGART1r5a98hBVc",
+     "name": "ファミリーマート 銀座中央通り店",
+     "address": "〒105-0004 東京都港区新橋１丁目７−１ 近鉄銀座中央通りビル 1F",
+     "lat": 35.6670227,
+     "lng": 139.76104519999998
+    },
+    {
+     "place_id": "ChIJTfNAio2LGGARuRPPLQTMKk4",
+     "name": "セブンイレブン港区虎ノ門駅南店",
+     "address": "〒105-0001 東京都港区虎ノ門１丁目２−４",
+     "lat": 35.6699329,
+     "lng": 139.7488632
+    },
+    {
+     "place_id": "ChIJBQbPY8OLGGARnZrtEeYL6oM",
+     "name": "ファミリーマート 新橋四丁目店",
+     "address": "〒105-0004 東京都港区新橋４丁目１９−４ コンシェリア新橋 １階",
+     "lat": 35.6644917,
+     "lng": 139.75767960000002
+    },
+    {
+     "place_id": "ChIJp8aYGfOLGGARFKrMRmvbHi8",
+     "name": "ファミリーマート 東京家庭裁判所内店",
+     "address": "〒100-0013 東京都千代田区霞が関１丁目１−２",
+     "lat": 35.674571,
+     "lng": 139.7539509
+    },
+    {
+     "place_id": "ChIJy3XL2oyLGGARtpHgTfrLdtc",
+     "name": "ローソン 農林水産省店",
+     "address": "〒100-0013 東京都千代田区霞が関１丁目２−１ 農林水産省北別館 B1",
+     "lat": 35.673894,
+     "lng": 139.75169599999998
     }
    ]
   },
