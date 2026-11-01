@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-31T15:13:07.435Z",
+ "updatedAt": "2026-11-01T15:54:33.086Z",
  "areas": {
   "akabane": {
    "v": 2,
@@ -3120,7 +3120,9 @@
    ]
   },
   "honmachi": {
-   "fetchedAt": "2026-10-24T11:23:31.069Z",
+   "v": 2,
+   "fetchedAt": "2026-11-01T15:54:23.243Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJg3fVpR3nAGARyR0tccLeM1I",
@@ -3214,6 +3216,13 @@
      "lng": 135.5002978
     },
     {
+     "place_id": "ChIJJRnkUrnnAGARQyLHptyhdLY",
+     "name": "ローソン ＭＩＤ西本町ビル店",
+     "address": "〒550-0011 大阪府大阪市西区阿波座１丁目６−１",
+     "lat": 34.6814557,
+     "lng": 135.4965686
+    },
+    {
      "place_id": "ChIJkVaRIRznAGARTVWrA_7ee94",
      "name": "セブン‐イレブン船場心斎橋筋店",
      "address": "〒541-0056 大阪府大阪市中央区久太郎町３丁目５−８",
@@ -3235,6 +3244,13 @@
      "lng": 135.5016072
     },
     {
+     "place_id": "ChIJodjjWv3mAGARtQnF0LT5zGA",
+     "name": "ファミリーマート 西本町店",
+     "address": "〒550-0005 大阪府大阪市西区西本町１丁目５−１０",
+     "lat": 34.682272499999996,
+     "lng": 135.4962282
+    },
+    {
      "place_id": "ChIJHc7QxeLmAGARRKm-6r1x_fg",
      "name": "セブン-イレブン 大阪靱本町１丁目店",
      "address": "〒550-0004 大阪府大阪市西区靱本町１丁目４−８",
@@ -3249,6 +3265,13 @@
      "lng": 135.5018393
     },
     {
+     "place_id": "ChIJe3ftCvbnAGARUR6cRkN6UKU",
+     "name": "ファミリーマート 南久宝寺町四丁目店",
+     "address": "〒541-0058 大阪府大阪市中央区南久宝寺町４丁目６−１０ 南久宝寺Fukue Bl. 1階",
+     "lat": 34.679085900000004,
+     "lng": 135.4988912
+    },
+    {
      "place_id": "ChIJD-QzcuLmAGARisGaWj05WJ4",
      "name": "セブン‐イレブン御堂ビル店",
      "address": "〒541-0053 大阪府大阪市中央区本町４丁目１−１３",
@@ -3256,11 +3279,242 @@
      "lng": 135.5002044
     },
     {
+     "place_id": "ChIJ4e1fjz3nAGAR8PEesfV9Wzo",
+     "name": "セブン-イレブン 四ツ橋立売堀店",
+     "address": "〒550-0012 大阪府大阪市西区立売堀１丁目３−１１",
+     "lat": 34.6794015,
+     "lng": 135.4972331
+    },
+    {
+     "place_id": "ChIJKfZnxALnAGARINPRdPh8I1I",
+     "name": "ファミリーマート 立売堀一丁目店",
+     "address": "〒550-0012 大阪府大阪市西区立売堀１丁目６−１３ 南本町天祥ビル 2号館",
+     "lat": 34.6803525,
+     "lng": 135.4960789
+    },
+    {
      "place_id": "ChIJPcUM-B3nAGARZK2JTnhz29E",
      "name": "ローソン 御堂筋本町ビル店",
      "address": "〒541-0052 大阪府大阪市中央区本町３丁目５−７ Ｂ1",
      "lat": 34.6840548,
      "lng": 135.5011459
+    },
+    {
+     "place_id": "ChIJYZdOURznAGARUk_wJ8Z5F0A",
+     "name": "ファミリーマート 信濃橋店",
+     "address": "〒550-0004 大阪府大阪市西区靱本町１丁目１１−７",
+     "lat": 34.6840116,
+     "lng": 135.49671379999998
+    },
+    {
+     "place_id": "ChIJodjjWv3mAGAR-E8gOeQ21is",
+     "name": "ファミリーマート 本町駅西店",
+     "address": "〒550-0011 大阪府大阪市西区阿波座１丁目７−１２",
+     "lat": 34.681434599999996,
+     "lng": 135.495229
+    },
+    {
+     "place_id": "ChIJPQJKJAPnAGAR1XZZLKiPQDk",
+     "name": "セブン-イレブン 大阪立売堀1丁目東店",
+     "address": "〒550-0012 大阪府大阪市西区立売堀１丁目４−２２",
+     "lat": 34.6796179,
+     "lng": 135.4961577
+    },
+    {
+     "place_id": "ChIJk8Z9exvnAGARpLsD2z1dzcE",
+     "name": "デイリーヤマザキ 大阪博労町店",
+     "address": "〒541-0059 大阪府大阪市中央区博労町４丁目６−１０ ハニービル",
+     "lat": 34.6783678,
+     "lng": 135.4988962
+    },
+    {
+     "place_id": "ChIJp-pXuGznAGARIcO6S2K_PMc",
+     "name": "セブン‐イレブン本町ガーデンシティテラス店",
+     "address": "〒541-0052 大阪府大阪市中央区安土町３丁目５−１３",
+     "lat": 34.6846495,
+     "lng": 135.5009428
+    },
+    {
+     "place_id": "ChIJ2571Gv3mAGAR2diiBuh0UgM",
+     "name": "ファミリーマート 西本町一丁目店",
+     "address": "〒550-0005 大阪府大阪市西区西本町１丁目８−１４",
+     "lat": 34.683186,
+     "lng": 135.4953105
+    },
+    {
+     "place_id": "ChIJrXxezR3nAGAR-qWNE4il9Nw",
+     "name": "ファミリーマート エル本町店",
+     "address": "〒541-0053 大阪府大阪市中央区本町４丁目７−４",
+     "lat": 34.68515,
+     "lng": 135.498169
+    },
+    {
+     "place_id": "ChIJsVhU_uHmAGARkzGZc4ApS-s",
+     "name": "ミニストップ 御堂筋本町店",
+     "address": "〒541-0052 大阪府大阪市中央区安土町３丁目４−１０",
+     "lat": 34.684591,
+     "lng": 135.501767
+    },
+    {
+     "place_id": "ChIJ33moGeLmAGARTw1mdABtuGI",
+     "name": "デイリーヤマザキ 御堂筋本町店",
+     "address": "〒541-0051 大阪府大阪市中央区備後町３丁目６−２ KFセンタービル",
+     "lat": 34.685147,
+     "lng": 135.501082
+    },
+    {
+     "place_id": "ChIJQXfUaxnnAGARF07Eqzz4Npo",
+     "name": "セブン‐イレブン大阪南久宝寺町３丁目店",
+     "address": "〒541-0058 大阪府大阪市中央区南久宝寺町３丁目２−５",
+     "lat": 34.679068,
+     "lng": 135.502554
+    },
+    {
+     "place_id": "ChIJAQDAHOLmAGARPJmwBRo9vtw",
+     "name": "スーパーフレスコ ミニ御堂筋本町店",
+     "address": "〒541-0051 大阪府大阪市中央区備後町３丁目６−１４",
+     "lat": 34.6851205,
+     "lng": 135.50155329999998
+    },
+    {
+     "place_id": "ChIJpUKPl2DnAGAR28rXWhhjsXE",
+     "name": "ファミリーマート 靱公園前店",
+     "address": "〒550-0004 大阪府大阪市西区靱本町１丁目６−１４",
+     "lat": 34.685476699999995,
+     "lng": 135.4971784
+    },
+    {
+     "place_id": "ChIJS0gWXRvnAGARO0yVcOrxjNw",
+     "name": "ミニストップ 南船場店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場４丁目１４−３",
+     "lat": 34.6776944,
+     "lng": 135.497982
+    },
+    {
+     "place_id": "ChIJD_cg1hvnAGARQe0b5tiqL2E",
+     "name": "ファミリーマート 博労町三丁目店",
+     "address": "〒541-0059 大阪府大阪市中央区博労町３丁目３−１",
+     "lat": 34.6780611,
+     "lng": 135.5015587
+    },
+    {
+     "place_id": "ChIJ44PKB-PmAGAR9gKOLdvrpw0",
+     "name": "セブン‐イレブン大阪瓦町４丁目店",
+     "address": "〒541-0048 大阪府大阪市中央区瓦町４丁目３−４",
+     "lat": 34.685933299999995,
+     "lng": 135.49912940000002
+    },
+    {
+     "place_id": "ChIJ-QQxKlrnAGARweWERooc_lQ",
+     "name": "ニュージョイス 靱本町店(仮)",
+     "address": "〒550-0004 大阪府大阪市西区靱本町１丁目１７−１",
+     "lat": 34.684508099999995,
+     "lng": 135.495026
+    },
+    {
+     "place_id": "ChIJT8cGuP3mAGART99N_Yrptbo",
+     "name": "ファミリーマート 西本町なにわ筋店",
+     "address": "〒550-0005 大阪府大阪市西区西本町１丁目１５−１０ 辰野西本町ビル",
+     "lat": 34.6821073,
+     "lng": 135.4934195
+    },
+    {
+     "place_id": "ChIJT-A7DhvnAGARSDvlV6PDS3k",
+     "name": "（株）ＶＯＬ−ＮＥＸＴ",
+     "address": "〒542-0081 大阪府大阪市中央区南船場４丁目１０−５",
+     "lat": 34.6770949,
+     "lng": 135.4987361
+    },
+    {
+     "place_id": "ChIJvaz8CBnnAGARrTkrjXXuMK4",
+     "name": "ローソン 博労町三丁目店",
+     "address": "〒541-0059 大阪府大阪市中央区博労町３丁目１−３",
+     "lat": 34.678624,
+     "lng": 135.5032621
+    },
+    {
+     "place_id": "ChIJ988U9DbnAGARoAn0loIrSxA",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪南船場３丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場３丁目８−６",
+     "lat": 34.677745,
+     "lng": 135.5021247
+    },
+    {
+     "place_id": "ChIJcxHNFx_nAGARV-eQTS7pwqg",
+     "name": "セブン‐イレブン大阪南本町２丁目店",
+     "address": "〒541-0054 大阪府大阪市中央区南本町２丁目３−１２",
+     "lat": 34.682494,
+     "lng": 135.50471199999998
+    },
+    {
+     "place_id": "ChIJCdai2l_nAGARuXBDCjxMoPw",
+     "name": "セブン‐イレブン大阪南船場３丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場３丁目８−６",
+     "lat": 34.677655699999995,
+     "lng": 135.5022348
+    },
+    {
+     "place_id": "ChIJJQpSSBvnAGARjqYJsHPSIso",
+     "name": "ファミリーマート 四ツ橋北店",
+     "address": "〒550-0013 大阪府大阪市西区新町１丁目３−１２ 四ツ橋セントラルビル １Ｆ",
+     "lat": 34.676928499999995,
+     "lng": 135.4973287
+    },
+    {
+     "place_id": "ChIJs6PusgTnAGARFVMquzmorqY",
+     "name": "ローソン 西区新町一丁目店",
+     "address": "〒550-0013 大阪府大阪市西区新町１丁目８−１",
+     "lat": 34.677017899999996,
+     "lng": 135.4968376
+    },
+    {
+     "place_id": "ChIJnSFdeCjnAGAR94ktEJ_xHls",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪南船場4丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場４丁目６−２０",
+     "lat": 34.6766106,
+     "lng": 135.49903419999998
+    },
+    {
+     "place_id": "ChIJy7lVQabnAGARHvaXqJxUyLY",
+     "name": "セブン-イレブン大阪新町１丁目",
+     "address": "〒550-0013 大阪府大阪市西区新町１丁目１９−１８ 四ツ橋吉田ビル",
+     "lat": 34.6774116,
+     "lng": 135.4956276
+    },
+    {
+     "place_id": "ChIJKzhxARvnAGARjN6kuR3LDZU",
+     "name": "セブン‐イレブン大阪南船場４丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場４丁目６−２０",
+     "lat": 34.676587999999995,
+     "lng": 135.4990386
+    },
+    {
+     "place_id": "ChIJ-cDqQALnAGARxbPtypjA6Dk",
+     "name": "セブン-イレブン 大阪立売堀１丁目店",
+     "address": "〒550-0012 大阪府大阪市西区立売堀１丁目１４−２０",
+     "lat": 34.6794064,
+     "lng": 135.4934359
+    },
+    {
+     "place_id": "ChIJx82sox_nAGARX6cOAYVlaqc",
+     "name": "ファミリーマート 大阪国際ビル西口店",
+     "address": "〒541-0052 大阪府大阪市中央区安土町２丁目３−１３ 大阪国際ビルディング",
+     "lat": 34.683985899999996,
+     "lng": 135.5047659
+    },
+    {
+     "place_id": "ChIJVWcNrgPnAGARHAR4w3iy3ks",
+     "name": "ローソン 大阪厚生年金会館前店",
+     "address": "〒550-0013 大阪府大阪市西区新町１丁目３４−５",
+     "lat": 34.678341599999996,
+     "lng": 135.4940339
+    },
+    {
+     "place_id": "ChIJ37XMvxjnAGARyQZ8z3EP4Fs",
+     "name": "ファミリーマート 久太郎町二丁目店",
+     "address": "〒541-0056 大阪府大阪市中央区久太郎町２丁目３−１５",
+     "lat": 34.680551699999995,
+     "lng": 135.5053067
     }
    ]
   },
@@ -8073,7 +8327,9 @@
    ]
   },
   "namba": {
-   "fetchedAt": "2026-10-24T11:23:24.310Z",
+   "v": 2,
+   "fetchedAt": "2026-11-01T15:53:43.959Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJOR9YIA7nAGARg0YIIOJhqdE",
@@ -8181,11 +8437,32 @@
      "lng": 135.5045098
     },
     {
+     "place_id": "ChIJFa43n27nAGARhSiaGJR1vOA",
+     "name": "ファミリーマート 難波中南店",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中３丁目９−５",
+     "lat": 34.661119,
+     "lng": 135.5003572
+    },
+    {
+     "place_id": "ChIJA6oiC13nAGARXqevibLlYdg",
+     "name": "ファミリーマート 難波中二丁目店",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中２丁目５−８",
+     "lat": 34.661555299999996,
+     "lng": 135.50479909999999
+    },
+    {
      "place_id": "ChIJ83C3yDvnAGARcOc26slAZ7w",
      "name": "ローソン 難波三丁目店",
      "address": "〒542-0076 大阪府大阪市中央区難波３丁目７−１２",
      "lat": 34.6658416,
      "lng": 135.5006031
+    },
+    {
+     "place_id": "ChIJz08MfFTnAGARe2_gM2_jc9s",
+     "name": "ファミリーマート 難波中北店",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中１丁目６−５",
+     "lat": 34.6648759,
+     "lng": 135.4992383
     },
     {
      "place_id": "ChIJP2OBu5HnAGARh6FgKD0nRqc",
@@ -8195,11 +8472,46 @@
      "lng": 135.5033666
     },
     {
+     "place_id": "ChIJkf9vym7nAGARS_9RZ3YBu3I",
+     "name": "ファミリーマート 四つ橋なんば駅南店",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中１丁目１０−１０ AUSビル",
+     "lat": 34.6641368,
+     "lng": 135.4985797
+    },
+    {
+     "place_id": "ChIJcW4EPhPnAGARlO5sQCG3OMk",
+     "name": "ファミリーマート ホテルロイヤルクラシック大阪店",
+     "address": "〒542-0076 大阪府大阪市中央区難波４丁目３−３",
+     "lat": 34.6659079,
+     "lng": 135.4999008
+    },
+    {
+     "place_id": "ChIJH_ni5GjnAGARbi-pg48HcsU",
+     "name": "ローソン 日本橋西一丁目店",
+     "address": "〒556-0004 大阪府大阪市浪速区日本橋西１丁目３−１９",
+     "lat": 34.6602584,
+     "lng": 135.5032913
+    },
+    {
      "place_id": "ChIJ-5pFTBPnAGAR1zxbi8LszDQ",
      "name": "ファミリーマート 難波三丁目店",
      "address": "〒542-0076 大阪府大阪市中央区難波３丁目６−７",
      "lat": 34.6663387,
      "lng": 135.5008713
+    },
+    {
+     "place_id": "ChIJ4Rvk32nnAGARJ5zMkBQrFIQ",
+     "name": "ミニストップ日本橋３丁目交差点東店",
+     "address": "〒542-0073 大阪府大阪市中央区日本橋２丁目９−１３",
+     "lat": 34.663129399999995,
+     "lng": 135.5061518
+    },
+    {
+     "place_id": "ChIJGcNyzWnnAGARnFHVZoPbz6M",
+     "name": "ローソンストア100 浪速日本橋店",
+     "address": "〒556-0005 大阪府大阪市浪速区日本橋３丁目７−３ Phoenix 難波 East",
+     "lat": 34.6618664,
+     "lng": 135.50577850000002
     },
     {
      "place_id": "ChIJ34IhHmvnAGARG9LUlVePvsg",
@@ -8214,6 +8526,293 @@
      "address": "〒542-0076 大阪府大阪市中央区難波３丁目４−１６ ECS第32ビル １階",
      "lat": 34.6667671,
      "lng": 135.5019567
+    },
+    {
+     "place_id": "ChIJ0YQxaoTnAGARB7KsAzcMoec",
+     "name": "ローソン なんばパークスサウス店",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中２丁目１１−１８ 2F",
+     "lat": 34.6597605,
+     "lng": 135.5018364
+    },
+    {
+     "place_id": "ChIJXTHbXBPnAGARX3s55UdLs_A",
+     "name": "ローソン Ｓ ＯＳＬなんば駅上りホーム店",
+     "address": "〒542-0076 大阪府大阪市中央区難波１丁目９−７ 御堂筋線なんば駅 2番ホーム",
+     "lat": 34.666564099999995,
+     "lng": 135.5001974
+    },
+    {
+     "place_id": "ChIJvzb3TxPnAGARW0ZkFaIVgPU",
+     "name": "ファミリーマート 難波千日前通店",
+     "address": "〒542-0076 大阪府大阪市中央区難波３丁目５−１７ 北極星ビル1F",
+     "lat": 34.6668495,
+     "lng": 135.5010507
+    },
+    {
+     "place_id": "ChIJb0bVOhPnAGARyi0ukyfLuR0",
+     "name": "ポプラ 難波御堂筋ビル店",
+     "address": "〒542-0076 大阪府大阪市中央区難波４丁目２−２−１",
+     "lat": 34.6664852,
+     "lng": 135.4998633
+    },
+    {
+     "place_id": "ChIJPzOhnW3nAGARIjyvlHuF0_0",
+     "name": "ファミリーマート 元町二丁目店",
+     "address": "〒556-0016 大阪府大阪市浪速区元町２丁目１−３",
+     "lat": 34.6625067,
+     "lng": 135.4977202
+    },
+    {
+     "place_id": "ChIJ2_hceSDnAGARFTUzZycpnsc",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪日本橋オタロード店",
+     "address": "〒556-0004 大阪府大阪市浪速区日本橋西１丁目４−１９",
+     "lat": 34.660198799999996,
+     "lng": 135.5045706
+    },
+    {
+     "place_id": "ChIJ20pBXWjnAGARtVkdlhhAEuI",
+     "name": "セブンイレブン 大阪日本橋オタロード店",
+     "address": "〒556-0004 大阪府大阪市浪速区日本橋西１丁目４−１９",
+     "lat": 34.6601853,
+     "lng": 135.5045978
+    },
+    {
+     "place_id": "ChIJ0Qdwe_rnAGARavWxLmTgzhA",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪日本橋3丁目店",
+     "address": "〒556-0005 大阪府大阪市浪速区日本橋３丁目４−１０",
+     "lat": 34.6615008,
+     "lng": 135.5060882
+    },
+    {
+     "place_id": "ChIJLz-X2RLnAGARiS3392QnSGM",
+     "name": "ファミリーマート なんば楽座店",
+     "address": "〒542-0076 大阪府大阪市中央区難波４丁目５−３０",
+     "lat": 34.666076,
+     "lng": 135.4990387
+    },
+    {
+     "place_id": "ChIJe6kaJmjnAGARGmPGXhhbgks",
+     "name": "セブン-イレブン 大阪日本橋３丁目店",
+     "address": "〒556-0005 大阪府大阪市浪速区日本橋３丁目４−１０ ホテルヒラリーズ",
+     "lat": 34.6614754,
+     "lng": 135.50608219999998
+    },
+    {
+     "place_id": "ChIJM0ieyRLnAGARmeoFHmS0vNg",
+     "name": "ファミリーマート 四つ橋なんば駅前店",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中１丁目３−１０",
+     "lat": 34.665357799999995,
+     "lng": 135.498236
+    },
+    {
+     "place_id": "ChIJg27ORADnAGARZcaBcploLBo",
+     "name": "Smoking Area Family Mart",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中１丁目３−１０",
+     "lat": 34.6653442,
+     "lng": 135.4982193
+    },
+    {
+     "place_id": "ChIJ134UFhPnAGAR7BIsYaO-jrY",
+     "name": "ファミリーマート 近鉄難波駅東改札外店",
+     "address": "〒542-0076 大阪府大阪市中央区難波４丁目１−１７",
+     "lat": 34.666973,
+     "lng": 135.5002092
+    },
+    {
+     "place_id": "ChIJI8pPZWrnAGARDEAlzTxlrTQ",
+     "name": "ローソン 日本橋一丁目店",
+     "address": "〒542-0073 大阪府大阪市中央区日本橋１丁目２０−５",
+     "lat": 34.6657349,
+     "lng": 135.5059453
+    },
+    {
+     "place_id": "ChIJ77Xd-0HnAGAR5P51-8Vd5-I",
+     "name": "ファミリーマート 黒門市場前店",
+     "address": "〒542-0073 大阪府大阪市中央区日本橋２丁目３−８",
+     "lat": 34.6646967,
+     "lng": 135.5066615
+    },
+    {
+     "place_id": "ChIJT4NIFWjnAGARJBeRXJphirU",
+     "name": "ファミリーマート 日本橋四丁目店",
+     "address": "〒556-0005 大阪府大阪市浪速区日本橋４丁目１０−８",
+     "lat": 34.6606161,
+     "lng": 135.5057181
+    },
+    {
+     "place_id": "ChIJJXR7wmrnAGARBbhUg7vtkdo",
+     "name": "ファミリーマート なんばウォーク店",
+     "address": "〒542-0074 大阪府大阪市中央区千日前１丁目５ 虹のまち ５－９",
+     "lat": 34.666900999999996,
+     "lng": 135.5046516
+    },
+    {
+     "place_id": "ChIJUVPSuZznAGARQ_hOIpjeL3k",
+     "name": "ローソン ＯＳＬ ekimoなんば店",
+     "address": "〒542-0076 大阪府大阪市中央区難波１丁目９−７ ekimoなんば NORTH ゾーン",
+     "lat": 34.6672201,
+     "lng": 135.5003738
+    },
+    {
+     "place_id": "ChIJryGrluXnAGARlGZWiQ2bNDc",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪難波中３丁目南店",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中３丁目１６−１",
+     "lat": 34.6601663,
+     "lng": 135.498733
+    },
+    {
+     "place_id": "ChIJk772bG7nAGAR3nbP7qOTfFA",
+     "name": "セブン-イレブン 大阪難波中３丁目南店",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中３丁目１６−１",
+     "lat": 34.6601566,
+     "lng": 135.4986965
+    },
+    {
+     "place_id": "ChIJ3VyHaADnAGARPzf_DVGM1LY",
+     "name": "ファミリーマート日本橋1丁目店",
+     "address": "〒542-0076 大阪府大阪市中央区難波１丁目９−７",
+     "lat": 34.66734170000001,
+     "lng": 135.5005569
+    },
+    {
+     "place_id": "ChIJHxjvg9DnAGARm9kNL-4hOHs",
+     "name": "ファミリーマート 千日前一丁目店",
+     "address": "〒542-0074 大阪府大阪市中央区千日前１丁目９−７",
+     "lat": 34.6673316,
+     "lng": 135.5039367
+    },
+    {
+     "place_id": "ChIJ5beyYwDnAGARFn1mdANxVuw",
+     "name": "7-Eleven",
+     "address": "〒542-0076 大阪府大阪市中央区難波１丁目８−７",
+     "lat": 34.6675259,
+     "lng": 135.5010252
+    },
+    {
+     "place_id": "ChIJf-89HRPnAGARMUZTEdYlQ8c",
+     "name": "ファミリーマート 近鉄難波駅東改札内",
+     "address": "〒542-0076 大阪府大阪市中央区難波４丁目１−１７",
+     "lat": 34.667141199999996,
+     "lng": 135.49936309999998
+    },
+    {
+     "place_id": "ChIJQR-bBhPnAGARDrXlFNKmvzg",
+     "name": "ローソン 難波二丁目店",
+     "address": "〒542-0076 大阪府大阪市中央区難波２丁目２−３",
+     "lat": 34.667448199999995,
+     "lng": 135.4996214
+    },
+    {
+     "place_id": "ChIJiV3BD_nnAGAR370KLmDkdks",
+     "name": "セブン-イレブン 大阪元町２丁目店",
+     "address": "〒556-0016 大阪府大阪市浪速区元町２丁目９−１０",
+     "lat": 34.6610817,
+     "lng": 135.496903
+    },
+    {
+     "place_id": "ChIJK2VLHgDnAGARfR1PotIuQGE",
+     "name": "ローソン Ｓ ＯＳＬ大阪日本橋駅店",
+     "address": "〒542-0073 大阪府大阪市中央区日本橋１丁目５−１２",
+     "lat": 34.6671566,
+     "lng": 135.5057051
+    },
+    {
+     "place_id": "ChIJQekjYgDnAGARMflaYjaZ0Uo",
+     "name": "セブン‐イレブン大阪千日前１丁目店",
+     "address": "〒542-0074 大阪府大阪市中央区千日前１丁目３５−３",
+     "lat": 34.66731920000001,
+     "lng": 135.5055079
+    },
+    {
+     "place_id": "ChIJAWsIiSvnAGARHc8eqcOYdlI",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪千日前１丁目店",
+     "address": "〒542-0074 大阪府大阪市中央区千日前１丁目35番３",
+     "lat": 34.6673352,
+     "lng": 135.5055083
+    },
+    {
+     "place_id": "ChIJ976ynGrnAGARxtepmxpYv-Y",
+     "name": "ファミリーマート 近鉄日本橋駅改札内中央店",
+     "address": "〒542-0073 大阪府大阪市中央区日本橋１丁目１８−１４",
+     "lat": 34.666951,
+     "lng": 135.5061448
+    },
+    {
+     "place_id": "ChIJVVVl-ELnAGARWy_odJemtJk",
+     "name": "ファミリーマート 日本橋二丁目店",
+     "address": "〒542-0073 大阪府大阪市中央区日本橋２丁目１８−１２",
+     "lat": 34.6628967,
+     "lng": 135.5082011
+    },
+    {
+     "place_id": "ChIJX_sTlHLnAGARjoWNUEb7lUc",
+     "name": "ミニストップ 青葉堂浪速元町店",
+     "address": "〒556-0016 大阪府大阪市浪速区元町２丁目３−１９",
+     "lat": 34.6626401,
+     "lng": 135.4959811
+    },
+    {
+     "place_id": "ChIJYba6iUHnAGARN0d9r0EPcFQ",
+     "name": "ファミリーマート 黒門市場東店",
+     "address": "〒542-0073 大阪府大阪市中央区日本橋２丁目１−２４",
+     "lat": 34.6650765,
+     "lng": 135.5079314
+    },
+    {
+     "place_id": "ChIJH-5AtkLnAGARwt9y1Kf_0FM",
+     "name": "ローソン 日本橋四丁目店",
+     "address": "〒556-0005 大阪府大阪市浪速区日本橋４丁目１−１９",
+     "lat": 34.660714399999996,
+     "lng": 135.5074723
+    },
+    {
+     "place_id": "ChIJTaIDQG7nAGARujv02V-_Grk",
+     "name": "ファミリーマート 難波中三丁目店",
+     "address": "〒556-0011 大阪府大阪市浪速区難波中３丁目１７−１５",
+     "lat": 34.6593541,
+     "lng": 135.498054
+    },
+    {
+     "place_id": "ChIJ0emxHADnAGARh8Z5D6_y1w8",
+     "name": "千里馬",
+     "address": "〒556-0005 大阪府大阪市浪速区日本橋４丁目１２",
+     "lat": 34.659047099999995,
+     "lng": 135.5057138
+    },
+    {
+     "place_id": "ChIJ8f8_J0DnAGARSLN3zV5GYaI",
+     "name": "ファミリーマート 日本橋一丁目店",
+     "address": "〒542-0073 大阪府大阪市中央区日本橋１丁目５−１２ １Ｆ",
+     "lat": 34.6672669,
+     "lng": 135.5063003
+    },
+    {
+     "place_id": "ChIJUQNpAG7nAGARwpyZFiwPdNw",
+     "name": "ファミリーマート 浪速元町三丁目店",
+     "address": "〒556-0016 大阪府大阪市浪速区元町３丁目１０−２３",
+     "lat": 34.659621099999995,
+     "lng": 135.4975049
+    },
+    {
+     "place_id": "ChIJN3nPy5bnAGARdugV5SHQkMo",
+     "name": "セブン-イレブン ＪＲ難波駅東店",
+     "address": "〒556-0016 大阪府大阪市浪速区元町１丁目２−１７",
+     "lat": 34.6661314,
+     "lng": 135.4966801
+    },
+    {
+     "place_id": "ChIJO_gOXwvnAGARH9sZ1d_zujI",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン JR難波駅東店",
+     "address": "〒556-0016 大阪府大阪市浪速区元町１丁目２−１７",
+     "lat": 34.666145199999995,
+     "lng": 135.49668359999998
+    },
+    {
+     "place_id": "ChIJf3e49RLnAGARb5phEemhMIc",
+     "name": "ファミリーマート 近鉄難波駅西改札外店",
+     "address": "〒542-0076 大阪府大阪市中央区難波４丁目１−１７",
+     "lat": 34.6671881,
+     "lng": 135.4976212
     }
    ]
   },
@@ -13369,7 +13968,9 @@
    ]
   },
   "shinosaka": {
-   "fetchedAt": "2026-10-24T11:23:27.628Z",
+   "v": 2,
+   "fetchedAt": "2026-11-01T15:54:03.662Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJYRD3bjnkAGARCM6PAo_W-Us",
@@ -13510,11 +14111,265 @@
      "address": "〒532-0003 大阪府大阪市淀川区宮原１丁目１−４２",
      "lat": 34.734341,
      "lng": 135.500846
+    },
+    {
+     "place_id": "ChIJiXlYnu3lAGARozvk8ig1HhA",
+     "name": "食の商店「もより市」",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目１−１６ 新大阪駅",
+     "lat": 34.7332615,
+     "lng": 135.4981339
+    },
+    {
+     "place_id": "ChIJa3E1GQDlAGARnMt1leFqqBs",
+     "name": "セブン-イレブン ハートインJR新大阪駅東改札内店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目１６−１ JR 新大阪駅",
+     "lat": 34.733999000000004,
+     "lng": 135.5021421
+    },
+    {
+     "place_id": "ChIJeXHJFnblAGARil6fbVi8wsQ",
+     "name": "HOWコンビニエンスストア大阪回生病院店(売店)ワタキューセイモア株式会社",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原１丁目６−１０ 大阪回生病院 地下一階 四丁目［東］（バス",
+     "lat": 34.735189399999996,
+     "lng": 135.4990052
+    },
+    {
+     "place_id": "ChIJYaAmMvPlAGARFV4hLf5wK2k",
+     "name": "セブン-イレブン ハートイン ヴィアイン新大阪正面店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目１４−１４",
+     "lat": 34.7317513,
+     "lng": 135.4991019
+    },
+    {
+     "place_id": "ChIJT3yRDiPlAGARv-6-n7_Ho8Y",
+     "name": "プラザ新大阪中13",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目１６−１ JR 新大阪駅 構内",
+     "lat": 34.7343396,
+     "lng": 135.5021085
+    },
+    {
+     "place_id": "ChIJC00wurnlAGARp6NHeFeUvsI",
+     "name": "プラザ新大阪中06（休業）",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目１６−１ JR 新大阪駅 構内",
+     "lat": 34.7343396,
+     "lng": 135.5021085
+    },
+    {
+     "place_id": "ChIJNwCotPHlAGARMFcyRZag8lc",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン アントレマルシェ新大阪中央口店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目１６−１",
+     "lat": 34.7343396,
+     "lng": 135.5021085
+    },
+    {
+     "place_id": "ChIJf6O7UFDlAGARrIVNrPPMlGw",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン ハートインJR新大阪駅東改札口店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目１６−１ 改札外",
+     "lat": 34.733965999999995,
+     "lng": 135.5023452
+    },
+    {
+     "place_id": "ChIJ5xHuHjzkAGARCOmq1POrLT0",
+     "name": "ローソン 新大阪駅東口店",
+     "address": "〒533-0033 大阪府大阪市東淀川区東中島１丁目１９−４",
+     "lat": 34.733550199999996,
+     "lng": 135.5026045
+    },
+    {
+     "place_id": "ChIJYeCi8zjkAGARdnuel7j0TNU",
+     "name": "セブン-イレブン 新大阪ブリックビル店",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原１丁目６−１ 新大阪ブリックビル",
+     "lat": 34.7357662,
+     "lng": 135.4996518
+    },
+    {
+     "place_id": "ChIJjwjCFjjkAGARAIPZkpUETcQ",
+     "name": "ローソン 新大阪センタービル店",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原４丁目１−４",
+     "lat": 34.7348535,
+     "lng": 135.4976433
+    },
+    {
+     "place_id": "ChIJ8YKahzfkAGARIRGv5bmCjcA",
+     "name": "デイリーヤマザキ 新大阪店",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原３丁目４−３０",
+     "lat": 34.7334782,
+     "lng": 135.4969141
+    },
+    {
+     "place_id": "ChIJaZe4HzrkAGARHyHvCtGQTVI",
+     "name": "ファミリーマート 西中島七丁目店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島７丁目５−２０",
+     "lat": 34.7315217,
+     "lng": 135.49799700000003
+    },
+    {
+     "place_id": "ChIJYR-5JzzkAGARmgP0Co6n5co",
+     "name": "ファミリーマート スバルＪＲ新大阪駅前店",
+     "address": "〒533-0033 大阪府大阪市東淀川区東中島１丁目２０−１４",
+     "lat": 34.733976999999996,
+     "lng": 135.5033383
+    },
+    {
+     "place_id": "ChIJG4cqoMDlAGARUNQX8k0yMKg",
+     "name": "ローソン 新大阪セントラルタワー店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目５−１５",
+     "lat": 34.7306701,
+     "lng": 135.500263
+    },
+    {
+     "place_id": "ChIJawbqkyblAGAR2b5PLsFWGw8",
+     "name": "ローソン 新大阪駅南店",
+     "address": "〒533-0033 大阪府大阪市東淀川区東中島１丁目２１−５",
+     "lat": 34.7331751,
+     "lng": 135.5038558
+    },
+    {
+     "place_id": "ChIJJYZKETrkAGARUZSbmfhyJJ0",
+     "name": "セブン-イレブン 大阪西中島７丁目店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島７丁目４−１７",
+     "lat": 34.7306739,
+     "lng": 135.498051
+    },
+    {
+     "place_id": "ChIJ-7hQqj7kAGARQd3n0v_OPZ0",
+     "name": "ファミリーマート 淀川宮原店",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原１丁目１９−８ ノルデンタワー東大阪アネックス A2615",
+     "lat": 34.7366654,
+     "lng": 135.49894179999998
+    },
+    {
+     "place_id": "ChIJTQJ8-zfkAGAR12idEBybcmY",
+     "name": "セブン-イレブン ハートインヴィアイン新大阪Ｗ店",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原４丁目１−１番７号",
+     "lat": 34.735123699999995,
+     "lng": 135.49632549999998
+    },
+    {
+     "place_id": "ChIJLVA_lTfkAGARhf-16AxWXjs",
+     "name": "ファミリーマート 新大阪駅北口店",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原３丁目５−３６ 新大阪トラストタワー",
+     "lat": 34.7340473,
+     "lng": 135.4955965
+    },
+    {
+     "place_id": "ChIJ9xsS0D3kAGARniQ3Yw4CDyo",
+     "name": "ファミリーマート 新大阪駅東口店",
+     "address": "〒533-0033 大阪府大阪市東淀川区東中島１丁目２１−１８",
+     "lat": 34.7341076,
+     "lng": 135.5046207
+    },
+    {
+     "place_id": "ChIJsRS05zzkAGARyblBJrJLDig",
+     "name": "セブン-イレブン 大阪東中島１丁目店",
+     "address": "〒533-0033 大阪府大阪市東淀川区東中島１丁目１２−１８",
+     "lat": 34.730882199999996,
+     "lng": 135.5035398
+    },
+    {
+     "place_id": "ChIJSX4AoTfkAGARi-aRbXClczo",
+     "name": "ローソン 淀川宮原三丁目店",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原３丁目３−１６",
+     "lat": 34.732639999999996,
+     "lng": 135.494954
+    },
+    {
+     "place_id": "ChIJ_SnD4jrkAGARZvoedzGEhVc",
+     "name": "ローソン 西中島五丁目店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目１２−８",
+     "lat": 34.7293093,
+     "lng": 135.49917109999998
+    },
+    {
+     "place_id": "ChIJO8N7oT3kAGARWmyWauRLrwk",
+     "name": "ローソン 新大阪東店",
+     "address": "〒533-0033 大阪府大阪市東淀川区東中島４丁目１−２３ コーポラスキド",
+     "lat": 34.7329219,
+     "lng": 135.50516149999999
+    },
+    {
+     "place_id": "ChIJ64YLoEfkAGARlqXgRueFH8M",
+     "name": "ローソン 宮原一丁目店",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原１丁目１９−２３",
+     "lat": 34.737743699999996,
+     "lng": 135.4992911
+    },
+    {
+     "place_id": "ChIJt4HYsTzkAGARAq6nNVqFam8",
+     "name": "ローソン 東中島一丁目店",
+     "address": "〒533-0033 大阪府大阪市東淀川区東中島１丁目８−５",
+     "lat": 34.7294658,
+     "lng": 135.50222069999998
+    },
+    {
+     "place_id": "ChIJtyWX-RvlAGARBf0MSLjrigM",
+     "name": "セブンイレブン Ｊ．ＮＯＤＥ新大阪ツー",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原４丁目５−１",
+     "lat": 34.7364416,
+     "lng": 135.4957279
+    },
+    {
+     "place_id": "ChIJE2wSwUnlAGARfTOQP9h4CKY",
+     "name": "セブン-イレブン 大阪東中島３丁目店",
+     "address": "〒533-0033 大阪府大阪市東淀川区東中島３丁目５−１",
+     "lat": 34.730066,
+     "lng": 135.5039339
+    },
+    {
+     "place_id": "ChIJVVbZGCjlAGARs8eh2XE-EAE",
+     "name": "（株）ＪＲ東海リテイリング・プラス 関西支社",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島７丁目１６−１１６",
+     "lat": 34.7318972,
+     "lng": 135.4945567
+    },
+    {
+     "place_id": "ChIJrR11eDrkAGARVnO2-vBEkM0",
+     "name": "ローソン 西中島店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島６丁目３−３２",
+     "lat": 34.7294573,
+     "lng": 135.4969232
+    },
+    {
+     "place_id": "ChIJtwRhYkjkAGARNCXZ_POpx1E",
+     "name": "セブン-イレブン 大阪宮原４丁目店",
+     "address": "〒532-0003 大阪府大阪市淀川区宮原４丁目４−３９",
+     "lat": 34.737218,
+     "lng": 135.49606
+    },
+    {
+     "place_id": "ChIJ0av7zknkAGARhCJf5F6bme4",
+     "name": "セブン-イレブン ＳＯＲＡ新大阪２１店",
+     "address": "〒532-0004 大阪府大阪市淀川区西宮原２丁目１−３",
+     "lat": 34.734932,
+     "lng": 135.4942151
+    },
+    {
+     "place_id": "ChIJZWC5kzrkAGARt1D2Pz6B7FU",
+     "name": "ファミリーマート プライムタワー西中島店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島６丁目１−１",
+     "lat": 34.7288042,
+     "lng": 135.4979437
+    },
+    {
+     "place_id": "ChIJF7VGsyTkAGARSW9p7p4Q6uQ",
+     "name": "デイリーヤマザキ 西中島５丁目店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目９−１ 新大阪花村ビル １Ｆ",
+     "lat": 34.728403799999995,
+     "lng": 135.5008459
+    },
+    {
+     "place_id": "ChIJ3csfMjvkAGARD6oIjUK0Ys0",
+     "name": "セブン-イレブン 大阪西中島５丁目南店",
+     "address": "〒532-0011 大阪府大阪市淀川区西中島５丁目９−８",
+     "lat": 34.7282882,
+     "lng": 135.4999229
     }
    ]
   },
   "shinsaibashi": {
-   "fetchedAt": "2026-10-24T11:23:29.330Z",
+   "v": 2,
+   "fetchedAt": "2026-11-01T15:54:13.559Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJQ5Z8LBfnAGAR6twq5MJNETQ",
@@ -13615,11 +14470,39 @@
      "lng": 135.4987755
     },
     {
+     "place_id": "ChIJAVh65BbnAGAROwSAcmP-XRY",
+     "name": "ファミリーマート 心斎橋店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋１丁目１８−７ 大質ビル",
+     "lat": 34.673597099999995,
+     "lng": 135.503296
+    },
+    {
      "place_id": "ChIJ5RllWwDnAGARqzdUNjFaZsM",
      "name": "セブンイレブン クリスタ長堀ウエストタウン",
      "address": "〒542-0081 大阪府大阪市中央区南船場４丁目１２ 長堀地下街 ７号",
      "lat": 34.6752167,
      "lng": 135.4990721
+    },
+    {
+     "place_id": "ChIJvzafBRfnAGARU2QrPTsjFyw",
+     "name": "セブン‐イレブン大阪東心斎橋１丁目店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋１丁目１２−１７",
+     "lat": 34.6746538,
+     "lng": 135.5034661
+    },
+    {
+     "place_id": "ChIJXW1K05PnAGARFGDVfrBWovU",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪東心斎橋１丁目店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋１丁目１２−１７",
+     "lat": 34.6746719,
+     "lng": 135.5034785
+    },
+    {
+     "place_id": "ChIJl2GAoxbnAGARdbPhmlywcv4",
+     "name": "ファミリーマート ヨーロッパ通り店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋２丁目８−２６",
+     "lat": 34.6718554,
+     "lng": 135.5024223
     },
     {
      "place_id": "ChIJv7upnxrnAGARJNMR--UVWO4",
@@ -13634,6 +14517,34 @@
      "address": "〒542-0081 大阪府大阪市中央区南船場４丁目１２−１０",
      "lat": 34.6755247,
      "lng": 135.4984352
+    },
+    {
+     "place_id": "ChIJHVv7XRbnAGARqtcb8DcD6Us",
+     "name": "ファミリーマート 南船場店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場３丁目６−２２",
+     "lat": 34.676658599999996,
+     "lng": 135.50149969999998
+    },
+    {
+     "place_id": "ChIJXYc13xnnAGAR-Jaf9LIHqeA",
+     "name": "ファミリーマート 南船場三丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場３丁目３−１０ エーゼービル １階",
+     "lat": 34.6761705,
+     "lng": 135.5030615
+    },
+    {
+     "place_id": "ChIJfb5ZcLrnAGAR1_uC5_vjWPs",
+     "name": "ローソン ヨーロッパ通り店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋１丁目１５−１５ いちご心斎橋ビル １Ｆ",
+     "lat": 34.672041199999995,
+     "lng": 135.5037222
+    },
+    {
+     "place_id": "ChIJ-7p9-NLnAGAR7uxrTXbAwPM",
+     "name": "外貨両替機 SMART EXCHANGE ローソン ヨーロッパ通店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋１丁目１５−１５ いちご心斎橋ビル 1Ｆ",
+     "lat": 34.6720398,
+     "lng": 135.5037535
     },
     {
      "place_id": "ChIJKzhxARvnAGARjN6kuR3LDZU",
@@ -13655,6 +14566,349 @@
      "address": "〒550-0014 大阪府大阪市西区北堀江１丁目１−２１",
      "lat": 34.6738128,
      "lng": 135.4970693
+    },
+    {
+     "place_id": "ChIJt5068hnnAGARP9jS5839OGE",
+     "name": "セブン‐イレブン南船場三休橋筋店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場２丁目１１−２１",
+     "lat": 34.6765548,
+     "lng": 135.5035207
+    },
+    {
+     "place_id": "ChIJucQRLYvnAGARiogVnH62HY0",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 南船場三休橋筋店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場２丁目１１−２１",
+     "lat": 34.6765793,
+     "lng": 135.50351770000003
+    },
+    {
+     "place_id": "ChIJfw0eOxDnAGARbnsxfURqz3U",
+     "name": "ファミリーマート アメ村三角公園前店",
+     "address": "〒542-0086 大阪府大阪市中央区西心斎橋２丁目１８−６",
+     "lat": 34.672042499999996,
+     "lng": 135.4976533
+    },
+    {
+     "place_id": "ChIJ5Wf5LunnAGAREFLUKKZ0AiI",
+     "name": "ローソン 東心斎橋一丁目店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋１丁目８−２",
+     "lat": 34.6741862,
+     "lng": 135.50521750000001
+    },
+    {
+     "place_id": "ChIJAdhtyhHnAGARCShQWsCyptA",
+     "name": "ローソン 西心斎橋二丁目店",
+     "address": "〒542-0086 大阪府大阪市中央区西心斎橋２丁目１１−６",
+     "lat": 34.671420399999995,
+     "lng": 135.4980412
+    },
+    {
+     "place_id": "ChIJT-A7DhvnAGARSDvlV6PDS3k",
+     "name": "（株）ＶＯＬ−ＮＥＸＴ",
+     "address": "〒542-0081 大阪府大阪市中央区南船場４丁目１０−５",
+     "lat": 34.6770949,
+     "lng": 135.4987361
+    },
+    {
+     "place_id": "ChIJT-MIQIjnAGARENZtk3Fxf74",
+     "name": "セブン‐イレブン御堂筋三ツ寺店",
+     "address": "〒542-0085 大阪府大阪市中央区心斎橋筋２丁目６−１４",
+     "lat": 34.6702487,
+     "lng": 135.5006644
+    },
+    {
+     "place_id": "ChIJAwjJsD7nAGARuFy_mUJip9c",
+     "name": "ローソン 南船場二丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場２丁目５−７",
+     "lat": 34.675382299999995,
+     "lng": 135.5052715
+    },
+    {
+     "place_id": "ChIJCdai2l_nAGARuXBDCjxMoPw",
+     "name": "セブン‐イレブン大阪南船場３丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場３丁目８−６",
+     "lat": 34.677655699999995,
+     "lng": 135.5022348
+    },
+    {
+     "place_id": "ChIJ988U9DbnAGARoAn0loIrSxA",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪南船場３丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場３丁目８−６",
+     "lat": 34.677745,
+     "lng": 135.5021247
+    },
+    {
+     "place_id": "ChIJ8UIQlV_nAGARE7YnbPl6onM",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪長堀心斎橋店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋１丁目１−１２",
+     "lat": 34.6748142,
+     "lng": 135.5056377
+    },
+    {
+     "place_id": "ChIJYQAnMhbnAGARsPkL_WVymaA",
+     "name": "セブン‐イレブン大阪長堀心斎橋店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋１丁目１−１２ 1F",
+     "lat": 34.6748565,
+     "lng": 135.50564029999998
+    },
+    {
+     "place_id": "ChIJ_____xDnAGAResj2DbdAntM",
+     "name": "ファミリーマート 西心斎橋二丁目店",
+     "address": "〒542-0086 大阪府大阪市中央区西心斎橋２丁目３−１８",
+     "lat": 34.6702893,
+     "lng": 135.4994792
+    },
+    {
+     "place_id": "ChIJ9ez5JQXnAGAROVD4Fs0s4Ms",
+     "name": "ファミリーマート 四ツ橋駅前店",
+     "address": "〒550-0014 大阪府大阪市西区北堀江１丁目７−６",
+     "lat": 34.674988899999995,
+     "lng": 135.49630059999998
+    },
+    {
+     "place_id": "ChIJQYifzRfnAGARK6WV9S3BXHo",
+     "name": "セブン‐イレブンクリスタ長堀店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場２丁目４ 長堀地下街１号 長堀地下街 １号",
+     "lat": 34.6751954,
+     "lng": 135.5057329
+    },
+    {
+     "place_id": "ChIJD_cg1hvnAGARQe0b5tiqL2E",
+     "name": "ファミリーマート 博労町三丁目店",
+     "address": "〒541-0059 大阪府大阪市中央区博労町３丁目３−１",
+     "lat": 34.6780611,
+     "lng": 135.5015587
+    },
+    {
+     "place_id": "ChIJoTxnKBjnAGARfbKk9SSbNDQ",
+     "name": "ファミリーマート 南船場二丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場２丁目７−１６",
+     "lat": 34.6768344,
+     "lng": 135.5046338
+    },
+    {
+     "place_id": "ChIJPaU00BHnAGARrr8tinJStTg",
+     "name": "ファミリーマート アメ村西心斎橋店",
+     "address": "〒542-0086 大阪府大阪市中央区西心斎橋２丁目１７−３",
+     "lat": 34.6710472,
+     "lng": 135.49748
+    },
+    {
+     "place_id": "ChIJJQpSSBvnAGARjqYJsHPSIso",
+     "name": "ファミリーマート 四ツ橋北店",
+     "address": "〒550-0013 大阪府大阪市西区新町１丁目３−１２ 四ツ橋セントラルビル １Ｆ",
+     "lat": 34.676928499999995,
+     "lng": 135.4973287
+    },
+    {
+     "place_id": "ChIJgw6MTxTnAGAR2NiT7fobzAY",
+     "name": "（株）オスカル フレッシュショッパーズ",
+     "address": "〒542-0084 大阪府大阪市中央区宗右衛門町５−２８ 三笠会館",
+     "lat": 34.670276,
+     "lng": 135.503416
+    },
+    {
+     "place_id": "ChIJESOjXgXnAGARggbI6g8TnTI",
+     "name": "ファミリーマート 四ツ橋北堀江一丁目店",
+     "address": "〒550-0014 大阪府大阪市西区北堀江１丁目３−２０",
+     "lat": 34.6731374,
+     "lng": 135.4959422
+    },
+    {
+     "place_id": "ChIJ5yG_8xXnAGARoxmZ1N2daIo",
+     "name": "ファミリーマート 東心斎橋店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋１丁目５−１",
+     "lat": 34.672686399999996,
+     "lng": 135.5060858
+    },
+    {
+     "place_id": "ChIJM9FM3Q_nAGARjbCnurNlxP0",
+     "name": "ファミリーマート 四ツ橋南堀江店",
+     "address": "〒550-0015 大阪府大阪市西区南堀江１丁目１１−６",
+     "lat": 34.6718689,
+     "lng": 135.49632
+    },
+    {
+     "place_id": "ChIJS0gWXRvnAGARO0yVcOrxjNw",
+     "name": "ミニストップ 南船場店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場４丁目１４−３",
+     "lat": 34.6776944,
+     "lng": 135.497982
+    },
+    {
+     "place_id": "ChIJP8K0rRXnAGARJMYNp_f3Xpk",
+     "name": "ファミリーマート 難波玉屋町店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋２丁目６−９ CNI ビル",
+     "lat": 34.6703908,
+     "lng": 135.5041819
+    },
+    {
+     "place_id": "ChIJc_6fdg_nAGARxk0phUkw0_I",
+     "name": "セブン-イレブン 四ツ橋南堀江店",
+     "address": "〒550-0015 大阪府大阪市西区南堀江１丁目１１−１７",
+     "lat": 34.672378099999996,
+     "lng": 135.49588409999998
+    },
+    {
+     "place_id": "ChIJm8zkCd3nAGARwzQsdVTHAMc",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪南船場２丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場２丁目７−６",
+     "lat": 34.676857,
+     "lng": 135.5052502
+    },
+    {
+     "place_id": "ChIJs6PusgTnAGARFVMquzmorqY",
+     "name": "ローソン 西区新町一丁目店",
+     "address": "〒550-0013 大阪府大阪市西区新町１丁目８−１",
+     "lat": 34.677017899999996,
+     "lng": 135.4968376
+    },
+    {
+     "place_id": "ChIJcdYqg0DnAGAR6gA0i4bcJu4",
+     "name": "ファミリーマート 長堀橋駅南店",
+     "address": "〒542-0082 大阪府大阪市中央区島之内１丁目２１−２２",
+     "lat": 34.673198299999996,
+     "lng": 135.5065066
+    },
+    {
+     "place_id": "ChIJaWeh1xfnAGARFbpmP4dTEWo",
+     "name": "ファミリーマート 長堀橋駅北店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場２丁目４−１ 美貴ビル",
+     "lat": 34.6758522,
+     "lng": 135.50616670000002
+    },
+    {
+     "place_id": "ChIJk8Z9exvnAGARpLsD2z1dzcE",
+     "name": "デイリーヤマザキ 大阪博労町店",
+     "address": "〒541-0059 大阪府大阪市中央区博労町４丁目６−１０ ハニービル",
+     "lat": 34.6783678,
+     "lng": 135.4988962
+    },
+    {
+     "place_id": "ChIJyw3uI8DnAGARrraO4W6GdOY",
+     "name": "セブン‐イレブン大阪南船場２丁目店",
+     "address": "〒542-0081 大阪府大阪市中央区南船場２丁目７−６",
+     "lat": 34.6771351,
+     "lng": 135.50525539999998
+    },
+    {
+     "place_id": "ChIJR6o4IBbnAGARUQOt1_kBGF4",
+     "name": "ローソン Ｓ ＯＳＬ長堀橋駅店",
+     "address": "〒542-0081 大阪府大阪市中央区島之内１丁目１８−９",
+     "lat": 34.6755982,
+     "lng": 135.5063873
+    },
+    {
+     "place_id": "ChIJhaFOwATnAGARWK6clqYlj0A",
+     "name": "ファミリーマート 新町店",
+     "address": "〒550-0013 大阪府大阪市西区新町１丁目２４−３",
+     "lat": 34.6760607,
+     "lng": 135.49585009999998
+    },
+    {
+     "place_id": "ChIJId6rMDjnAGAR0888oZxJ5v0",
+     "name": "ファミリーマート 宗右衛門町店",
+     "address": "〒542-0084 大阪府大阪市中央区宗右衛門町７−５",
+     "lat": 34.669280799999996,
+     "lng": 135.5016953
+    },
+    {
+     "place_id": "ChIJ1ZalE8vnAGAR8aWw_Vp_4B4",
+     "name": "外貨両替機 SMART EXCHANGE ローソン 宗右衛門町店",
+     "address": "〒542-0084 大阪府大阪市中央区宗右衛門町5丁目５−１８ 1F",
+     "lat": 34.6695043,
+     "lng": 135.5033809
+    },
+    {
+     "place_id": "ChIJH8jiXQfnAGARPJ8pylMTmJU",
+     "name": "ローソン 東心斎橋二丁目店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋２丁目１−６",
+     "lat": 34.6713235,
+     "lng": 135.50603909999998
+    },
+    {
+     "place_id": "ChIJHSL9NxPnAGARAyof8KhjXWw",
+     "name": "ファミリーマート アメリカ村店",
+     "address": "〒542-0086 大阪府大阪市中央区西心斎橋２丁目１３−１０",
+     "lat": 34.6698436,
+     "lng": 135.4976803
+    },
+    {
+     "place_id": "ChIJvaz8CBnnAGARrTkrjXXuMK4",
+     "name": "ローソン 博労町三丁目店",
+     "address": "〒541-0059 大阪府大阪市中央区博労町３丁目１−３",
+     "lat": 34.678624,
+     "lng": 135.5032621
+    },
+    {
+     "place_id": "ChIJ7z-cILjnAGARmnx1a0UHOoU",
+     "name": "ファミリーマート 東心斎橋二丁目店",
+     "address": "〒542-0083 大阪府大阪市中央区東心斎橋２丁目２−１４",
+     "lat": 34.6704982,
+     "lng": 135.5053356
+    },
+    {
+     "place_id": "ChIJSYpwhvrnAGARbS_391kwh3c",
+     "name": "HIMAWARI HALAL MART",
+     "address": "〒542-0085 大阪府大阪市中央区西心斎橋２丁目７−１５ 道頓堀 JNSビル 4階",
+     "lat": 34.669415199999996,
+     "lng": 135.4981633
+    },
+    {
+     "place_id": "ChIJQXfUaxnnAGARF07Eqzz4Npo",
+     "name": "セブン‐イレブン大阪南久宝寺町３丁目店",
+     "address": "〒541-0058 大阪府大阪市中央区南久宝寺町３丁目２−５",
+     "lat": 34.679068,
+     "lng": 135.502554
+    },
+    {
+     "place_id": "ChIJ-UBSYknnAGARhyQjodChslI",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪西心斎橋2丁目店",
+     "address": "〒542-0086 大阪府大阪市中央区西心斎橋２丁目１４−４",
+     "lat": 34.66939980000001,
+     "lng": 135.49787999999998
+    },
+    {
+     "place_id": "ChIJma5TeLDnAGARrmoneXkAR2g",
+     "name": "セブン‐イレブン大阪西心斎橋２丁目店",
+     "address": "〒542-0086 大阪府大阪市中央区西心斎橋２丁目１４−４",
+     "lat": 34.6693583,
+     "lng": 135.497927
+    },
+    {
+     "place_id": "ChIJnYGjjHPnAGARh_nlmFIFL0w",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪宗右衛門町店",
+     "address": "〒542-0084 大阪府大阪市中央区宗右衛門町２−１３",
+     "lat": 34.6695785,
+     "lng": 135.5046797
+    },
+    {
+     "place_id": "ChIJ4Vg6VWrnAGARwGDB0GpGd2A",
+     "name": "ファミリーマート 戎橋店",
+     "address": "〒542-0071 大阪府大阪市中央区道頓堀１丁目９−１",
+     "lat": 34.668639299999995,
+     "lng": 135.50120139999999
+    },
+    {
+     "place_id": "ChIJ4X8vEhXnAGARf4ltadtRICA",
+     "name": "セブン‐イレブン大阪宗右衛門町店",
+     "address": "〒542-0084 大阪府大阪市中央区宗右衛門町２−１３",
+     "lat": 34.669566599999996,
+     "lng": 135.5046793
+    },
+    {
+     "place_id": "ChIJVz3eAkHnAGARC6bmr4wwhac",
+     "name": "ファミリーマート 島之内八幡町店",
+     "address": "〒542-0082 大阪府大阪市中央区島之内２丁目１４−２３",
+     "lat": 34.6709824,
+     "lng": 135.5064038
+    },
+    {
+     "place_id": "ChIJe3ftCvbnAGARUR6cRkN6UKU",
+     "name": "ファミリーマート 南久宝寺町四丁目店",
+     "address": "〒541-0058 大阪府大阪市中央区南久宝寺町４丁目６−１０ 南久宝寺Fukue Bl. 1階",
+     "lat": 34.679085900000004,
+     "lng": 135.4988912
     }
    ]
   },
@@ -14989,7 +16243,9 @@
    ]
   },
   "tennoji": {
-   "fetchedAt": "2026-10-24T11:23:25.926Z",
+   "v": 2,
+   "fetchedAt": "2026-11-01T15:53:53.805Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJxQXOvsvdAGAR5Ay_PsBnRlA",
@@ -15083,6 +16339,20 @@
      "lng": 135.5148672
     },
     {
+     "place_id": "ChIJt-X8Ng7dAGARzin2dEWZs5g",
+     "name": "セブン-イレブン ハートインＪＲ天王寺駅東改札内店",
+     "address": "〒543-0055 大阪府大阪市天王寺区悲田院町１０−４５",
+     "lat": 34.646877499999995,
+     "lng": 135.5153647
+    },
+    {
+     "place_id": "ChIJs1F5AsvdAGARaDC9OGnY59g",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン ハートインJR天王寺駅東改札内店",
+     "address": "〒543-0055 大阪府大阪市天王寺区悲田院町１０−４５",
+     "lat": 34.6468834,
+     "lng": 135.51536439999998
+    },
+    {
      "place_id": "ChIJs8rATOndAGAR3O_lASHIS9Q",
      "name": "ファミリーマート あべのルシアス店",
      "address": "〒545-0052 大阪府大阪市阿倍野区阿倍野筋１丁目５−１ ルシアスビル B1F",
@@ -15102,6 +16372,20 @@
      "address": "〒545-0052 大阪府大阪市阿倍野区阿倍野筋２丁目１−２９ ＡＩＴビル",
      "lat": 34.6445799,
      "lng": 135.51289459999998
+    },
+    {
+     "place_id": "ChIJ7dcUi-bdAGARIaxsWYS6feU",
+     "name": "ファミリーマート 近鉄阿部野橋駅地下東改札外店",
+     "address": "〒545-0052 大阪府大阪市阿倍野区阿倍野筋１丁目１−４３",
+     "lat": 34.6456144,
+     "lng": 135.515468
+    },
+    {
+     "place_id": "ChIJVZtcb-XdAGARAckEmQm9xU4",
+     "name": "ファミリーマート 天王寺公園前店",
+     "address": "〒543-0056 大阪府大阪市天王寺区堀越町１４−１１",
+     "lat": 34.6484957,
+     "lng": 135.51352470000003
     },
     {
      "place_id": "ChIJFbL-Yv_dAGARdo8btbi393o",
@@ -15130,6 +16414,111 @@
      "address": "〒545-0053 大阪府大阪市阿倍野区松崎町２丁目３−４７",
      "lat": 34.644491200000004,
      "lng": 135.5142594
+    },
+    {
+     "place_id": "ChIJd1c5TuTdAGAR_OZ-p4BDzSk",
+     "name": "ファミリーマート 天王寺駅北口店",
+     "address": "〒543-0055 大阪府大阪市天王寺区悲田院町４−１０",
+     "lat": 34.648317399999996,
+     "lng": 135.5152201
+    },
+    {
+     "place_id": "ChIJ0XKcaOXdAGARvuIjd5hhwfA",
+     "name": "セブン-イレブン ハートイン 阿倍野松崎町１丁目店",
+     "address": "〒545-0053 大阪府大阪市阿倍野区松崎町１丁目２−１２",
+     "lat": 34.6457619,
+     "lng": 135.5161432
+    },
+    {
+     "place_id": "ChIJQZ0pYfHdAGARsD_NQzeD7nE",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン ハートイン阿倍野松崎町1丁目店",
+     "address": "〒545-0053 大阪府大阪市阿倍野区松崎町１丁目２−１２",
+     "lat": 34.6457697,
+     "lng": 135.5161641
+    },
+    {
+     "place_id": "ChIJm9brefDdAGARPvye5a4_tPU",
+     "name": "ファミリーマート ＪＲ天王寺駅北口店",
+     "address": "〒543-0055 大阪府大阪市天王寺区悲田院町８−２２ ニッセイ天王寺ビル",
+     "lat": 34.6481128,
+     "lng": 135.51570569999998
+    },
+    {
+     "place_id": "ChIJp6vngO_dAGAR0FKY3pYApME",
+     "name": "ファミリーマート あべの橋駅前店",
+     "address": "〒545-0053 大阪府大阪市阿倍野区松崎町２丁目２−２８ 1F",
+     "lat": 34.6443059,
+     "lng": 135.5155634
+    },
+    {
+     "place_id": "ChIJ_RjqRvLdAGARGMBhMYe2mGw",
+     "name": "ファミリーマート あべのポンテ店",
+     "address": "〒545-0051 大阪府大阪市阿倍野区旭町２丁目１−２",
+     "lat": 34.645111299999996,
+     "lng": 135.509776
+    },
+    {
+     "place_id": "ChIJoSpMUQDdAGARFeaaxF4JZ-g",
+     "name": "ファミリーマート 大阪公立大学阿倍野Ｃ／Ｓ店",
+     "address": "〒545-0051 大阪府大阪市阿倍野区旭町１丁目４−３",
+     "lat": 34.6461397,
+     "lng": 135.5093413
+    },
+    {
+     "place_id": "ChIJhfOO-vHdAGARIwuDaMyFEhM",
+     "name": "ファミリーマート キューズタウン店",
+     "address": "〒545-0052 大阪府大阪市阿倍野区阿倍野筋１丁目６−１ ヴィアあべのウォーク １",
+     "lat": 34.6434068,
+     "lng": 135.511616
+    },
+    {
+     "place_id": "ChIJNeZUnvPdAGARrvaILZ2Kmj0",
+     "name": "ローソン 大阪公立大学病院",
+     "address": "〒545-0051 大阪府大阪市阿倍野区旭町１丁目５−７ ６階",
+     "lat": 34.646637399999996,
+     "lng": 135.5089243
+    },
+    {
+     "place_id": "ChIJS7sMCeXdAGARYSEjCYoksKE",
+     "name": "セブン-イレブン ハートイン JR大阪鉄道病院店",
+     "address": "〒545-0053 大阪府大阪市阿倍野区松崎町１丁目２−２２",
+     "lat": 34.645032199999996,
+     "lng": 135.5173179
+    },
+    {
+     "place_id": "ChIJ21g-Xe_dAGAR4lnTJ1k92V8",
+     "name": "セブン-イレブン 大阪松崎町２丁目店",
+     "address": "〒545-0053 大阪府大阪市阿倍野区松崎町２丁目１０−５",
+     "lat": 34.6427008,
+     "lng": 135.5152795
+    },
+    {
+     "place_id": "ChIJLcWS3IDdAGARixVP5QeE2CM",
+     "name": "ファミリーマート 阿倍野筋三丁目店",
+     "address": "〒545-0052 大阪府大阪市阿倍野区阿倍野筋３丁目５−１９",
+     "lat": 34.6423833,
+     "lng": 135.5121464
+    },
+    {
+     "place_id": "ChIJ4ZfZPPfdAGARUx_YYSlISvI",
+     "name": "ファミリーマート 天王寺堀越町店",
+     "address": "〒543-0056 大阪府大阪市天王寺区堀越町８−１８",
+     "lat": 34.6510185,
+     "lng": 135.51402059999998
+    },
+    {
+     "place_id": "ChIJS-VxPvfdAGARnPoB9ue2h_c",
+     "name": "ローソンストア100 四天王寺南店",
+     "address": "〒543-0052 大阪府大阪市天王寺区大道１丁目８−６ Ｓ－ＲＥＳＩＤＥＮＣＥ天王寺 504号",
+     "lat": 34.6512507,
+     "lng": 135.51411009999998
+    },
+    {
+     "place_id": "ChIJQXa7APvdAGARvf3OwingvSY",
+     "name": "ファミリーマート 北河堀店",
+     "address": "〒543-0053 大阪府大阪市天王寺区北河堀町２−１６ 安田ビル",
+     "lat": 34.649752299999996,
+     "lng": 135.518303
     }
    ]
   },
@@ -17176,7 +18565,9 @@
    ]
   },
   "umeda": {
-   "fetchedAt": "2026-10-24T11:23:22.568Z",
+   "v": 2,
+   "fetchedAt": "2026-11-01T15:53:33.994Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJ50vLAwDnAGAR7KArhU34b1w",
@@ -17317,11 +18708,426 @@
      "address": "〒530-0001 大阪府大阪市北区大深町５−１",
      "lat": 34.702741100000004,
      "lng": 135.49362399999998
+    },
+    {
+     "place_id": "ChIJW4cBFRfnAGARgg_WSPqh_8A",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン ハートインうめきたグリーンプレイス店",
+     "address": "〒530-0011 大阪府大阪市北区大深町５−１ うめきたグリーンプレイス 1F",
+     "lat": 34.702709999999996,
+     "lng": 135.4935707
+    },
+    {
+     "place_id": "ChIJ6e1Nk47nAGAR8gNjgIYsqLU",
+     "name": "ファミマ!! グランフロント大阪店",
+     "address": "〒530-0011 大阪府大阪市北区大深町４−２０ グランフロント大阪 南館 ９階",
+     "lat": 34.7042545,
+     "lng": 135.4947402
+    },
+    {
+     "place_id": "ChIJs_37aADnAGARMJPPPvatZuY",
+     "name": "ファミリーマート KITTE大阪店",
+     "address": "〒530-0001 大阪府大阪市北区梅田３丁目２−２ ＫＩＴＴＥ大阪Ｂ１Ｆ０２４区画",
+     "lat": 34.700671199999995,
+     "lng": 135.4944188
+    },
+    {
+     "place_id": "ChIJ3zlvRILnAGARDnix3I1nBdg",
+     "name": "ファミリーマート LINKS UMEDA店",
+     "address": "〒530-0011 大阪府大阪市北区大深町１−１ リンクス梅田 1F",
+     "lat": 34.7047288,
+     "lng": 135.4955502
+    },
+    {
+     "place_id": "ChIJi2YzDE7nAGAR7UQQA1ybV0s",
+     "name": "ファミリーマート ディアモールマーケットＳＴ店",
+     "address": "〒530-0001 大阪府大阪市北区梅田１丁目１３−１３ 大阪駅前ダイヤモンド地下街 ３号Ｇ３０",
+     "lat": 34.7010054,
+     "lng": 135.4985223
+    },
+    {
+     "place_id": "ChIJQSJSTwDnAGAROz3Luzi263s",
+     "name": "ローソンHB阪急梅田３階西店",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−１",
+     "lat": 34.7044113,
+     "lng": 135.49808819999998
+    },
+    {
+     "place_id": "ChIJU4ftviPnAGAR8idVJaU44qw",
+     "name": "ローソン ＨＡ 阪急梅田３階店",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−２",
+     "lat": 34.7042072,
+     "lng": 135.4983541
+    },
+    {
+     "place_id": "ChIJM2GAkS_nAGARgrLk9OW-CHA",
+     "name": "ローソン ＨＡ 大阪梅田ツインタワーズＮ店",
+     "address": "〒530-0017 大阪府大阪市北区角田町８−１",
+     "lat": 34.702497,
+     "lng": 135.499204
+    },
+    {
+     "place_id": "ChIJWyZYP47mAGARXHcqeGKJYNw",
+     "name": "ファミリーマート 北梅田店",
+     "address": "〒530-0012 大阪府大阪市北区芝田２丁目３−２３ メイプルビル芝田 1F",
+     "lat": 34.705221699999996,
+     "lng": 135.4957437
+    },
+    {
+     "place_id": "ChIJYx_fVY7mAGAR17dmg6iCkc8",
+     "name": "セブン-イレブン グランフロント大阪フロアナイン店",
+     "address": "〒530-0011 大阪府大阪市北区大深町３−１ グランフロント大阪北館 9F",
+     "lat": 34.705167100000004,
+     "lng": 135.4949246
+    },
+    {
+     "place_id": "ChIJo1680QvnAGARD7DT9N_uGkE",
+     "name": "ローソン ＨＢ 阪急梅田２階中央店",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−２ 阪急大阪梅田駅 2F 中央",
+     "lat": 34.704805199999996,
+     "lng": 135.49835339999998
+    },
+    {
+     "place_id": "ChIJ3VSRnRXnAGARHWuz3Mu7ZpQ",
+     "name": "セブン-イレブン グランフロント大阪",
+     "address": "〒530-0011 大阪府大阪市北区大深町３−１",
+     "lat": 34.7052954,
+     "lng": 135.49418219999998
+    },
+    {
+     "place_id": "ChIJVVUSJ-3mAGARKizOcjhrHqo",
+     "name": "ローソン Ｓ ＯＳＬ東梅田駅店",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目１１−１１",
+     "lat": 34.7012558,
+     "lng": 135.4993988
+    },
+    {
+     "place_id": "ChIJwSwpPADnAGAR5AwpI5SX5Tg",
+     "name": "ローソン ＨＢ 阪急梅田２階西店",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−２",
+     "lat": 34.7051398,
+     "lng": 135.4980723
+    },
+    {
+     "place_id": "ChIJg39eM43mAGAR8FoyaJyUhmg",
+     "name": "ファミリーマート 西梅田店",
+     "address": "〒530-0001 大阪府大阪市北区梅田２丁目１−１８",
+     "lat": 34.6992895,
+     "lng": 135.4954583
+    },
+    {
+     "place_id": "ChIJL_GgNo7mAGAR_NFNdZIll6k",
+     "name": "セブン-イレブン 大阪芝田２丁目店",
+     "address": "〒530-0012 大阪府大阪市北区芝田２丁目２−１３",
+     "lat": 34.705781099999996,
+     "lng": 135.4958327
+    },
+    {
+     "place_id": "ChIJ6bzZO-3mAGARhQKf_rikVm4",
+     "name": "ローソン 第４ビル地下２階店",
+     "address": "〒530-0001 大阪府大阪市北区梅田１丁目１１−４ Ｂ２００",
+     "lat": 34.6999176,
+     "lng": 135.4984155
+    },
+    {
+     "place_id": "ChIJ-8sMubDnAGAR0JhwiYRv4lc",
+     "name": "ローソン ＨＢ 阪急梅田３階東店",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−２ 阪急大阪梅田駅",
+     "lat": 34.704604599999996,
+     "lng": 135.4991058
+    },
+    {
+     "place_id": "ChIJA4SXmMLnAGARQFF_LFslOT0",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 梅田曽根崎警察署前店",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目１２−７",
+     "lat": 34.701252499999995,
+     "lng": 135.4997447
+    },
+    {
+     "place_id": "ChIJxTC_0uzmAGARV76ZcAwMkYc",
+     "name": "セブン-イレブン 梅田曽根崎警察署前店",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目１２−７",
+     "lat": 34.7012395,
+     "lng": 135.4997465
+    },
+    {
+     "place_id": "ChIJf2xCDi_nAGAR7JdHsmc3a-Q",
+     "name": "ローソン ＨＢ 阪急梅田３階中央店",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−２",
+     "lat": 34.705107999999996,
+     "lng": 135.49858799999998
+    },
+    {
+     "place_id": "ChIJbRcw0uzmAGARTbv5QMYZBas",
+     "name": "国際ハートサービス",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目１２−７ ５階",
+     "lat": 34.7012408,
+     "lng": 135.4997842
+    },
+    {
+     "place_id": "ChIJ34_SGWvnAGAR-Z44WnpCXJ4",
+     "name": "ローソン ＨＡ 阪急梅田２階店",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−２",
+     "lat": 34.7052589,
+     "lng": 135.49841379999998
+    },
+    {
+     "place_id": "ChIJNYZvcxznAGAR_o75biRbEYc",
+     "name": "ローソン ＨＢ 阪急梅田２階東店",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−２",
+     "lat": 34.7050494,
+     "lng": 135.49883789999998
+    },
+    {
+     "place_id": "ChIJy1tMyZPmAGARPyPbNYisj2A",
+     "name": "ファミリーマート ABC-MART梅田ビル店",
+     "address": "〒530-0013 大阪府大阪市北区茶屋町１−２７",
+     "lat": 34.70455870000001,
+     "lng": 135.4995712
+    },
+    {
+     "place_id": "ChIJh1vpQunmAGARdB0bB605tPQ",
+     "name": "ファミリーマート 東梅田駅前店",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目１２−４ B2",
+     "lat": 34.7008815,
+     "lng": 135.4999514
+    },
+    {
+     "place_id": "ChIJ02EJo_LmAGAR8rTH5qZlXTQ",
+     "name": "FamilyMart+コクミンドラッグ 第1ビル店",
+     "address": "〒530-0001 大阪府大阪市北区梅田１丁目３−１ B 200 大阪駅前第一ビル地下2階",
+     "lat": 34.6988134,
+     "lng": 135.4964973
+    },
+    {
+     "place_id": "ChIJi4aQfADnAGARJrVFvtJ2_Xs",
+     "name": "ファミマ!! グラングリーン大阪店",
+     "address": "〒530-0011 大阪府大阪市北区大深町５−５４ パークタワ ２階",
+     "lat": 34.7030216,
+     "lng": 135.4913985
+    },
+    {
+     "place_id": "ChIJE3TTBADnAGARZmmov1c3z50",
+     "name": "ｼｮｯﾌﾟ･ﾙﾅ",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−３",
+     "lat": 34.7056669,
+     "lng": 135.49836539999998
+    },
+    {
+     "place_id": "ChIJqXU6tODnAGARfu44p-M3We8",
+     "name": "ローソン アカカベお初天神店",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目１６−２６",
+     "lat": 34.701478,
+     "lng": 135.500354
+    },
+    {
+     "place_id": "ChIJxfZnF-3mAGAR2JVX5ZkH8mM",
+     "name": "ファミリーマート ディアモール大阪店",
+     "address": "〒530-0001 大阪府大阪市北区梅田１丁目１ 大阪駅前ダイヤモンド地下街５号５２８０",
+     "lat": 34.6994794,
+     "lng": 135.4987414
+    },
+    {
+     "place_id": "ChIJN6NUW5PmAGARY40pFSKyoqg",
+     "name": "ファミリーマート 阪急東通店",
+     "address": "〒530-0018 大阪府大阪市北区小松原町３−３ ＯＳビル",
+     "lat": 34.7026654,
+     "lng": 135.5005617
+    },
+    {
+     "place_id": "ChIJg0JbIIHnAGARFuvqu_9yFEg",
+     "name": "ファミリーマート 梅田二丁目店",
+     "address": "〒530-0001 大阪府大阪市北区梅田２丁目１−３ 桜橋御幸ビル",
+     "lat": 34.6986864,
+     "lng": 135.4950828
+    },
+    {
+     "place_id": "ChIJE01cwsvnAGAR7R2iIrP0APg",
+     "name": "ローソン ＨＡ 阪急梅田茶屋町口店",
+     "address": "〒530-0012 大阪府大阪市北区芝田１丁目１−２",
+     "lat": 34.7057018,
+     "lng": 135.4985704
+    },
+    {
+     "place_id": "ChIJVd-w0ozmAGARnunv5Az5q14",
+     "name": "セブン-イレブン 梅田ブリーゼタワー店",
+     "address": "〒530-0001 大阪府大阪市北区梅田２丁目４−９",
+     "lat": 34.6989409,
+     "lng": 135.4939585
+    },
+    {
+     "place_id": "ChIJCbVZbe3mAGAR_gtJrG0gUq8",
+     "name": "セブン-イレブン 大阪駅前第２ビル店",
+     "address": "〒530-0001 大阪府大阪市北区梅田１丁目２−２ 大阪駅前第２ビル 地下２階",
+     "lat": 34.699031,
+     "lng": 135.49814519999998
+    },
+    {
+     "place_id": "ChIJB8ky8hnnAGARX29bcTaKtsg",
+     "name": "セブン-イレブン 大阪駅前第2ビルB1店",
+     "address": "〒530-0001 大阪府大阪市北区梅田１丁目２−２",
+     "lat": 34.699064199999995,
+     "lng": 135.49836009999999
+    },
+    {
+     "place_id": "ChIJVYOJq1TnAGARGyrX8yK7P60",
+     "name": "ローソン ＯＳＬ東梅田駅ホーム店",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目１１−１１",
+     "lat": 34.700461,
+     "lng": 135.500135
+    },
+    {
+     "place_id": "ChIJU-BXMOnmAGARqVx7fjeoiyY",
+     "name": "ファミリーマート 大阪駅前第四ビル店",
+     "address": "〒530-0001 大阪府大阪市北区梅田１丁目１１−４ 大阪駅前第4ビル B2",
+     "lat": 34.6996116,
+     "lng": 135.4994401
+    },
+    {
+     "place_id": "ChIJYycfdADnAGAReR-JIW1goOI",
+     "name": "ローソン ＪＡＭ ＢＡＳＥ店",
+     "address": "〒530-0001 大阪府大阪市北区大深町６−３８ 2F",
+     "lat": 34.7060302,
+     "lng": 135.4929776
+    },
+    {
+     "place_id": "ChIJ2RpfUJPmAGARfe_TPSgo3gk",
+     "name": "セブン-イレブン ハートインヴィアイン梅田店",
+     "address": "〒530-0018 大阪府大阪市北区小松原町１−２０",
+     "lat": 34.7025383,
+     "lng": 135.5012509
+    },
+    {
+     "place_id": "ChIJGZXDpQrnAGARM1Mtrz2qab8",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン ハートインヴィアイン梅田店",
+     "address": "〒530-0018 大阪府大阪市北区小松原町１−２０",
+     "lat": 34.7025589,
+     "lng": 135.5012548
+    },
+    {
+     "place_id": "ChIJg14RkozmAGARXK2zNaEYx94",
+     "name": "セブン-イレブン 梅田ダイビル店",
+     "address": "〒530-0001 大阪府大阪市北区梅田３丁目３−１０ B1",
+     "lat": 34.699044199999996,
+     "lng": 135.4923124
+    },
+    {
+     "place_id": "ChIJ8Z-fmvLmAGARjE08XE-UQeg",
+     "name": "ファミリーマート ドーチカ店",
+     "address": "〒530-0002 大阪府大阪市北区曾根崎新地１丁目４ ４号 堂島地下街",
+     "lat": 34.6979499,
+     "lng": 135.4955977
+    },
+    {
+     "place_id": "ChIJlWRhY5PmAGARnxzfQweX9UY",
+     "name": "マーティーマート 林",
+     "address": "〒530-0018 大阪府大阪市北区小松原町５−１２ ＭａｒｔｙＭａｒｋ",
+     "lat": 34.7036048,
+     "lng": 135.5013391
+    },
+    {
+     "place_id": "ChIJgTAlsv3nAGARoDzLay6b44M",
+     "name": "梅田 ベーカリー&コンビニ",
+     "address": "〒530-0013 大阪府大阪市北区茶屋町１−４５ OIT梅田タワ １階南側",
+     "lat": 34.7054696,
+     "lng": 135.5002089
+    },
+    {
+     "place_id": "ChIJm4hAAQDnAGAR1Un3SBMP7r4",
+     "name": "ローソン お初天神通り店",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目７−４",
+     "lat": 34.699624299999996,
+     "lng": 135.500404
+    },
+    {
+     "place_id": "ChIJUbrpIPPmAGARK6MC-eEwKSM",
+     "name": "セブン-イレブン 梅田曽根崎新地２丁目店",
+     "address": "〒530-0002 大阪府大阪市北区曾根崎新地２丁目３−２１ 1F",
+     "lat": 34.6979621,
+     "lng": 135.4944296
+    },
+    {
+     "place_id": "ChIJo2hHWuzmAGARSnZcKJgNfYk",
+     "name": "セブン-イレブン 大阪駅前第３ビル店",
+     "address": "〒530-0001 大阪府大阪市北区梅田１丁目１−３ 地下一階",
+     "lat": 34.6987788,
+     "lng": 135.499416
+    },
+    {
+     "place_id": "ChIJAQBAycfiAGARzE2SxwsgKYI",
+     "name": "セブン-イレブン 梅田スカイビル東店",
+     "address": "〒531-0071 大阪府大阪市北区中津５丁目２−１２",
+     "lat": 34.705621,
+     "lng": 135.4915722
+    },
+    {
+     "place_id": "ChIJdQet3I_mAGARAXYJWS7boyA",
+     "name": "ファミリーマート 芝田二丁目店",
+     "address": "〒530-0012 大阪府大阪市北区芝田２丁目７−１８ LUCID SQUARE UMEDA",
+     "lat": 34.707294399999995,
+     "lng": 135.4962959
+    },
+    {
+     "place_id": "ChIJY4V14fHmAGARzQ_2kL3lm8A",
+     "name": "ファミリーマート 桜橋店",
+     "address": "〒530-0002 大阪府大阪市北区曾根崎新地２丁目３−１３",
+     "lat": 34.697842699999995,
+     "lng": 135.4939379
+    },
+    {
+     "place_id": "ChIJ6Xkx75PmAGARfHh3_AdwOL8",
+     "name": "ローソン 大阪茶屋町店",
+     "address": "〒530-0013 大阪府大阪市北区茶屋町１−１ 共信梅田ビル １階",
+     "lat": 34.7055101,
+     "lng": 135.5007968
+    },
+    {
+     "place_id": "ChIJffHGOQDnAGARo7bZppHD7Ok",
+     "name": "ヤマザキショップ（Yショップ）大阪中央病院店",
+     "address": "〒530-0001 大阪府大阪市北区梅田３丁目３−３０",
+     "lat": 34.6991175,
+     "lng": 135.4912218
+    },
+    {
+     "place_id": "ChIJg4slY-zmAGARnrupJ12HRXg",
+     "name": "デイリーヤマザキ 梅田お初天神店",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目５−２０ お初天神ビル",
+     "lat": 34.699502599999995,
+     "lng": 135.5009905
+    },
+    {
+     "place_id": "ChIJRc3LmpTmAGARplqm-e3U2lc",
+     "name": "ファミリーマート 堂山町店",
+     "address": "〒530-0027 大阪府大阪市北区堂山町１７−８",
+     "lat": 34.703973,
+     "lng": 135.501941
+    },
+    {
+     "place_id": "ChIJkWLWHvPmAGARm_roP9O3h9A",
+     "name": "ファミリーマート 堂島北店",
+     "address": "〒530-0002 大阪府大阪市北区曾根崎新地２丁目４−１ ホテルマイステイズ堂島 １Ｆ",
+     "lat": 34.697417699999995,
+     "lng": 135.4941912
+    },
+    {
+     "place_id": "ChIJZ-COMzDnAGAR8FsTuTinBlE",
+     "name": "ローソン アパリゾート大阪梅田駅タワー店",
+     "address": "〒530-0057 大阪府大阪市北区曾根崎２丁目８−３２",
+     "lat": 34.699881999999995,
+     "lng": 135.50151400000001
+    },
+    {
+     "place_id": "ChIJwSwUaOvmAGARRhFyeUoL4D8",
+     "name": "ローソン 太融寺町西店",
+     "address": "〒530-0051 大阪府大阪市北区太融寺町８−８",
+     "lat": 34.7011963,
+     "lng": 135.5021756
     }
    ]
   },
   "yodoyabashi": {
-   "fetchedAt": "2026-10-24T11:23:32.772Z",
+   "v": 2,
+   "fetchedAt": "2026-11-01T15:54:33.085Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJiedc5uXmAGARNkpwVZvWKCQ",
@@ -17401,6 +19207,27 @@
      "lng": 135.4979574
     },
     {
+     "place_id": "ChIJWSkpYQDnAGAR8YpLUXlEVaE",
+     "name": "ファミリーマート 大阪堂島浜タワー店",
+     "address": "〒530-0004 大阪府大阪市北区堂島浜１丁目１−２７",
+     "lat": 34.695670299999996,
+     "lng": 135.5009414
+    },
+    {
+     "place_id": "ChIJdWm7bEPnAGAR0TGhtanoS_g",
+     "name": "ローソン 北浜土佐堀通店",
+     "address": "〒541-0041 大阪府大阪市中央区北浜２丁目５−１９",
+     "lat": 34.6919298,
+     "lng": 135.5048564
+    },
+    {
+     "place_id": "ChIJVa8DMQDnAGARajcUqpYu9xU",
+     "name": "ファミリーマート",
+     "address": "〒530-0004 大阪府大阪市北区堂島浜１丁目１−５",
+     "lat": 34.6956791,
+     "lng": 135.5006524
+    },
+    {
      "place_id": "ChIJOZ2E3CjnAGARC53H-KHyRuE",
      "name": "ファミリーマート 伏見町四丁目店",
      "address": "〒541-0044 大阪府大阪市中央区伏見町４丁目１−１ 明治安田生命 大阪御堂筋ビル 1F",
@@ -17415,6 +19242,20 @@
      "lng": 135.4974045
     },
     {
+     "place_id": "ChIJLWXcYe7mAGARLQgm415GnGE",
+     "name": "ファミリーマート 新ダイビル店",
+     "address": "〒530-0004 大阪府大阪市北区堂島浜１丁目２−１ 4階",
+     "lat": 34.695754199999996,
+     "lng": 135.4994956
+    },
+    {
+     "place_id": "ChIJzyBa0-DmAGARVOYn09oiM4c",
+     "name": "セブン-イレブン 大阪今橋２丁目店",
+     "address": "〒541-0042 大阪府大阪市中央区今橋２丁目４−１０",
+     "lat": 34.6908315,
+     "lng": 135.5048876
+    },
+    {
      "place_id": "ChIJcU9NHPDmAGARr_Vs-87CiM4",
      "name": "ローソン 肥後橋駅前店",
      "address": "〒550-0002 大阪府大阪市西区江戸堀１丁目２−１１",
@@ -17427,6 +19268,48 @@
      "address": "〒541-0043 大阪府大阪市中央区高麗橋４丁目８−１０",
      "lat": 34.6900741,
      "lng": 135.4978492
+    },
+    {
+     "place_id": "ChIJnRi-AhznAGAR6mEgixBuWpk",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 大阪伏見町３丁目店",
+     "address": "〒541-0044 大阪府大阪市中央区伏見町３丁目２−４",
+     "lat": 34.689081099999996,
+     "lng": 135.5028985
+    },
+    {
+     "place_id": "ChIJTyfURefmAGARUlIkYqA75tE",
+     "name": "ファミリーマート 北浜二丁目店",
+     "address": "〒541-0041 大阪府大阪市中央区北浜２丁目４−１２",
+     "lat": 34.6912176,
+     "lng": 135.5055258
+    },
+    {
+     "place_id": "ChIJaXlPNuHmAGARB3Y3-6TYWHo",
+     "name": "セブン‐イレブン大阪伏見町３丁目店",
+     "address": "〒541-0044 大阪府大阪市中央区伏見町３丁目２−４",
+     "lat": 34.6890522,
+     "lng": 135.5029097
+    },
+    {
+     "place_id": "ChIJaZDicADnAGARBrPp-fREnk8",
+     "name": "ファミリーマート 道修町三丁目店",
+     "address": "〒541-0045 大阪府大阪市中央区道修町３丁目４−１１",
+     "lat": 34.6887797,
+     "lng": 135.5017645
+    },
+    {
+     "place_id": "ChIJ6cE_fQDnAGARBXY52L9090w",
+     "name": "ファミリーマート 大阪高等裁判所／Ｓ店",
+     "address": "〒530-0047 大阪府大阪市北区西天満２丁目１−１ １０号",
+     "lat": 34.695691499999995,
+     "lng": 135.50398769999998
+    },
+    {
+     "place_id": "ChIJj2j3NOnmAGARPGd9fFMnv4M",
+     "name": "デイリーヤマザキ 西天満2丁目店",
+     "address": "〒530-0047 大阪府大阪市北区西天満２丁目１０−２",
+     "lat": 34.6964602,
+     "lng": 135.5016731
     },
     {
      "place_id": "ChIJ4XGq1vHmAGARDpVS7s6Bq0E",
@@ -17457,11 +19340,137 @@
      "lng": 135.496063
     },
     {
+     "place_id": "ChIJh-19de7mAGARK7qY5SDU5iI",
+     "name": "ファミリーマート 堂島一丁目店",
+     "address": "〒530-0003 大阪府大阪市北区堂島１丁目４−２",
+     "lat": 34.69614,
+     "lng": 135.498215
+    },
+    {
+     "place_id": "ChIJSwWjJgDnAGARaMp-cmK1zo0",
+     "name": "ローソン 今橋二丁目店",
+     "address": "〒541-0042 大阪府大阪市中央区今橋２丁目２−１７",
+     "lat": 34.690365,
+     "lng": 135.505727
+    },
+    {
+     "place_id": "ChIJR43p1vHmAGARwY_O5Gr8hRA",
+     "name": "ローソン 中之島フェスティバルプラザ店",
+     "address": "〒530-0005 大阪府大阪市北区中之島２丁目３−１８ Ｂ１Ｆ",
+     "lat": 34.693849799999995,
+     "lng": 135.4960471
+    },
+    {
      "place_id": "ChIJNU8uJuXmAGARA86eU9NPLb0",
      "name": "ローソン 江戸堀一丁目店",
      "address": "〒550-0002 大阪府大阪市西区江戸堀１丁目７−１３",
      "lat": 34.6892972,
      "lng": 135.4975007
+    },
+    {
+     "place_id": "ChIJ-4PUFuXmAGARjRFaYu8wQ3w",
+     "name": "ファミマ!! 中之島フェスティバルプラザ店",
+     "address": "〒530-0005 大阪府大阪市北区中之島３丁目２−４",
+     "lat": 34.693337500000005,
+     "lng": 135.49574099999998
+    },
+    {
+     "place_id": "ChIJ9ZTbRefmAGAR-As3eOWfPnQ",
+     "name": "ファミリーマート ザロイヤルパークキャンバス大阪店",
+     "address": "〒541-0041 大阪府大阪市中央区北浜１丁目９−８ ｻﾞ･ﾛｲﾔﾙﾊﾟｰｸｷｬﾝﾊﾟｽ大阪北浜 1F",
+     "lat": 34.6910106,
+     "lng": 135.5068139
+    },
+    {
+     "place_id": "ChIJkeVoBenmAGARnXJQR29yLio",
+     "name": "ローソン ドラッグミック西天満四丁目店",
+     "address": "〒530-0047 大阪府大阪市北区西天満４丁目１０−１４",
+     "lat": 34.6972027,
+     "lng": 135.5031957
+    },
+    {
+     "place_id": "ChIJnRkeuPrmAGARSHqIQZWKitk",
+     "name": "ファミリーマート 江戸堀一丁目店",
+     "address": "〒550-0002 大阪府大阪市西区江戸堀１丁目１０−２ 肥後橋ニッタイビル",
+     "lat": 34.6897284,
+     "lng": 135.496363
+    },
+    {
+     "place_id": "ChIJ8fpSkeDmAGAR_2-5NPBwud0",
+     "name": "ファミリーマート 伏見町二丁目店",
+     "address": "〒541-0044 大阪府大阪市中央区伏見町２丁目４−２",
+     "lat": 34.689182699999996,
+     "lng": 135.50549949999998
+    },
+    {
+     "place_id": "ChIJza0sfHXnAGARutBlXrSJlEw",
+     "name": "セブン-イレブン 御堂筋平野町店",
+     "address": "〒541-0046 大阪府大阪市中央区平野町３丁目６−１",
+     "lat": 34.6876524,
+     "lng": 135.5014019
+    },
+    {
+     "place_id": "ChIJk1MJUujmAGARUQk3qxVTDFM",
+     "name": "セブン-イレブン 大阪西天満４丁目店",
+     "address": "〒530-0047 大阪府大阪市北区西天満４丁目６−１８",
+     "lat": 34.696752499999995,
+     "lng": 135.5045413
+    },
+    {
+     "place_id": "ChIJufC0_N3mAGAR6yZxXGaRESk",
+     "name": "セブン‐イレブン大阪証券取引所ビル店",
+     "address": "〒541-0041 大阪府大阪市中央区北浜１丁目８−１６",
+     "lat": 34.6912891,
+     "lng": 135.5071021
+    },
+    {
+     "place_id": "ChIJoUAc9O3mAGARLDGGGnaWf94",
+     "name": "ファミリーマート 堂島北新地店",
+     "address": "〒530-0003 大阪府大阪市北区堂島１丁目３−１４ 堂島平八ビル",
+     "lat": 34.696472799999995,
+     "lng": 135.497185
+    },
+    {
+     "place_id": "ChIJLyIJBeHmAGARxduHVql1gBc",
+     "name": "ミニストップ 平野町３丁目店",
+     "address": "〒541-0046 大阪府大阪市中央区平野町３丁目１−２",
+     "lat": 34.6878387,
+     "lng": 135.5035352
+    },
+    {
+     "place_id": "ChIJPWB0_uDmAGARKZ4cco9EzIc",
+     "name": "セブン‐イレブン大阪平野町２丁目店",
+     "address": "〒541-0046 大阪府大阪市中央区平野町２丁目５−８ CENTURY BUILDING",
+     "lat": 34.6879801,
+     "lng": 135.5040651
+    },
+    {
+     "place_id": "ChIJhRskCt7mAGARCHCwbLBJZnE",
+     "name": "ローソン Ｓ ＯＳＬ北浜駅南店",
+     "address": "〒541-0043 大阪府大阪市中央区北浜１丁目８−１６",
+     "lat": 34.689672099999996,
+     "lng": 135.50662459999998
+    },
+    {
+     "place_id": "ChIJFyy9he_mAGARLVGFNh0j9xI",
+     "name": "ファミリーマート 堂島浜一丁目店",
+     "address": "〒530-0004 大阪府大阪市北区堂島浜１丁目４−１９",
+     "lat": 34.6956547,
+     "lng": 135.495849
+    },
+    {
+     "place_id": "ChIJhcCmNSznAGAR5WSa9eXRyoI",
+     "name": "外貨両替機 SMART EXCHANGE ローソン ホテルモントレ ル・フレール大阪",
+     "address": "〒530-0002 大阪府大阪市北区曾根崎新地１丁目１２−８ 1F",
+     "lat": 34.6977794,
+     "lng": 135.4995128
+    },
+    {
+     "place_id": "ChIJc8sKba3nAGARMlSjI7kgAaY",
+     "name": "ローソン ホテルモントレ ル・フレール大阪店",
+     "address": "〒530-0002 大阪府大阪市北区曾根崎新地１丁目１２−８ ホテルモントレ ル・フレール大阪 １階",
+     "lat": 34.697789199999995,
+     "lng": 135.49950809999999
     }
    ]
   },
