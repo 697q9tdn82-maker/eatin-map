@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-01T15:54:33.086Z",
+ "updatedAt": "2026-11-02T19:20:38.302Z",
  "areas": {
   "akabane": {
    "v": 2,
@@ -1444,7 +1444,9 @@
    ]
   },
   "fukushima": {
-   "fetchedAt": "2026-10-24T11:23:38.127Z",
+   "v": 2,
+   "fetchedAt": "2026-11-02T19:19:57.969Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJx0jmqYznAGARz_LoPmLt4UI",
@@ -1571,6 +1573,27 @@
      "address": "〒530-0001 大阪府大阪市北区梅田３丁目４−５",
      "lat": 34.6983877,
      "lng": 135.4907807
+    },
+    {
+     "place_id": "ChIJk_eLfV_mAGARbkV3-7gSFSI",
+     "name": "ローソン 関西電力病院店",
+     "address": "〒553-0003 大阪府大阪市福島区福島２丁目１−７",
+     "lat": 34.692978,
+     "lng": 135.4875609
+    },
+    {
+     "place_id": "ChIJffHGOQDnAGARo7bZppHD7Ok",
+     "name": "ヤマザキショップ（Yショップ）大阪中央病院店",
+     "address": "〒530-0001 大阪府大阪市北区梅田３丁目３−３０",
+     "lat": 34.6991175,
+     "lng": 135.4912218
+    },
+    {
+     "place_id": "ChIJ_3kaXgDnAGARdvLas1pDSfk",
+     "name": "ファミリーマート 福島三丁目店",
+     "address": "〒553-0003 大阪府大阪市福島区福島３丁目１−３",
+     "lat": 34.69242630000001,
+     "lng": 135.48607189999998
     },
     {
      "place_id": "ChIJnZ-FHGPmAGARY_rqgfC0qqU",
@@ -4597,7 +4620,9 @@
    ]
   },
   "juso": {
-   "fetchedAt": "2026-10-24T11:23:39.826Z",
+   "v": 2,
+   "fetchedAt": "2026-11-02T19:20:07.792Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJxYeVt3vlAGARFCWCBr8EMu0",
@@ -4710,6 +4735,20 @@
      "address": "〒532-0023 大阪府大阪市淀川区十三東２丁目３−１６",
      "lat": 34.720759699999995,
      "lng": 135.4862758
+    },
+    {
+     "place_id": "ChIJ4wj4VMnlAGAR3Z1g9CPeZfs",
+     "name": "セブン-イレブン 大阪十三本町３丁目店",
+     "address": "〒532-0024 大阪府大阪市淀川区十三本町３丁目５−１７",
+     "lat": 34.7246757,
+     "lng": 135.48261080000003
+    },
+    {
+     "place_id": "ChIJ_cdm6MXlAGARhlPbklHyKtw",
+     "name": "ローソン 十三元今里三丁目店",
+     "address": "〒532-0028 大阪府大阪市淀川区十三元今里３丁目１−６３",
+     "lat": 34.721252199999995,
+     "lng": 135.4769457
     },
     {
      "place_id": "ChIJm4FnRdDlAGARSRl2lav4gwY",
@@ -6667,7 +6706,9 @@
    ]
   },
   "kyobashi": {
-   "fetchedAt": "2026-10-24T11:23:34.473Z",
+   "v": 2,
+   "fetchedAt": "2026-11-02T19:19:38.301Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJe3-chdfgAGARbp-AMCgYkuQ",
@@ -6782,6 +6823,20 @@
      "lng": 135.5341148
     },
     {
+     "place_id": "ChIJDWfj5ynhAGAR8VWH0vlu0R4",
+     "name": "ローソン 京橋北口店",
+     "address": "〒534-0024 大阪府大阪市都島区東野田町４丁目７−１８",
+     "lat": 34.69842,
+     "lng": 135.531001
+    },
+    {
+     "place_id": "ChIJESZfBdbgAGARP-n8u5GylmM",
+     "name": "ファミリーマート 京橋片町口店",
+     "address": "〒534-0024 大阪府大阪市都島区東野田町２丁目２−１０",
+     "lat": 34.6970598,
+     "lng": 135.5303697
+    },
+    {
      "place_id": "ChIJt3SZxvDhAGARMYb2FoCohbM",
      "name": "セブン-イレブン 大阪蒲生１丁目店",
      "address": "〒536-0016 大阪府大阪市城東区蒲生１丁目３−２１",
@@ -6796,6 +6851,13 @@
      "lng": 135.5322857
     },
     {
+     "place_id": "ChIJiUs3ZADhAGARoJnnNMF0gSU",
+     "name": "セブン‐イレブン 京阪京橋店",
+     "address": "〒534-0024 大阪府大阪市都島区東野田町１丁目６−１",
+     "lat": 34.6958777,
+     "lng": 135.53003139999998
+    },
+    {
      "place_id": "ChIJ7VUUWMTgAGARgLpVUgWL6qc",
      "name": "ファミリーマート ＯＢＰＫＤＤＩ大阪ビル店",
      "address": "〒540-0001 大阪府大阪市中央区城見２丁目２−７２",
@@ -6803,11 +6865,60 @@
      "lng": 135.53455700000004
     },
     {
+     "place_id": "ChIJV61qeNjgAGARPPxPKnoKTeA",
+     "name": "セブン-イレブン 大阪東野田町５丁目店",
+     "address": "〒534-0024 大阪府大阪市都島区東野田町５丁目１１−１５",
+     "lat": 34.700271799999996,
+     "lng": 135.53630619999998
+    },
+    {
+     "place_id": "ChIJ6cBjrynhAGARNLFFADAFUZs",
+     "name": "ファミリーマート 東野田四丁目店",
+     "address": "〒534-0024 大阪府大阪市都島区東野田町４丁目１３−９",
+     "lat": 34.7000457,
+     "lng": 135.531704
+    },
+    {
      "place_id": "ChIJGQqmnB3hAGAR25rl9qJi5PU",
      "name": "ファミリーマート ツイン２１店",
      "address": "〒540-0001 大阪府大阪市中央区城見２丁目１−６１ ツイン２１ ２階",
      "lat": 34.693441799999995,
      "lng": 135.5316118
+    },
+    {
+     "place_id": "ChIJCTlQDNzgAGAR4YLGSC6gKS4",
+     "name": "ローソン 新喜多一丁目店",
+     "address": "〒536-0015 大阪府大阪市城東区新喜多１丁目７−２２",
+     "lat": 34.6966775,
+     "lng": 135.53984119999998
+    },
+    {
+     "place_id": "ChIJF1-extXgAGARgZ-Gz8PbmXs",
+     "name": "ファミリーマート 京橋駅西店",
+     "address": "〒534-0024 大阪府大阪市都島区東野田町１丁目５−２９",
+     "lat": 34.6955637,
+     "lng": 135.5289472
+    },
+    {
+     "place_id": "ChIJbe06jc_gAGARf2w3-ookflc",
+     "name": "ファミリーマート 大阪ビジネスパーク店",
+     "address": "〒540-0001 大阪府大阪市中央区城見２丁目１−６１ ツイン２１ＭＩＤタワ １階",
+     "lat": 34.6925162,
+     "lng": 135.5313707
+    },
+    {
+     "place_id": "ChIJz3GoWtvgAGARnGIDR7pp5hY",
+     "name": "ファミリーマート 城東鴫野西店",
+     "address": "〒536-0014 大阪府大阪市城東区鴫野西２丁目１８−３",
+     "lat": 34.6931051,
+     "lng": 135.5388128
+    },
+    {
+     "place_id": "ChIJ_dsvb9HgAGARrPRGKPjPPyA",
+     "name": "ファミリーマート ＩＭＰ店",
+     "address": "〒540-0001 大阪府大阪市中央区城見１丁目３−７ 松下IMPビル 3F",
+     "lat": 34.6919295,
+     "lng": 135.5317354
     }
    ]
   },
@@ -7302,7 +7413,9 @@
    ]
   },
   "kyoto": {
-   "fetchedAt": "2026-10-24T11:23:44.982Z",
+   "v": 2,
+   "fetchedAt": "2026-11-02T19:20:28.651Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJxyHcligJAWARcYLl8GDcaoE",
@@ -7382,6 +7495,13 @@
      "lng": 135.758555
     },
     {
+     "place_id": "ChIJyz72xa4IAWARbQssASQap2g",
+     "name": "セブン-イレブン ハートインＪＲ京都駅東口改札内店",
+     "address": "〒600-8215 京都府京都市下京区烏丸通塩小路下ル東塩小路町",
+     "lat": 34.9855541,
+     "lng": 135.7600477
+    },
+    {
      "place_id": "ChIJ56weprkJAWARPv25l2Srck4",
      "name": "PLUSTA京都幹線中央改札内",
      "address": "〒600-8214 京都府京都市下京区東塩小路高倉町８−３ 新幹線東乗換口 京都駅構内 新幹線改札口内コンコース",
@@ -7408,6 +7528,20 @@
      "address": "〒600-8215 京都府京都市下京区烏丸通塩小路下ル東塩小路町",
      "lat": 34.984508999999996,
      "lng": 135.7578969
+    },
+    {
+     "place_id": "ChIJtdTJwL0JAWAR0tlXsBDWmaI",
+     "name": "セブン-イレブン ハートインＪＲ京都駅地下東口店",
+     "address": "〒600-8215 京都府京都市下京区烏丸通塩小路下ル東塩小路町",
+     "lat": 34.9858104,
+     "lng": 135.7602648
+    },
+    {
+     "place_id": "ChIJO9yvzNoJAWARe65elpOX7q0",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン ハートインJR京都駅地下東口店",
+     "address": "〒600-8216 京都府京都市下京区烏丸通塩小路下ル東塩小路町B2F",
+     "lat": 34.985847899999996,
+     "lng": 135.7602648
     },
     {
      "place_id": "ChIJBy8XNK8IAWARAL90NW9uFKE",
@@ -7438,11 +7572,193 @@
      "lng": 135.7563461
     },
     {
+     "place_id": "ChIJtRs-JN8JAWARyOv2zVp8aTM",
+     "name": "KIOSK 京都下りホーム（3号）",
+     "address": "〒600-8214 京都府京都市下京区東塩小路高倉町",
+     "lat": 34.9845514,
+     "lng": 135.7601894
+    },
+    {
+     "place_id": "ChIJw1hHAe4JAWARc-G6M0q383s",
+     "name": "PLUSTA京都幹線上12",
+     "address": "〒600-8214 京都府京都市下京区東塩小路高倉町８−３ 八条東口 京都駅構内 11·12番線(登り)ホーム12号車 付近",
+     "lat": 34.9847272,
+     "lng": 135.7603758
+    },
+    {
      "place_id": "ChIJTQYmr6gIAWARBC13nMuUL4s",
      "name": "ローソン 新京都センタービル店",
      "address": "〒600-8212 京都府京都市下京区塩小路通烏丸西入東塩小路町６１４",
      "lat": 34.987383,
      "lng": 135.7565898
+    },
+    {
+     "place_id": "ChIJN2Q6e3wGAWARZ5rf-6nFbEk",
+     "name": "セブン-イレブン ハートイン ヴィアイン京都八条口店",
+     "address": "〒601-8002 京都府京都市南区東九条上殿田町４４−１",
+     "lat": 34.983426699999995,
+     "lng": 135.75837339999998
+    },
+    {
+     "place_id": "ChIJG3TEoz8JAWARqwQ1AOiOCkQ",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン ハートインヴィアイン京都八条口店",
+     "address": "〒601-8002 京都府京都市南区東九条上殿田町４４−１",
+     "lat": 34.9833868,
+     "lng": 135.7584388
+    },
+    {
+     "place_id": "ChIJ3498XbIIAWARLdC0QG3Zri0",
+     "name": "ファミリーマート 京都タワー前店",
+     "address": "〒600-8216 京都府京都市下京区東洞院通七条下ル東塩小路町二丁目７３０ 大和開発",
+     "lat": 34.9879125,
+     "lng": 135.75996279999998
+    },
+    {
+     "place_id": "ChIJEQJ0V74JAWARhkYEJgLmIjc",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 京都駅八条口店",
+     "address": "〒600-8215 京都府京都市下京区東塩小路釜殿町３１−１",
+     "lat": 34.9846037,
+     "lng": 135.755513
+    },
+    {
+     "place_id": "ChIJNQrnr64IAWARa5WS0HKwjDk",
+     "name": "セブン‐イレブン京都駅八条口店",
+     "address": "〒600-8215 京都府京都市下京区東塩小路釜殿町３１−１",
+     "lat": 34.9845289,
+     "lng": 135.7555203
+    },
+    {
+     "place_id": "ChIJNzv1ma0IAWARRqiW5s0td3Y",
+     "name": "セブン-イレブン 7FS京阪バス京都駅八条口店",
+     "address": "〒601-8003 京都府京都市南区東九条西山王町３１",
+     "lat": 34.983596999999996,
+     "lng": 135.76072209999998
+    },
+    {
+     "place_id": "ChIJR220FFcJAWARDIR8Q8-52ow",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン DR京都テラス八条東ロイネット店",
+     "address": "〒601-8004 京都府京都市南区東九条東山王町１４−１",
+     "lat": 34.984224399999995,
+     "lng": 135.76142729999998
+    },
+    {
+     "place_id": "ChIJlU398eIJAWAR1ygEpeCa5uM",
+     "name": "セブン-イレブン DR京都テラス八条東ロイネット店",
+     "address": "〒601-8004 京都府京都市南区東九条東山王町１４−１",
+     "lat": 34.984224399999995,
+     "lng": 135.76142729999998
+    },
+    {
+     "place_id": "ChIJl34Oqa0IAWARgfTDTjkB9lI",
+     "name": "ファミリーマート 烏丸八条口店",
+     "address": "〒601-8002 京都府京都市南区東九条上殿田町４１−１",
+     "lat": 34.9829438,
+     "lng": 135.7595704
+    },
+    {
+     "place_id": "ChIJLXO9p60IAWARoYTQIIHLFKc",
+     "name": "デイリーヤマザキ 烏丸八条口店",
+     "address": "〒601-8003 京都府京都市南区東九条西山王町１６",
+     "lat": 34.9830511,
+     "lng": 135.7600034
+    },
+    {
+     "place_id": "ChIJY9cb2bEIAWART9NuFC_nID4",
+     "name": "ローソン 京都駅東塩小路店",
+     "address": "〒600-8216 京都府京都市下京区東塩小路町５５８−８",
+     "lat": 34.9874238,
+     "lng": 135.76176479999998
+    },
+    {
+     "place_id": "ChIJZ2aaz68IAWARn_y6pPpk454",
+     "name": "セブン‐イレブン京都東洞院七条店",
+     "address": "〒600-8212 京都府京都市下京区塩小路町５２３",
+     "lat": 34.9882911,
+     "lng": 135.7609218
+    },
+    {
+     "place_id": "ChIJm8K-cK0IAWAROhUeJoGI7iI",
+     "name": "ローソン 竹田街道針小路店",
+     "address": "〒601-8003 京都府京都市南区東九条西山王町１１",
+     "lat": 34.9830711,
+     "lng": 135.7609793
+    },
+    {
+     "place_id": "ChIJSQreJ1YJAWARiULGF2qdKNs",
+     "name": "外貨両替機 SMART EXCHANGE セブン-イレブン 下京区役所前店",
+     "address": "〒600-8232 京都府京都市下京区木津屋橋通油小路東入南町５７７",
+     "lat": 34.9878145,
+     "lng": 135.7550995
+    },
+    {
+     "place_id": "ChIJy6npka8IAWARq4WJ1CcsBoQ",
+     "name": "ローソン 烏丸七条店",
+     "address": "〒600-8211 京都府京都市下京区真苧屋町１９５",
+     "lat": 34.9890058,
+     "lng": 135.76002069999998
+    },
+    {
+     "place_id": "ChIJySFkJaYIAWARoy1azGnKRC4",
+     "name": "セブン‐イレブン下京区役所前店",
+     "address": "〒600-8232 京都府京都市下京区木津屋橋通油小路東入南町５７７",
+     "lat": 34.987825199999996,
+     "lng": 135.7550971
+    },
+    {
+     "place_id": "ChIJfx4JymoGAWARqBBXCdyn468",
+     "name": "ファミリーマート 七条新町店",
+     "address": "〒600-8310 京都府京都市下京区七条通新町東入夷之町７２３番地２",
+     "lat": 34.9890523,
+     "lng": 135.7568645
+    },
+    {
+     "place_id": "ChIJAQB7qakIAWARHOPudsFr5iE",
+     "name": "ローソン 京都駅八条口店",
+     "address": "〒601-8411 京都府京都市南区西九条北ノ内町４２−１４",
+     "lat": 34.9844694,
+     "lng": 135.7543421
+    },
+    {
+     "place_id": "ChIJf9gkECkJAWARcMHt0GtcnP0",
+     "name": "セブン‐イレブン京都堀川塩小路南店",
+     "address": "〒600-8236 京都府京都市下京区油小路通塩小路下る西油小路町２７",
+     "lat": 34.9863682,
+     "lng": 135.7537038
+    },
+    {
+     "place_id": "ChIJ_UqC5LIIAWARuYVi6xFyGCc",
+     "name": "セブン‐イレブン京都八条通東店",
+     "address": "〒601-8005 京都府京都市南区東九条西岩本町１６−１６",
+     "lat": 34.9841951,
+     "lng": 135.763164
+    },
+    {
+     "place_id": "ChIJdZ5Z0AEGAWARxes86KK9lWs",
+     "name": "ファミリーマート 京都駅八条口西店",
+     "address": "〒601-8416 京都府京都市南区西九条池ノ内町６０−１",
+     "lat": 34.9841178,
+     "lng": 135.753524
+    },
+    {
+     "place_id": "ChIJDYQBMagIAWAREUbFCEjyB3o",
+     "name": "ローソン 八条油小路西店",
+     "address": "〒601-8407 京都府京都市南区西九条寺ノ前町２−１",
+     "lat": 34.9845161,
+     "lng": 135.7525387
+    },
+    {
+     "place_id": "ChIJ4VhRR7AIAWAR5M7CMwnShQs",
+     "name": "ミニストップ 七条高倉店",
+     "address": "〒600-8146 京都府京都市下京区材木町４８４",
+     "lat": 34.989474799999996,
+     "lng": 135.76285199999998
+    },
+    {
+     "place_id": "ChIJJ706FJ4IAWARhlW6lZRHlvc",
+     "name": "ファミリーマート 東洞院下珠数屋町店",
+     "address": "〒600-8157 京都府京都市下京区下珠数屋町通東洞院西入ル橘町６９",
+     "lat": 34.99056180000001,
+     "lng": 135.76099779999998
     }
    ]
   },
@@ -9398,7 +9714,9 @@
    ]
   },
   "nishikujo": {
-   "fetchedAt": "2026-10-24T11:23:41.532Z",
+   "v": 2,
+   "fetchedAt": "2026-11-02T19:20:09.172Z",
+   "split": false,
    "places": [
     {
      "place_id": "ChIJ7_JEdTjmAGARnPkOHfR9p2w",
@@ -11587,7 +11905,9 @@
    ]
   },
   "sannomiya": {
-   "fetchedAt": "2026-10-24T11:23:46.690Z",
+   "v": 2,
+   "fetchedAt": "2026-11-02T19:20:38.302Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJY9PGBkuPAGARfpWcE7jQgW8",
@@ -11716,6 +12036,20 @@
      "lng": 135.1930205
     },
     {
+     "place_id": "ChIJoa6DOPCOAGARDSKWaggyMkM",
+     "name": "ヤマサキショップ 三宮店",
+     "address": "〒651-0088 兵庫県神戸市中央区小野柄通５丁目１−９ オレンジビルディング",
+     "lat": 34.6937892,
+     "lng": 135.19788739999998
+    },
+    {
+     "place_id": "ChIJ--K2je-OAGARa73vRECUIAQ",
+     "name": "セブン-イレブン 神戸三宮駅南店",
+     "address": "〒651-0095 兵庫県神戸市中央区旭通５丁目２−５",
+     "lat": 34.695662999999996,
+     "lng": 135.19671929999998
+    },
+    {
      "place_id": "ChIJ1xnS-PCOAGARfVY-nkLGTRQ",
      "name": "ファミリーマート 柳屋琴ノ緒町店",
      "address": "〒651-0094 兵庫県神戸市中央区琴ノ緒町４丁目３−３ Ｇ．Ｈ三宮駅前ビル 6 階",
@@ -11723,11 +12057,256 @@
      "lng": 135.1955486
     },
     {
+     "place_id": "ChIJTcuQfvqOAGARoU0xN3AJ9lE",
+     "name": "ローソン 神戸国際会館前店",
+     "address": "〒651-0086 兵庫県神戸市中央区磯上通８丁目１−１９ カーサグランデ神戸 1F",
+     "lat": 34.6916467,
+     "lng": 135.1959972
+    },
+    {
+     "place_id": "ChIJJ0wFRyqPAGARZdUGdVzXjkU",
+     "name": "セブン-イレブン 神戸御幸通６丁目店",
+     "address": "〒651-0087 兵庫県神戸市中央区御幸通６丁目１−１０ １階",
+     "lat": 34.692669099999996,
+     "lng": 135.19773809999998
+    },
+    {
      "place_id": "ChIJVVWKUeSOAGARsDEgJnfUpx0",
      "name": "セブン-イレブン 神戸フラワーロード店",
      "address": "〒650-0001 兵庫県神戸市中央区加納町４丁目１０−２",
      "lat": 34.6955993,
      "lng": 135.19362089999998
+    },
+    {
+     "place_id": "ChIJux4eP5qPAGAR9i2jvwHG-xg",
+     "name": "ファミリーマート阪急神戸三宮駅西口店",
+     "address": "〒650-0012 兵庫県神戸市中央区加納町４丁目２−番 １Ｄ０７",
+     "lat": 34.6927944,
+     "lng": 135.1925673
+    },
+    {
+     "place_id": "ChIJ72HQteSOAGARM0S7S7BLuNU",
+     "name": "ファミリーマート 三宮センイ街店",
+     "address": "〒650-0012 兵庫県神戸市中央区北長狭通１丁目３０−２１",
+     "lat": 34.6926341,
+     "lng": 135.1925549
+    },
+    {
+     "place_id": "ChIJg70q7PCOAGAR7j1c4qTdaKw",
+     "name": "ファミリーマート 神戸磯上通店",
+     "address": "〒651-0086 兵庫県神戸市中央区磯上通７丁目１−３０",
+     "lat": 34.6918873,
+     "lng": 135.1976311
+    },
+    {
+     "place_id": "ChIJO7tHMPuOAGARzeVIovp0eDM",
+     "name": "セブン-イレブン 神戸さんプラザ店",
+     "address": "〒650-0021 兵庫県神戸市中央区三宮町１丁目８−１ １１７",
+     "lat": 34.6922133,
+     "lng": 135.192817
+    },
+    {
+     "place_id": "ChIJDVo30_WOAGAR4yF6-ccEVpA",
+     "name": "ファミリーマート 神戸御幸通店",
+     "address": "〒651-0087 兵庫県神戸市中央区御幸通５丁目１−６",
+     "lat": 34.6930753,
+     "lng": 135.1985621
+    },
+    {
+     "place_id": "ChIJdy9et-WOAGARkc1EGzOhnXE",
+     "name": "セブン-イレブン 神戸琴ノ緒町５丁目店",
+     "address": "〒651-0094 兵庫県神戸市中央区琴ノ緒町５丁目５−１３",
+     "lat": 34.696553,
+     "lng": 135.1943968
+    },
+    {
+     "place_id": "ChIJsWa5nuSOAGARNqybPzLR3Pk",
+     "name": "ファミリーマート 柳屋生田新道店",
+     "address": "〒650-0012 兵庫県神戸市中央区北長狭通１丁目７−４",
+     "lat": 34.693449199999996,
+     "lng": 135.1918498
+    },
+    {
+     "place_id": "ChIJY6VwXwmPAGAR9bHdTb7Q2NQ",
+     "name": "セブン-イレブン 神戸サンキタ通店",
+     "address": "〒650-0012 兵庫県神戸市中央区北長狭通１丁目９−３",
+     "lat": 34.6926653,
+     "lng": 135.19181179999998
+    },
+    {
+     "place_id": "ChIJg_QNtu-OAGARV2nDqxq_fwU",
+     "name": "セブン-イレブン 神戸中央区役所北店",
+     "address": "〒651-0095 兵庫県神戸市中央区旭通４丁目１−５",
+     "lat": 34.6961996,
+     "lng": 135.1980787
+    },
+    {
+     "place_id": "ChIJy15wt0qPAGAR-AE2Wdau0iA",
+     "name": "セブン-イレブン 神戸三宮東門街店",
+     "address": "〒650-0011 兵庫県神戸市中央区下山手通１丁目１−１ 東新ビル",
+     "lat": 34.6935601,
+     "lng": 135.19138999999998
+    },
+    {
+     "place_id": "ChIJ-0EkduSOAGARbQ6XkQGdet0",
+     "name": "ローソン 神戸東門街店",
+     "address": "〒650-0004 兵庫県神戸市中央区中山手通１丁目５−１０",
+     "lat": 34.6949514,
+     "lng": 135.1916036
+    },
+    {
+     "place_id": "ChIJp3X7LeSOAGARqFawpHd7WkY",
+     "name": "ローソン 加納町店",
+     "address": "〒650-0001 兵庫県神戸市中央区加納町３丁目１−２６",
+     "lat": 34.6968211,
+     "lng": 135.1936234
+    },
+    {
+     "place_id": "ChIJPeZ4D_uOAGARXH3loDg9SLA",
+     "name": "ローソン 三宮京町筋店",
+     "address": "〒650-0021 兵庫県神戸市中央区三宮町１丁目４−１",
+     "lat": 34.6908859,
+     "lng": 135.19335719999998
+    },
+    {
+     "place_id": "ChIJh_TsBfGOAGARRIyAm0DVaeY",
+     "name": "セブン-イレブン 神戸磯上通４丁目店",
+     "address": "〒651-0086 兵庫県神戸市中央区磯上通４丁目３−１３",
+     "lat": 34.6931047,
+     "lng": 135.19949599999998
+    },
+    {
+     "place_id": "ChIJI4nfRPqOAGARpsqJ561wBDw",
+     "name": "セブンイレブン 神戸江戸町店",
+     "address": "〒650-0033 兵庫県神戸市中央区江戸町９５ 井門神戸ビル １F",
+     "lat": 34.6903995,
+     "lng": 135.19456879999998
+    },
+    {
+     "place_id": "ChIJO2XxUPuOAGARb7Nl4TPooO4",
+     "name": "ファミリーマート センタープラザ東店",
+     "address": "〒650-0021 兵庫県神戸市中央区三宮町１丁目９−１ センタープラザ東館 1F",
+     "lat": 34.6916946,
+     "lng": 135.1920021
+    },
+    {
+     "place_id": "ChIJYxFcNfqOAGAR5j6CC71icd4",
+     "name": "ファミリーマート 柳屋いくたロード店",
+     "address": "〒650-0011 兵庫県神戸市中央区下山手通２丁目１−１８",
+     "lat": 34.6930226,
+     "lng": 135.1911745
+    },
+    {
+     "place_id": "ChIJF_UMR_qOAGAR-yld_S8egXQ",
+     "name": "ローソン 神戸市役所西店",
+     "address": "〒650-0033 兵庫県神戸市中央区江戸町９６",
+     "lat": 34.6901213,
+     "lng": 135.1946803
+    },
+    {
+     "place_id": "ChIJZ1u0ceOOAGARVN2mCYFqTQI",
+     "name": "セブン-イレブン 神戸生田新道店",
+     "address": "〒650-0011 兵庫県神戸市中央区下山手通２丁目１０−３",
+     "lat": 34.693343999999996,
+     "lng": 135.190853
+    },
+    {
+     "place_id": "ChIJMzYznvGOAGARPS3EjDlRvaI",
+     "name": "ローソン 神戸御幸通四丁目店",
+     "address": "〒651-0087 兵庫県神戸市中央区御幸通４丁目１−１",
+     "lat": 34.6936509,
+     "lng": 135.2001512
+    },
+    {
+     "place_id": "ChIJ0_U2puaOAGARulITahaX5bc",
+     "name": "ローソン 神戸北野坂店",
+     "address": "〒650-0001 兵庫県神戸市中央区加納町３丁目５−６ 1F",
+     "lat": 34.6968301,
+     "lng": 135.1922313
+    },
+    {
+     "place_id": "ChIJ5WMFbOOOAGARZ46-w0GZ2q0",
+     "name": "ファミリーマート 柳屋下山手通店",
+     "address": "〒650-0011 兵庫県神戸市中央区下山手通２丁目１−１０",
+     "lat": 34.6930153,
+     "lng": 135.190576
+    },
+    {
+     "place_id": "ChIJd2avXu-OAGARawpONDyW-2s",
+     "name": "セブン-イレブン 神戸琴ノ緒町店",
+     "address": "〒651-0094 兵庫県神戸市中央区琴ノ緒町２丁目５−４",
+     "lat": 34.6978019,
+     "lng": 135.19656609999998
+    },
+    {
+     "place_id": "ChIJAQCkZvuOAGARDHocvtw485Q",
+     "name": "セブン-イレブン 神戸いくたロード南店",
+     "address": "〒650-0021 兵庫県神戸市中央区三宮町２丁目５−５",
+     "lat": 34.690855899999995,
+     "lng": 135.19188309999998
+    },
+    {
+     "place_id": "ChIJdfOKE--OAGAR26NU9gitM9w",
+     "name": "セブン-イレブン 神戸三宮駅東店",
+     "address": "〒651-0094 兵庫県神戸市中央区琴ノ緒町２丁目３−５",
+     "lat": 34.697760699999996,
+     "lng": 135.1976535
+    },
+    {
+     "place_id": "ChIJEZOHJPeOAGARXT0mFsHSEzw",
+     "name": "セブン-イレブン 神戸中央磯辺通店",
+     "address": "〒651-0084 兵庫県神戸市中央区磯辺通３丁目２−１７",
+     "lat": 34.6898785,
+     "lng": 135.1980748
+    },
+    {
+     "place_id": "ChIJoXctxfaOAGARpu02Fgp3X50",
+     "name": "ファミリーマート 三宮南店",
+     "address": "〒651-0084 兵庫県神戸市中央区磯辺通２丁目２−１６ 三宮南ビル 1F",
+     "lat": 34.690404199999996,
+     "lng": 135.1991104
+    },
+    {
+     "place_id": "ChIJT1Jp4OOOAGARWVRh0wufzVk",
+     "name": "ファミリーマート 神戸中山手通店",
+     "address": "〒650-0004 兵庫県神戸市中央区中山手通２丁目１−１８",
+     "lat": 34.6958219,
+     "lng": 135.19040139999998
+    },
+    {
+     "place_id": "ChIJPzHcAu6OAGARkaYi6Yna4Xo",
+     "name": "ローソン 雲井通二丁目店",
+     "address": "〒651-0096 兵庫県神戸市中央区雲井通２丁目１−９",
+     "lat": 34.696200399999995,
+     "lng": 135.2003756
+    },
+    {
+     "place_id": "ChIJZzzzu2aPAGARLod_fH-QucM",
+     "name": "ファミリーマート センタープラザ西店",
+     "address": "〒650-0021 兵庫県神戸市中央区三宮町２丁目１１−１ センタープラザ西館 １０１号",
+     "lat": 34.6908692,
+     "lng": 135.1906438
+    },
+    {
+     "place_id": "ChIJT0cFZeGOAGARY27O7CRy7H0",
+     "name": "ローソン 中山手通二丁目店",
+     "address": "〒650-0004 兵庫県神戸市中央区中山手通２丁目１１−４",
+     "lat": 34.6960335,
+     "lng": 135.1900324
+    },
+    {
+     "place_id": "ChIJr_2qAe6PAGAReRJjmGzI-Qs",
+     "name": "ローソン 神戸布引町二丁目店",
+     "address": "〒651-0097 兵庫県神戸市中央区布引町２丁目１−４",
+     "lat": 34.6988201,
+     "lng": 135.1942322
+    },
+    {
+     "place_id": "ChIJLeAka-GOAGAR7I3tFkP_1iY",
+     "name": "セブン-イレブン 神戸ハンター坂店",
+     "address": "〒650-0004 兵庫県神戸市中央区中山手通２丁目１３−１２",
+     "lat": 34.6968349,
+     "lng": 135.19022260000003
     }
    ]
   },
@@ -13221,7 +13800,9 @@
    ]
   },
   "shinimamiya": {
-   "fetchedAt": "2026-10-24T11:23:43.235Z",
+   "v": 2,
+   "fetchedAt": "2026-11-02T19:20:18.873Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJ_R7cArLnAGARlXX27ZNLvKU",
@@ -13315,6 +13896,13 @@
      "lng": 135.50030189999998
     },
     {
+     "place_id": "ChIJV7dM1ordAGARmMEbh2WmAlc",
+     "name": "ファミリーマート 山王動物園前店",
+     "address": "〒557-0001 大阪府大阪市西成区山王１丁目１７−６ ザ･ウエストサイド",
+     "lat": 34.6486245,
+     "lng": 135.50579220000003
+    },
+    {
      "place_id": "ChIJz2MXAQDnAGARg40UMjQ64io",
      "name": "TIPTOP MART OSAKA",
      "address": "〒557-0025 大阪府大阪市西成区長橋１丁目３−１４",
@@ -13334,6 +13922,20 @@
      "address": "〒557-0031 大阪府大阪市西成区鶴見橋１丁目２−３",
      "lat": 34.646385699999996,
      "lng": 135.4965264
+    },
+    {
+     "place_id": "ChIJS1AiC2DnAGARxGCgNTSoYZk",
+     "name": "ローソン 通天閣南店",
+     "address": "〒556-0002 大阪府大阪市浪速区恵美須東２丁目３−１７ 2F",
+     "lat": 34.6519225,
+     "lng": 135.50616689999998
+    },
+    {
+     "place_id": "ChIJsf4gCgDnAGARlUYtB6Uwih0",
+     "name": "ローソン 浪速恵美須西二丁目店",
+     "address": "〒556-0003 大阪府大阪市浪速区恵美須西２丁目１−９",
+     "lat": 34.6536486,
+     "lng": 135.5050083
     },
     {
      "place_id": "ChIJr3LvmGbnAGARAJpzROiKrOk",
@@ -17629,7 +18231,9 @@
    ]
   },
   "tsuruhashi": {
-   "fetchedAt": "2026-10-24T11:23:36.180Z",
+   "v": 2,
+   "fetchedAt": "2026-11-02T19:19:48.088Z",
+   "split": true,
    "places": [
     {
      "place_id": "ChIJx2Gba6ngAGARsJzBxkCe1ss",
