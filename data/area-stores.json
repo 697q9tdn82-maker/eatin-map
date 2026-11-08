@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-03T16:54:49.948Z",
+ "updatedAt": "2026-11-08T15:52:56.486Z",
  "areas": {
   "akabane": {
    "v": 2,
@@ -535,7 +535,7 @@
   },
   "akihabara": {
    "v": 2,
-   "fetchedAt": "2026-10-25T13:38:57.881Z",
+   "fetchedAt": "2026-11-08T15:52:47.013Z",
    "split": true,
    "places": [
     {
@@ -563,8 +563,8 @@
      "place_id": "ChIJUcqcff2NGGAR75BgpF1K6J4",
      "name": "NewDays メッツ秋葉原",
      "address": "〒101-0021 東京都千代田区外神田１丁目１７−４ ＪＲ東日本ホテルメッツプレミア秋葉原 １階",
-     "lat": 35.6981074,
-     "lng": 139.7726439
+     "lat": 35.6982032,
+     "lng": 139.7726332
     },
     {
      "place_id": "ChIJzx39EoyPGGARfAGpWmVRiNg",
@@ -4266,7 +4266,7 @@
   },
   "ikebukuro": {
    "v": 2,
-   "fetchedAt": "2026-10-25T13:38:29.933Z",
+   "fetchedAt": "2026-11-08T15:52:18.432Z",
    "split": true,
    "places": [
     {
@@ -13359,7 +13359,7 @@
   },
   "shibuya": {
    "v": 2,
-   "fetchedAt": "2026-10-25T13:38:20.680Z",
+   "fetchedAt": "2026-11-08T15:52:08.753Z",
    "split": true,
    "places": [
     {
@@ -14479,7 +14479,7 @@
   },
   "shinagawa": {
    "v": 2,
-   "fetchedAt": "2026-10-25T13:38:48.600Z",
+   "fetchedAt": "2026-11-08T15:52:37.458Z",
    "split": true,
    "places": [
     {
@@ -14864,7 +14864,7 @@
   },
   "shinjuku": {
    "v": 2,
-   "fetchedAt": "2026-10-25T13:38:11.351Z",
+   "fetchedAt": "2026-11-08T15:51:58.999Z",
    "split": true,
    "places": [
     {
@@ -18028,7 +18028,7 @@
   },
   "tokyo": {
    "v": 2,
-   "fetchedAt": "2026-10-25T13:38:39.314Z",
+   "fetchedAt": "2026-11-08T15:52:27.916Z",
    "split": true,
    "places": [
     {
@@ -18268,6 +18268,13 @@
      "address": "〒100-0005 東京都千代田区丸の内１丁目９−１ JR 東京駅 付近 構内 18·19番線ホーム15号車",
      "lat": 35.6823233,
      "lng": 139.7687038
+    },
+    {
+     "place_id": "ChIJ37iyMACLGGAR7AwVTpvu2XQ",
+     "name": "ベルマートミニ",
+     "address": "〒100-6701 東京都千代田区丸の内１丁目９−１ 2f",
+     "lat": 35.682111,
+     "lng": 139.76915879999999
     },
     {
      "place_id": "ChIJf3wW7vyLGGARVZTRU7lMXm0",
@@ -20982,7 +20989,7 @@
   },
   "yokohama": {
    "v": 2,
-   "fetchedAt": "2026-10-25T13:39:07.175Z",
+   "fetchedAt": "2026-11-08T15:52:56.486Z",
    "split": true,
    "places": [
     {
