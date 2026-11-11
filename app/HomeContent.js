@@ -2,6 +2,7 @@ import Link from "next/link";
 import SupportLink from "./components/SupportLink";
 import { AREAS } from "../lib/areas";
 import { GUIDES } from "../lib/guides";
+import { NEWS, tagStyle, newsDate } from "../lib/news";
 
 // トップページの地図の下に表示する読みもの部分（サーバー側で描画＝検索エンジンにも読まれる）
 const POPULAR = ["shinjuku", "shibuya", "ikebukuro", "tokyo", "shinagawa", "shimbashi", "otemachi", "akihabara", "yokohama", "umeda", "namba", "tennoji", "nagoya", "hakata"];
@@ -61,6 +62,20 @@ export default function HomeContent({ storeCount, totalStores, areaCount }) {
             </Link>
           ))}
           <Link href="/guide" style={{ display: "block", fontSize: "13px", color: "#e63946", fontWeight: 700, marginTop: 8 }}>ガイド記事をすべて見る →</Link>
+        </section>
+
+        <section style={section}>
+          <h2 style={h2}>お知らせ</h2>
+          {NEWS.slice(0, 3).map((n, i) => (
+            <Link key={i} href="/news" style={{ display: "block", textDecoration: "none", padding: "8px 0", borderTop: i > 0 ? "1px solid #f0f0f0" : "none" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
+                <time dateTime={n.date} style={{ fontSize: "11.5px", color: "#999" }}>{newsDate(n.date)}</time>
+                <span style={tagStyle(n.tag)}>{n.tag}</span>
+              </div>
+              <div style={{ fontSize: "13.5px", color: "#333", fontWeight: 700, lineHeight: 1.6 }}>{n.title}</div>
+            </Link>
+          ))}
+          <Link href="/news" style={{ display: "block", fontSize: "13px", color: "#e63946", fontWeight: 700, marginTop: 6 }}>お知らせをすべて見る →</Link>
         </section>
 
         <SupportLink />

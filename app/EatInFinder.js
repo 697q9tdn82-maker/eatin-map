@@ -931,7 +931,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
             <div style={{ borderTop: "1px solid #eee", padding: "14px 16px 28px", background: "#fafafa" }}>
               <div style={{ fontSize: "11px", fontWeight: 800, color: "#aaa", marginBottom: 8 }}>メニュー</div>
-              {[["/", "🗺️ マップ トップ"], ["/area", "🗾 エリア一覧"], ["/guide", "📖 イートイン活用ガイド"], ["/report", "📊 イートイン設置率レポート"], ["/about", "ℹ️ このサイトについて"], ["/contact", "✉️ お問い合わせ"]].map(([href, label]) => (
+              {[["/", "🗺️ マップ トップ"], ["/area", "🗾 エリア一覧"], ["/guide", "📖 イートイン活用ガイド"], ["/report", "📊 イートイン設置率レポート"], ["/news", "📣 お知らせ"], ["/about", "ℹ️ このサイトについて"], ["/contact", "✉️ お問い合わせ"]].map(([href, label]) => (
                 <Link key={href} href={href} onClick={() => setShowMenu(false)} style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#333", textDecoration: "none", padding: "8px 0" }}>{label}</Link>
               ))}
               <SupportLink compact />
