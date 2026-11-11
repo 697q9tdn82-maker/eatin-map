@@ -22,7 +22,7 @@ export default function HomeContent({ storeCount, totalStores, areaCount }) {
           </h1>
           <p style={p}>
             コンビニイートインマップは、イートイン席があるコンビニをチェーンの垣根を越えて探せる無料のウェブサービスです。
-            {storeCount ? `${totalStores ? `全国${totalStores.toLocaleString()}店のコンビニのうち、` : ""}現在${storeCount.toLocaleString()}店舗の` : ""}イートイン情報を、実際に行った人の投稿とAI推定をもとに掲載しています。
+            {storeCount ? `${totalStores ? `全国${totalStores.toLocaleString()}店のコンビニのうち、` : ""}現在${storeCount.toLocaleString()}店舗の` : ""}イートイン情報を、実際に行った人の投稿・AI推定・チェーン公式サイトの情報をもとに掲載しています。
           </p>
           <p style={{ ...p, margin: 0 }}>
             ランチが1,000円を超えるのも珍しくないいま、飲み物1本で座って休めるコンビニのイートインは、外回りの会社員や移動中の人にとって貴重な休憩場所です。
