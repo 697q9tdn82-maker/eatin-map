@@ -23,7 +23,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
 const STORES_DIR = path.join(ROOT, "data", "stores");
 const OUT = path.join(ROOT, "data", "legacy-place-ids.json");
-// 位置つきの旧データ（あれば使う。なくても店名だけで照合する）
+// 位置つきの旧データ（以前の作り置き。削除済みで今はない。なくても店名だけで照合する。
+// すでに決まった対応は data/legacy-place-ids.json に残っているので、引き継ぎには影響しない）
 const OLD_SNAPSHOT = path.join(ROOT, "data", "area-stores.json");
 
 const NAME_MAX_DIST = 400;   // 店名が一致しても、これ以上離れていたら別の店とみなす（m）
