@@ -65,7 +65,7 @@ export default function HomeContent({ storeCount, areaCount }) {
         <section style={section}>
           <h2 style={h2}>情報の仕組みについて</h2>
           <p style={{ ...p, margin: 0 }}>
-            店舗の基本情報はGoogleマップ、イートインの有無は利用者の投稿（多数決で判定）と、投稿がない店のみAIによるクチコミ分析で表示しています。
+            店舗の名称・住所・位置はコンビニ各社の公式店舗情報をもとにしたオープンデータ、イートインの有無は利用者の投稿（多数決で判定）と、投稿がない店のみAIによるクチコミ分析で表示しています。
             AI推定は「AI推定」と明記して区別しています。詳しくは<Link href="/about" style={{ color: "#e63946", fontWeight: 700 }}>このサイトについて</Link>、
             よくある疑問は<Link href="/faq" style={{ color: "#e63946", fontWeight: 700 }}>よくある質問</Link>へ。
           </p>

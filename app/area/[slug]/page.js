@@ -9,9 +9,7 @@ import { formatJaDate } from "../../../lib/eatin-data";
 
 // エリア別ページ（例: /area/shinjuku）
 //
-// 【v4での変更点（AdSense対策）】
-// ・店舗一覧が本番で出ていなかった問題を修正（Places取得の失敗結果がキャッシュされていた）
-// ・ビルド時に68エリア分のPlaces APIを一斉に呼ばない（アクセスされた時に1回だけ作って1日保存）
+// ・店舗一覧は店舗マスタ（data/stores/）から作る。Google Places API は使わない
 // ・データから作る固有の紹介文・おすすめ店・エリアFAQを追加
 // ・情報が少ないエリアは noindex（検索結果に出さない）にして、薄いページでサイト評価を下げない
 
@@ -171,7 +169,7 @@ export default async function AreaPage({ params }) {
             <section style={sectionStyle}>
               <h2 style={h2Style}>{st}周辺のイートイン事情</h2>
               <p style={pStyle}>
-                {st}の半径約{AREA_RADIUS}m以内では、Googleマップに登録されているコンビニが{stores.length}店舗見つかりました。
+                {st}の半径約{AREA_RADIUS}m以内では、コンビニが{stores.length}店舗見つかりました（各社の公式店舗情報をもとにした一覧）。
                 そのうちイートイン有無の情報があるのは{yes.length + no.length}店で、
                 イートインありの割合は{yes.length + no.length > 0 ? Math.round((yes.length / (yes.length + no.length)) * 100) : 0}%です。
                 {yes.length > 0 && <>イートインがある店をチェーン別に見ると、{chainSentence(chainCounts)}となっています。</>}
@@ -239,7 +237,7 @@ export default async function AreaPage({ params }) {
                 ))}
               </ul>
               <p style={{ fontSize: "11px", color: "#999", marginTop: 10, lineHeight: 1.7 }}>
-                ※ 店舗はGoogleマップの登録情報、イートイン情報は利用者の投稿とAI推定（公開クチコミの分析）をもとにしています。
+                ※ 店舗の一覧はコンビニ各社の公式店舗情報をもとにしたオープンデータ（All The Places）、イートイン情報は利用者の投稿とAI推定（公開クチコミの分析）をもとにしています。
                 イートインは店舗の判断で休止・再開されることがあり、最新の状況と異なる場合があります。
                 情報の仕組みは<Link href="/about" style={{ color: "#999" }}>このサイトについて</Link>をご覧ください。
               </p>

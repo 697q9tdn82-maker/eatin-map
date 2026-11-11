@@ -1,6 +1,6 @@
 import Link from "next/link";
 import PageShell, { card, h2, p, linkStyle } from "../components/PageShell";
-import { fetchAllVerifications, aggregateEatIn, chainOf, MAJOR_CHAINS, formatJaDate } from "../../lib/eatin-data";
+import { fetchAllVerifications, aggregateEatIn, chainOf, MAJOR_CHAINS, formatJaDate, canonicalPlaceId } from "../../lib/eatin-data";
 
 // ============================================================
 // データレポート：コンビニのイートインはどれくらいある？
@@ -21,7 +21,8 @@ function buildStats(rows) {
   const byPlace = {};
   for (const r of rows) {
     if (!r.placeId || typeof r.hasEatIn !== "boolean") continue;
-    (byPlace[r.placeId] ||= []).push(r);
+    // 同じ店の投稿は、以前のIDのものも今のIDのものも1店としてまとめる
+    (byPlace[canonicalPlaceId(r.placeId)] ||= []).push(r);
   }
 
   const stores = Object.values(byPlace).map(vers => {
