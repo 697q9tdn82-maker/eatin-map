@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SupportLink from "./components/SupportLink";
 import { AREAS } from "../lib/areas";
 import { GUIDES } from "../lib/guides";
 
@@ -61,6 +62,8 @@ export default function HomeContent({ storeCount, totalStores, areaCount }) {
           ))}
           <Link href="/guide" style={{ display: "block", fontSize: "13px", color: "#e63946", fontWeight: 700, marginTop: 8 }}>ガイド記事をすべて見る →</Link>
         </section>
+
+        <SupportLink />
 
         <section style={section}>
           <h2 style={h2}>情報の仕組みについて</h2>

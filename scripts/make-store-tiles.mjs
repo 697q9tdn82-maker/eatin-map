@@ -40,10 +40,11 @@ for (const chain of Object.keys(CHAINS)) {
   let data;
   try { data = JSON.parse(fs.readFileSync(path.join(STORES_DIR, `${chain}.json`), "utf8")); } catch { continue; }
   counts[chain] = data.stores.length;
-  for (const [ref, name, lat, lng, addr] of data.stores) {
+  for (const [ref, name, lat, lng, addr, official] of data.stores) {
     const id = `${chain}:${ref}`;
     const old = legacyByStore.get(id);
     const row = [id, name, lat, lng, addr, old ? old.join(",") : 0];
+    if (official === 1) row.push(1); // 公式サイトに「イートインあり」と出ている店だけ印を付ける
     const key = tileKey(lat, lng);
     if (!tiles.has(key)) tiles.set(key, []);
     tiles.get(key).push(row);
@@ -69,12 +70,12 @@ for (const [slug, a] of Object.entries(AREAS)) {
   const dLat = 0.01, dLng = 0.0125; // ざっくり絞ってから正確な距離を測る
   areas[slug] = all
     .filter(r => Math.abs(r[2] - a.lat) < dLat && Math.abs(r[3] - a.lng) < dLng && distanceMeters(a.lat, a.lng, r[2], r[3]) <= AREA_RADIUS)
-    .map(r => ({ place_id: r[0], name: r[1], lat: r[2], lng: r[3], address: r[4], legacy_ids: r[5] ? r[5].split(",") : [] }));
+    .map(r => ({ place_id: r[0], name: r[1], lat: r[2], lng: r[3], address: r[4], legacy_ids: r[5] ? r[5].split(",") : [], official_eatin: r[6] === 1 }));
 }
 fs.mkdirSync(GEN_DIR, { recursive: true });
 fs.writeFileSync(path.join(GEN_DIR, "area-stores.json"), JSON.stringify({ total: all.length, areas }));
 // 画面に出す「全国○店」の母数（トップページで使う）
-fs.writeFileSync(path.join(GEN_DIR, "store-summary.json"), JSON.stringify({ total: all.length, counts }));
+fs.writeFileSync(path.join(GEN_DIR, "store-summary.json"), JSON.stringify({ total: all.length, counts, officialEatIn: all.filter(r => r[6] === 1).length }));
 
 console.log(`店舗マスタ: ${all.length}店 → タイル${tiles.size}個、エリア${Object.keys(areas).length}か所ぶんを作成`);
 if (all.length === 0) console.warn("⚠️ data/stores にデータがありません（地図に店が出ません）。node scripts/build-stores.mjs を実行してください");

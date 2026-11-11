@@ -1,4 +1,5 @@
 import Link from "next/link";
+import SupportLink from "../components/SupportLink";
 import PageShell, { card, h2, p, linkStyle } from "../components/PageShell";
 
 export const metadata = {
@@ -39,8 +40,11 @@ export default function About() {
         <p style={p}>店舗の名称・住所・位置は、コンビニ各社が公式サイトで公開している店舗情報をもとにしたオープンデータ「All The Places」（CC0）を週に1回取り込んで表示しています（対応チェーン：セブン-イレブン、ファミリーマート、ローソン、ミニストップ、デイリーヤマザキ、NewDays、セイコーマート、ポプラ）。地図の表示にはGoogleマップ（Google Maps Platform）を利用しています。イートインの有無は、次の2つの情報源をもとに判定しています。</p>
         <p style={p}><strong>① 利用者の確認情報</strong> — 実際にお店へ行った方からの「イートインあった／なかった」の投稿です。席数・コンセント・Wi-Fiの有無も投稿できます。複数の投稿がある場合は多数決で判定し、いたずら投稿1件で情報が書き換わらない仕組みにしています。</p>
         <p style={p}><strong>② AIによる推定</strong> — まだ投稿がないお店については、公開されているクチコミの記述をAIが分析し、「あり（AI推定）」として区別して表示しています。推定であることを明示し、利用者の投稿があればそちらを優先します。</p>
+        <p style={p}><strong>③ チェーン公式サイトの情報</strong> — ローソンなど、公式サイトの店舗情報に「イートインあり」と掲載されている店は、投稿がまだない場合に限り「たぶんあり（要確認）」として表示しています。休止中の場合もあるため、利用者の投稿があればそちらを優先します。</p>
         <p style={{ ...p, margin: 0 }}>集まったデータの全体像は<Link href="/report" style={linkStyle}>イートイン設置率レポート</Link>で公開しています。正確性には努めていますが、イートインの営業状況は店舗の判断で変わることがあります。お出かけ前の参考情報としてご利用ください。</p>
       </div>
+
+      <SupportLink />
 
       <div style={card}>
         <h2 style={h2}>運営者情報</h2>
