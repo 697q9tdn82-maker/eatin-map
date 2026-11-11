@@ -23,7 +23,7 @@ export default function HomeContent({ storeCount, totalStores, areaCount }) {
           </h1>
           <p style={p}>
             コンビニイートインマップは、イートイン席があるコンビニをチェーンの垣根を越えて探せる無料のウェブサービスです。
-            {storeCount ? `${totalStores ? `全国${totalStores.toLocaleString()}店のコンビニのうち、` : ""}現在${storeCount.toLocaleString()}店舗の` : ""}イートイン情報を、実際に行った人の投稿・AI推定・チェーン公式サイトの情報をもとに掲載しています。
+            {storeCount ? `${totalStores ? `全国${totalStores.toLocaleString()}店のコンビニのうち、` : ""}現在${storeCount.toLocaleString()}店舗の` : ""}イートイン情報を、実際に行った人の投稿と推定情報をもとに掲載しています。
           </p>
           <p style={{ ...p, margin: 0 }}>
             ランチが1,000円を超えるのも珍しくないいま、飲み物1本で座って休めるコンビニのイートインは、外回りの会社員や移動中の人にとって貴重な休憩場所です。
@@ -83,7 +83,7 @@ export default function HomeContent({ storeCount, totalStores, areaCount }) {
         <section style={section}>
           <h2 style={h2}>情報の仕組みについて</h2>
           <p style={{ ...p, margin: 0 }}>
-            店舗の名称・住所・位置はコンビニ各社の公式店舗情報をもとにしたオープンデータ、イートインの有無は利用者の投稿（多数決で判定）と、投稿がない店のみAIによるクチコミ分析で表示しています。
+            店舗の名称・住所・位置はコンビニ各社の公開情報をもとに、イートインの有無は利用者の投稿（多数決で判定）と、投稿がない店のみAIによるクチコミ分析で表示しています。
             AI推定は「AI推定」と明記して区別しています。詳しくは<Link href="/about" style={{ color: "#e63946", fontWeight: 700 }}>このサイトについて</Link>、
             よくある疑問は<Link href="/faq" style={{ color: "#e63946", fontWeight: 700 }}>よくある質問</Link>へ。
           </p>

@@ -817,7 +817,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                   {selected.hasEatIn === null || selected.hasEatIn === undefined
                     ? "📝 まだ誰も確認していません。行ったら教えてください！"
                     : isOfficialOnly(selected)
-                      ? "📝 公式サイトでは「イートインあり」の店です。実際どうだったか教えてください！"
+                      ? "📝 イートインがあるとみられるお店です。実際どうだったか教えてください！"
                     : isAiOnly(selected)
                       ? "📝 AIの推定です。実際どうだったか教えてください！"
                       : "📝 実際に行った方は教えてください！"}
