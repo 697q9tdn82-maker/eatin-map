@@ -7,6 +7,7 @@ import { db } from "../lib/firebase";
 import { collection, addDoc, getDocs, updateDoc, doc, increment, query, where, orderBy, limit } from "firebase/firestore";
 import { AREAS } from "../lib/areas";
 import { storesNear } from "../lib/store-tiles";
+import SupportLink from "./components/SupportLink";
 
 // ============================================================
 // 定数・ユーティリティ
@@ -39,7 +40,9 @@ const MAX_RESULTS = 80;
 
 // 店舗マスタの店（lib/store-tiles.js）に、投稿情報の入れ物を付けて画面用の形にする
 function blankStore(p) {
-  return { ...p, legacy_ids: p.legacy_ids || [], verifications: [], helpedCount: 0, hasEatIn: null, outlet: false, wifi: false, seats: null };
+  // 投稿がまだない店は、チェーンの公式サイトに「イートインあり」と出ていればそれを仮の答えにする
+  // （投稿が1件でも入れば、投稿のほうを優先する）
+  return { ...p, legacy_ids: p.legacy_ids || [], verifications: [], helpedCount: 0, hasEatIn: p.official_eatin ? true : null, outlet: false, wifi: false, seats: null };
 }
 
 // その店の投稿を探すときに使うID（今の店舗ID＋以前のGoogleの店舗ID）
@@ -91,14 +94,24 @@ function isAiOnly(store) {
   return (store.verifications?.length || 0) > 0 && store.verifications.every(v => v.source === "ai");
 }
 
-// 人の確認がない（未確認 or AI推定だけ）＝「要確認」の店
+// 公式サイトの情報だけ（投稿がまだない）かどうか
+function isOfficialOnly(store) {
+  return !!store.official_eatin && (store.verifications?.length || 0) === 0;
+}
+
+// 人の確認がまだない「仮の情報」（AI推定だけ、または公式サイトの情報だけ）かどうか
+function isEstimate(store) {
+  return isAiOnly(store) || isOfficialOnly(store);
+}
+
+// 人の確認がない（未確認 or 仮の情報だけ）＝「要確認」の店
 function needsCheck(store) {
-  return store.hasEatIn === null || store.hasEatIn === undefined || isAiOnly(store);
+  return store.hasEatIn === null || store.hasEatIn === undefined || isEstimate(store);
 }
 
 // ピンカラー
 function getPinColor(store) {
-  const ai = isAiOnly(store);
+  const ai = isEstimate(store);
   if (store.hasEatIn === true) return ai ? "#90caf9" : "#1e88e5"; // あり：青（AI推定は薄い青）
   if (store.hasEatIn === false) return ai ? "#cfcfcf" : "#9e9e9e"; // なし：グレー（AI推定は薄いグレー）
   return "#f57c00";                                               // 未確認：濃いオレンジ（目立たせる）
@@ -116,7 +129,7 @@ function StorePin({ store, isSelected, onClick }) {
   const color = getPinColor(store);
   const emoji = getPinEmoji(store);
   const unknown = store.hasEatIn === null || store.hasEatIn === undefined;
-  const ai = isAiOnly(store);
+  const ai = isEstimate(store);
   return (
     <div onClick={onClick} className={unknown && !isSelected ? "eatin-pin-unknown" : undefined} style={{
       display: "flex", flexDirection: "column", alignItems: "center", position: "relative",
@@ -236,7 +249,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         return {
           ...s,
           verifications: vers,
-          hasEatIn: aggregateEatIn(vers, s.hasEatIn),
+          hasEatIn: aggregateEatIn(vers, s.official_eatin ? true : s.hasEatIn),
           outlet: s.outlet || vers.some(v => v.outlet === true),
           wifi: s.wifi || vers.some(v => v.wifi === true),
           seats: s.seats ?? [...vers].reverse().find(v => v.seats != null)?.seats ?? null,
@@ -773,7 +786,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                 )}
               </div>
               <div style={{ padding: "5px 10px", marginRight: 30, borderRadius: 20, flexShrink: 0, background: selected.hasEatIn ? "#e8f5e9" : selected.hasEatIn === false ? "#f5f5f5" : "#fff7f0", border: `1px solid ${selected.hasEatIn ? "#a5d6a7" : selected.hasEatIn === false ? "#eee" : "#fcd5a0"}`, color: selected.hasEatIn ? "#2d6a4f" : selected.hasEatIn === false ? "#ccc" : "#f4a261", fontSize: "12px", fontWeight: 700 }}>
-                {selected.hasEatIn ? (isAiOnly(selected) ? "🪑 たぶんあり（要確認）" : "🪑 あり") : selected.hasEatIn === false ? (isAiOnly(selected) ? "✗ たぶんなし（要確認）" : "✗ なし") : "? 未確認"}
+                {selected.hasEatIn ? (isEstimate(selected) ? "🪑 たぶんあり（要確認）" : "🪑 あり") : selected.hasEatIn === false ? (isAiOnly(selected) ? "✗ たぶんなし（要確認）" : "✗ なし") : "? 未確認"}
               </div>
             </div>
 
@@ -803,6 +816,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                 <div style={{ fontSize: "12px", color: needsCheck(selected) ? "#e65100" : "#888", marginBottom: 8, fontWeight: 700 }}>
                   {selected.hasEatIn === null || selected.hasEatIn === undefined
                     ? "📝 まだ誰も確認していません。行ったら教えてください！"
+                    : isOfficialOnly(selected)
+                      ? "📝 公式サイトでは「イートインあり」の店です。実際どうだったか教えてください！"
                     : isAiOnly(selected)
                       ? "📝 AIの推定です。実際どうだったか教えてください！"
                       : "📝 実際に行った方は教えてください！"}
@@ -919,6 +934,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
               {[["/", "🗺️ マップ トップ"], ["/area", "🗾 エリア一覧"], ["/guide", "📖 イートイン活用ガイド"], ["/report", "📊 イートイン設置率レポート"], ["/about", "ℹ️ このサイトについて"], ["/contact", "✉️ お問い合わせ"]].map(([href, label]) => (
                 <Link key={href} href={href} onClick={() => setShowMenu(false)} style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#333", textDecoration: "none", padding: "8px 0" }}>{label}</Link>
               ))}
+              <SupportLink compact />
               <a href="https://x.com/Eatin_map" target="_blank" rel="noopener noreferrer" style={{ display: "block", fontSize: "13px", fontWeight: 700, color: "#333", textDecoration: "none", padding: "8px 0" }}>𝕏 公式アカウント</a>
             </div>
           </div>
@@ -941,7 +957,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
               {byDistance.length === 0 && <div style={{ fontSize: "12px", color: "#aaa", padding: "20px 0", textAlign: "center" }}>条件に合う店がありません</div>}
               {byDistance.map(s => {
                 const st = s.hasEatIn === true
-                  ? (isAiOnly(s) ? ["たぶんあり", "#e3f2fd", "#64b5f6"] : ["イートインあり", "#e3f2fd", "#1e88e5"])
+                  ? (isEstimate(s) ? ["たぶんあり", "#e3f2fd", "#64b5f6"] : ["イートインあり", "#e3f2fd", "#1e88e5"])
                   : s.hasEatIn === false
                     ? (isAiOnly(s) ? ["たぶんなし", "#f5f5f5", "#aaa"] : ["なし", "#f5f5f5", "#888"])
                     : ["未確認", "#fff3e0", "#e65100"];

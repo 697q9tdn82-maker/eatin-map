@@ -81,7 +81,7 @@ export default async function AreaPage({ params }) {
   const top = yes.slice(0, 3);
 
   const badge = s =>
-    s.hasEatIn === true ? { text: s.aiOnly ? "🪑 イートインあり（AI推定）" : "🪑 イートインあり（投稿で確認）", bg: "#e3f2fd", color: "#0077b6" } :
+    s.hasEatIn === true ? { text: s.officialOnly ? "🪑 イートインあり（公式サイトの情報・未確認）" : s.aiOnly ? "🪑 イートインあり（AI推定）" : "🪑 イートインあり（投稿で確認）", bg: "#e3f2fd", color: "#0077b6" } :
     s.hasEatIn === false ? { text: "イートインなし", bg: "#f5f5f5", color: "#888" } :
     { text: "❓ 未確認（情報募集中）", bg: "#fff3e0", color: "#e65100" };
 
@@ -102,7 +102,7 @@ export default async function AreaPage({ params }) {
     });
     faqs.push({
       q: `${st}周辺のイートイン情報はどれくらい正確ですか？`,
-      a: `掲載している${stores.length}店舗のうち、${humanConfirmedYes.length + no.filter(s => !s.aiOnly).length}店は実際に訪れた利用者の投稿で確認された情報、${stores.filter(s => s.aiOnly).length}店は公開クチコミをもとにしたAI推定です。${lastPostedAt ? `このエリアの最新の投稿は${formatJaDate(lastPostedAt)}です。` : ""}イートインは店舗の判断で休止・再開されることがあるため、参考情報としてご利用ください。`,
+      a: `掲載している${stores.length}店舗のうち、${humanConfirmedYes.length + no.filter(s => !s.aiOnly).length}店は実際に訪れた利用者の投稿で確認された情報、${stores.filter(s => s.aiOnly && !s.officialOnly).length}店は公開クチコミをもとにしたAI推定、${stores.filter(s => s.officialOnly).length}店はチェーン公式サイトの情報（利用者の確認はまだ）です。${lastPostedAt ? `このエリアの最新の投稿は${formatJaDate(lastPostedAt)}です。` : ""}イートインは店舗の判断で休止・再開されることがあるため、参考情報としてご利用ください。`,
     });
   }
 
@@ -177,7 +177,7 @@ export default async function AreaPage({ params }) {
               <p style={pStyle}>
                 {humanConfirmedYes.length > 0
                   ? <>このうち{humanConfirmedYes.length}店は、実際に訪れた利用者の投稿で「イートインあり」が確認されています。</>
-                  : <>イートインありの情報は現在すべてAIによる推定で、利用者による確認はまだありません。</>}
+                  : <>イートインありの情報は現在すべてAI推定または公式サイトの情報で、利用者による確認はまだありません。</>}
                 {withSeats.length > 0 && <>席数の投稿がある店では、{withSeats.map(s => `${s.name}が約${s.seats}席`).slice(0, 3).join("、")}と報告されています。</>}
                 {withOutlet.length > 0 && <>コンセントが使えるという投稿は{withOutlet.length}店にあります。</>}
               </p>
@@ -237,7 +237,7 @@ export default async function AreaPage({ params }) {
                 ))}
               </ul>
               <p style={{ fontSize: "11px", color: "#999", marginTop: 10, lineHeight: 1.7 }}>
-                ※ 店舗の一覧はコンビニ各社の公式店舗情報をもとにしたオープンデータ（All The Places）、イートイン情報は利用者の投稿とAI推定（公開クチコミの分析）をもとにしています。
+                ※ 店舗の一覧はコンビニ各社の公式店舗情報をもとにしたオープンデータ（All The Places）、イートイン情報は利用者の投稿・AI推定（公開クチコミの分析）・チェーン公式サイトの情報をもとにしています。
                 イートインは店舗の判断で休止・再開されることがあり、最新の状況と異なる場合があります。
                 情報の仕組みは<Link href="/about" style={{ color: "#999" }}>このサイトについて</Link>をご覧ください。
               </p>
