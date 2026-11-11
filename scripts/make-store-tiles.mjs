@@ -7,6 +7,7 @@
 //   public/stores/<タイル>.json   … 地図用。約5km四方ごとに分けた店舗一覧
 //   public/stores/meta.json       … どのタイルがあるか・全部で何店か
 //   data/generated/area-stores.json … エリアページ用。各駅から600m以内の店舗一覧
+//   data/generated/store-summary.json … 全国の店舗数（トップページの「全国○店のうち…」に使う）
 // ============================================================
 
 import fs from "node:fs";
@@ -72,6 +73,8 @@ for (const [slug, a] of Object.entries(AREAS)) {
 }
 fs.mkdirSync(GEN_DIR, { recursive: true });
 fs.writeFileSync(path.join(GEN_DIR, "area-stores.json"), JSON.stringify({ total: all.length, areas }));
+// 画面に出す「全国○店」の母数（トップページで使う）
+fs.writeFileSync(path.join(GEN_DIR, "store-summary.json"), JSON.stringify({ total: all.length, counts }));
 
 console.log(`店舗マスタ: ${all.length}店 → タイル${tiles.size}個、エリア${Object.keys(areas).length}か所ぶんを作成`);
 if (all.length === 0) console.warn("⚠️ data/stores にデータがありません（地図に店が出ません）。node scripts/build-stores.mjs を実行してください");

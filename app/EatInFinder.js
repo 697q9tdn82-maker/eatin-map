@@ -165,7 +165,7 @@ function NextStoreSuggest({ list, origin, onPick }) {
 // initialPlace: 共有リンクで開いたときに自動選択する店舗のplace_id
 // ============================================================
 // initialStores: エリアページから渡される作り置きの店舗リスト（あればGoogleを呼ばずに表示する）
-export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null, initialStores = null, storeCount = null, areaCount = null }) {
+export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null, initialStores = null, storeCount = null, totalStores = null }) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
   });
@@ -664,7 +664,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         })()}
         {storeCount && stores.length === 0 && !loading && (
           <div style={{ fontSize: "10.5px", color: "#999", marginTop: 6, textAlign: "center", letterSpacing: "0.2px" }}>
-            🗾 全国{areaCount}エリア・<span style={{ color: "#e63946", fontWeight: 800 }}>{storeCount.toLocaleString()}店舗</span>のイートイン情報を掲載中
+            🗾 {totalStores ? `全国${totalStores.toLocaleString()}店のうち ` : ""}<span style={{ color: "#e63946", fontWeight: 800 }}>{storeCount.toLocaleString()}店舗</span>のイートイン情報を掲載中
           </div>
         )}
       </div>

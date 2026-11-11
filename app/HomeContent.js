@@ -11,7 +11,7 @@ const h2 = { fontSize: "16px", fontWeight: 900, margin: "0 0 10px", color: "#1a1
 const p = { fontSize: "13.5px", color: "#555", lineHeight: 1.9, margin: "0 0 8px" };
 const pill = { fontSize: "12.5px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "6px 12px", textDecoration: "none" };
 
-export default function HomeContent({ storeCount, areaCount }) {
+export default function HomeContent({ storeCount, totalStores, areaCount }) {
   return (
     <div style={{ background: "#f4f5f7", padding: "20px 0 90px", fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif" }}>
       <div style={wrap}>
@@ -21,7 +21,7 @@ export default function HomeContent({ storeCount, areaCount }) {
           </h1>
           <p style={p}>
             コンビニイートインマップは、イートイン席があるコンビニをチェーンの垣根を越えて探せる無料のウェブサービスです。
-            {storeCount ? `現在${storeCount.toLocaleString()}店舗の` : ""}イートイン情報を、実際に行った人の投稿とAI推定をもとに掲載しています。
+            {storeCount ? `${totalStores ? `全国${totalStores.toLocaleString()}店のコンビニのうち、` : ""}現在${storeCount.toLocaleString()}店舗の` : ""}イートイン情報を、実際に行った人の投稿とAI推定をもとに掲載しています。
           </p>
           <p style={{ ...p, margin: 0 }}>
             ランチが1,000円を超えるのも珍しくないいま、飲み物1本で座って休めるコンビニのイートインは、外回りの会社員や移動中の人にとって貴重な休憩場所です。

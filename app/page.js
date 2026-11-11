@@ -2,6 +2,8 @@ import EatInFinder from "./EatInFinder";
 import HomeContent from "./HomeContent";
 import { AREAS } from "../lib/areas";
 import { getStoreCount } from "../lib/stats";
+// 店舗マスタの全店舗数（ビルドのたびに scripts/make-store-tiles.mjs が作る）
+import STORE_SUMMARY from "../data/generated/store-summary.json";
 
 // トップページ（サーバー側でURLパラメータを読み、地図コンポーネントに渡す）
 // 例: /?lat=35.68&lng=139.70&place=ChIJxxxx ← 共有リンクで開くと自動でその店を表示
@@ -29,6 +31,8 @@ export default async function Home({ searchParams }) {
 
   // 掲載店舗数（週1回だけ集計してキャッシュされる。実数をそのまま表示）
   const storeCount = await getStoreCount();
+  // 母数（全国のコンビニの数）
+  const totalStores = STORE_SUMMARY?.total || null;
 
   return (
     <>
@@ -37,10 +41,10 @@ export default async function Home({ searchParams }) {
         initialLng={hasCoords ? lng : null}
         initialPlace={typeof params?.place === "string" ? params.place : null}
         storeCount={storeCount}
-        areaCount={Object.keys(AREAS).length}
+        totalStores={totalStores}
       />
       {/* 地図の下の読みもの（サービス紹介・エリア・ガイド） */}
-      <HomeContent storeCount={storeCount} areaCount={Object.keys(AREAS).length} />
+      <HomeContent storeCount={storeCount} totalStores={totalStores} areaCount={Object.keys(AREAS).length} />
     </>
   );
 }
