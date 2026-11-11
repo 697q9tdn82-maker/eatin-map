@@ -1,0 +1,43 @@
+# 店舗マスタ（全国のコンビニの店名・住所・位置）を週1回、自動で更新する
+# ・取得元: All The Places（コンビニ各社の公式の店舗検索をもとにしたオープンデータ・CC0）
+# ・Google Places API は使いません（料金も1日の上限もなし）
+# ・data/stores/ と data/legacy-place-ids.json を更新して保存 → Vercelが自動で再デプロイ
+name: 店舗マスタの更新
+
+on:
+  schedule:
+    # 毎週月曜 日本時間 4:00
+    - cron: "0 19 * * 0"
+  workflow_dispatch: {} # GitHubの画面から手動でも実行できる
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-stores
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: 店舗マスタを取得
+        run: node scripts/build-stores.mjs
+      - name: 以前の投稿を新しい店舗IDに対応づける
+        run: node scripts/build-legacy-map.mjs
+      - name: 変更があれば保存
+        run: |
+          git add data/stores data/legacy-place-ids.json
+          if git diff --cached --quiet; then
+            echo "変更なし"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git commit -m "店舗マスタを自動更新"
+          git push

@@ -6,6 +6,7 @@ import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
 import { db } from "../lib/firebase";
 import { collection, addDoc, getDocs, updateDoc, doc, increment, query, where, orderBy, limit } from "firebase/firestore";
 import { AREAS } from "../lib/areas";
+import { storesNear } from "../lib/store-tiles";
 
 // ============================================================
 // 定数・ユーティリティ
@@ -24,65 +25,26 @@ function markAsReported(placeId, storeName, hasEatIn) {
   r[placeId] = { date: new Date().toISOString(), storeName, hasEatIn };
   localStorage.setItem("reportedStores", JSON.stringify(r));
 }
-function isReported(placeId) { return !!getReportedStores()[placeId]; }
+// 投稿済みかどうか（以前の店舗IDで投稿した店も「投稿済み」とみなす）
+function isReported(store) {
+  const r = getReportedStores();
+  return !!r[store.place_id] || (store.legacy_ids || []).some(id => r[id]);
+}
 
 const CHAIN_COLORS = { "セブン-イレブン": "#e63946", "ファミリーマート": "#00a040", "ローソン": "#0b5ea8", "ミニストップ": "#f4a261" };
 function getChainColor(name) { for (const [k,v] of Object.entries(CHAIN_COLORS)) if (name.includes(k)) return v; return "#888"; }
 
-const MAX_RESULTS = 20;
-// 検索結果は端末にも7日間保存し、同じ場所を再訪したときにGoogleを呼ばずに済ませる
-// （Google側の規約に配慮して長期保存はしない）
-const CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-const CACHE_MAX_ENTRIES = 30;
-const CACHE_STORAGE_KEY = "placesCacheV1";
-const searchCache = new Map();
+// 一度に地図へ出す店の上限（近い順）。多すぎると地図が重く・見づらくなるため
+const MAX_RESULTS = 80;
 
-function readStorageCache() {
-  try { return JSON.parse(localStorage.getItem(CACHE_STORAGE_KEY) || "{}"); } catch { return {}; }
+// 店舗マスタの店（lib/store-tiles.js）に、投稿情報の入れ物を付けて画面用の形にする
+function blankStore(p) {
+  return { ...p, legacy_ids: p.legacy_ids || [], verifications: [], helpedCount: 0, hasEatIn: null, outlet: false, wifi: false, seats: null };
 }
 
-function getFromCache(key) {
-  const mem = searchCache.get(key);
-  if (mem && Date.now() - mem.timestamp <= CACHE_TTL_MS) return mem.data;
-  const entry = readStorageCache()[key];
-  if (entry && Date.now() - entry.timestamp <= CACHE_TTL_MS) {
-    searchCache.set(key, entry);
-    return entry.data;
-  }
-  return null;
-}
-
-function setToCache(key, data) {
-  const entry = { data, timestamp: Date.now() };
-  searchCache.set(key, entry);
-  try {
-    const all = readStorageCache();
-    all[key] = entry;
-    // 古い順に整理して、保存しすぎないようにする
-    const trimmed = {};
-    Object.keys(all)
-      .filter(k => Date.now() - (all[k]?.timestamp || 0) <= CACHE_TTL_MS)
-      .sort((a, b) => all[b].timestamp - all[a].timestamp)
-      .slice(0, CACHE_MAX_ENTRIES)
-      .forEach(k => { trimmed[k] = all[k]; });
-    localStorage.setItem(CACHE_STORAGE_KEY, JSON.stringify(trimmed));
-  } catch { /* 保存できなくても動作に影響はない */ }
-}
-
-// 端末に保存済みの検索結果から、指定地点の近く（250m以内）のものを探す
-// 見つかればGoogleを呼ばずに表示できる（＝料金0円）
-function findNearbyCache(lat, lng) {
-  const entries = { ...readStorageCache() };
-  for (const [k, v] of searchCache.entries()) entries[k] = v;
-  let best = null;
-  for (const [key, entry] of Object.entries(entries)) {
-    if (!entry || Date.now() - (entry.timestamp || 0) > CACHE_TTL_MS) continue;
-    const [clat, clng, radius] = key.split(",").map(Number);
-    if (!Number.isFinite(clat) || !Number.isFinite(clng)) continue;
-    const d = calcDistance(lat, lng, clat, clng);
-    if (d <= 250 && (!best || d < best.d)) best = { d, lat: clat, lng: clng, radius, data: entry.data };
-  }
-  return best;
+// その店の投稿を探すときに使うID（今の店舗ID＋以前のGoogleの店舗ID）
+function queryIdsOf(store) {
+  return [store.place_id, ...(store.legacy_ids || [])];
 }
 
 // 前回見ていた地図の位置（次に開いたときにそこから表示する）
@@ -102,11 +64,6 @@ function saveLastView(lat, lng, zoom) {
 function formatDistance(d) {
   return d < 1000 ? `${Math.round(d / 10) * 10}m` : `${(d / 1000).toFixed(1)}km`;
 }
-
-// これ以上近い場所で再検索してもGoogleは呼ばない距離（m）
-// 200mなら「連打・微調整」の無駄打ちは防ぎつつ、
-// 地図を動かしたときの取りこぼし（未検索エリア）は25%以内に収まる
-const RESEARCH_MIN_DISTANCE_M = 200;
 
 // 投稿を古い順に並べる（createdAtはFirestoreのTimestamp）
 function sortByCreated(vers) {
@@ -248,31 +205,37 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [areaKeyword, setAreaKeyword] = useState("");
   const mapRef = useRef(null);
   const pendingSelectRef = useRef(initialPlace); // 共有リンクからの自動選択待ち
-  const lastSearchRef = useRef(null);            // 直前にGoogleへ問い合わせた地点
+  const [refreshTick, setRefreshTick] = useState(0); // 同じ場所でもう一度探したときに、投稿情報を読み直す合図
   const storesRef = useRef([]);                  // 最新の店舗一覧（コールバック内から参照する用）
 
-  // Firestoreデータ読み込み（表示中の店舗分だけをまとめて取得＝読み取り回数を大幅削減）
-  const loadFirestoreData = useCallback(async (placeIds) => {
-    if (!placeIds || placeIds.length === 0) return;
+  // 投稿（イートイン有無など）をFirestoreから読み込む。表示中の店舗分だけをまとめて取得する
+  // 以前の投稿はGoogleの店舗IDにひもづいているので、今の店舗IDと以前のIDの両方で探して1店にまとめる
+  const loadFirestoreData = useCallback(async (targets) => {
+    if (!targets || targets.length === 0) return;
     try {
-      const verMap = {}, helpMap = {};
+      const owner = {}; // 問い合わせに使うID → 店舗ID
+      for (const s of targets) for (const id of queryIdsOf(s)) owner[id] = s.place_id;
+      const ids = Object.keys(owner);
       // Firestoreの"in"検索は一度に30件までなので分割する
       const chunks = [];
-      for (let i = 0; i < placeIds.length; i += 30) chunks.push(placeIds.slice(i, i + 30));
-      for (const chunk of chunks) {
-        const [verSnap, helpSnap] = await Promise.all([
-          getDocs(query(collection(db, "verifications"), where("placeId", "in", chunk))),
-          getDocs(query(collection(db, "helped"), where("placeId", "in", chunk))),
-        ]);
-        verSnap.forEach(d => { const data = d.data(); if (!verMap[data.placeId]) verMap[data.placeId] = []; verMap[data.placeId].push({ ...data, docId: d.id }); });
-        helpSnap.forEach(d => { const data = d.data(); helpMap[data.placeId] = data.count || 0; });
+      for (let i = 0; i < ids.length; i += 30) chunks.push(ids.slice(i, i + 30));
+      const snaps = await Promise.all(chunks.map(chunk =>
+        getDocs(query(collection(db, "verifications"), where("placeId", "in", chunk)))
+      ));
+      const verMap = {};
+      for (const snap of snaps) {
+        snap.forEach(d => {
+          const data = d.data();
+          const storeId = owner[data.placeId];
+          if (!storeId) return;
+          (verMap[storeId] ||= []).push({ ...data, docId: d.id });
+        });
       }
       setStores(prev => prev.map(s => {
         const vers = sortByCreated(verMap[s.place_id] || s.verifications || []);
         return {
           ...s,
           verifications: vers,
-          helpedCount: helpMap[s.place_id] ?? s.helpedCount,
           hasEatIn: aggregateEatIn(vers, s.hasEatIn),
           outlet: s.outlet || vers.some(v => v.outlet === true),
           wifi: s.wifi || vers.some(v => v.wifi === true),
@@ -291,15 +254,35 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     if (latest && latest !== selected) setSelected(latest);
   }, [stores, selected]);
 
+  // 表示する店の顔ぶれが変わったら（または同じ場所を探し直したら）、その店の投稿を読み込む
+  const storeIdsKey = stores.map(s => s.place_id).sort().join("|");
   useEffect(() => {
-    if (stores.length > 0) loadFirestoreData(stores.map(s => s.place_id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [stores.length, loadFirestoreData]);
+    if (storesRef.current.length > 0) loadFirestoreData(storesRef.current);
+  }, [storeIdsKey, refreshTick, loadFirestoreData]);
+
+  // 店を選んだら、その店の「助かった！」の数を読み込む（詳細パネルでしか使わないので、選んだ店の分だけ）
+  const selectedId = selected?.place_id || null;
+  useEffect(() => {
+    if (!selectedId) return;
+    const store = storesRef.current.find(s => s.place_id === selectedId);
+    if (!store) return;
+    let cancelled = false;
+    getDocs(query(collection(db, "helped"), where("placeId", "in", queryIdsOf(store).slice(0, 30))))
+      .then(snap => {
+        if (cancelled) return;
+        let count = 0;
+        snap.forEach(d => { count += d.data().count || 0; });
+        setStores(prev => prev.map(s => (s.place_id === selectedId && !s.helpedByMe ? { ...s, helpedCount: count } : s)));
+      })
+      .catch(e => console.error(e));
+    return () => { cancelled = true; };
+  }, [selectedId]);
 
   // 共有リンクで開いたとき、該当店舗を自動で選択する
   useEffect(() => {
     if (!pendingSelectRef.current || stores.length === 0) return;
-    const target = stores.find(s => s.place_id === pendingSelectRef.current);
+    const want = pendingSelectRef.current; // 以前の共有リンクはGoogleの店舗IDなので、そちらでも探す
+    const target = stores.find(s => s.place_id === want || (s.legacy_ids || []).includes(want));
     if (target) {
       setSelected(target);
       pendingSelectRef.current = null;
@@ -337,102 +320,41 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     }
   };
 
-  // Places API検索
-  const searchPlaces = useCallback(async (lat, lng, radius = 500, force = false) => {
-    // ほとんど動いていない場所での再検索は、Googleを呼ばずに投稿情報だけ最新化する
-    // （地図の微調整や連打でAPIを無駄に消費しないための節約。投稿の反映は保証される）
-    const prev = lastSearchRef.current;
-    const current = storesRef.current;
-    if (
-      !force && prev && current.length > 0 && prev.radius === radius &&
-      calcDistance(prev.lat, prev.lng, lat, lng) < RESEARCH_MIN_DISTANCE_M
-    ) {
-      setLoading(true);
-      setGpsError("");
-      await loadFirestoreData(current.map(s => s.place_id));
-      // 新しい中心から近い順に並べ替える（表示の整合性を保つ）
-      setStores(prevStores => [...prevStores].sort(
-        (a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng)
-      ));
-      setLoading(false);
-      setInfoMsg("この付近の最新情報に更新しました");
-      setTimeout(() => setInfoMsg(""), 2500);
-      return;
-    }
-
+  // 近くのコンビニを店舗マスタから探して表示する
+  // （店舗マスタはサイト内のファイルなので、何回探しても料金はかからず、1日の上限もない）
+  const searchPlaces = useCallback(async (lat, lng, radius = 500) => {
     setLoading(true);
-    setStores([]);
-    setSelected(null);
     setGpsError("");
     setInfoMsg("");
     try {
-      // サーバー側と同じ丸め方にしておくとキャッシュが噛み合う
-      const cacheKey = `${lat.toFixed(3)},${lng.toFixed(3)},${radius}`;
-      const cached = getFromCache(cacheKey);
-      if (cached) {
-        lastSearchRef.current = { lat, lng, radius };
-        setStores(cached);
-        setLoading(false);
-        return;
-      }
-      // ぴったり同じ場所でなくても、250m以内で「前回のほうが広い範囲を探していた」なら使い回す（Googleを呼ばない）
-      const near = findNearbyCache(lat, lng);
-      // （前回の円が今回の円をまるごと含むときだけ。取りこぼしを防ぐ）
-      if (near && near.radius >= radius + near.d) {
-        lastSearchRef.current = { lat: near.lat, lng: near.lng, radius: near.radius };
-        setStores([...near.data].sort((a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng)));
-        setLoading(false);
-        return;
-      }
-      const res = await fetch(`/api/places?lat=${lat}&lng=${lng}&radius=${radius}`);
-      const data = await res.json();
-      // APIの上限超過などで取得できなかったときは理由を表示する
-      if (data.userMessage) {
-        setGpsError(data.userMessage);
-        setLoading(false);
-        return;
-      }
-      if (data.places && data.places.length === 0) {
+      const found = await storesNear(lat, lng, radius, MAX_RESULTS);
+      if (found.length === 0) {
+        setStores([]);
+        setSelected(null);
         setGpsError("このあたりにコンビニが見つかりませんでした。少し移動して試してください");
+      } else {
+        // すでに表示中の店は、読み込み済みの投稿情報をそのまま引き継ぐ（ピンがちらつかない）
+        const known = new Map(storesRef.current.map(s => [s.place_id, s]));
+        setStores(found.map(p => known.get(p.place_id) || blankStore(p)));
+        setSelected(sel => (sel && found.some(p => p.place_id === sel.place_id) ? sel : null));
+        setRefreshTick(t => t + 1); // 投稿情報を最新にする
       }
-      if (data.places && data.places.length > 0) {
-        const places = data.places.map(p => ({
-          ...p,
-          verifications: [],
-          helpedCount: 0,
-          hasEatIn: null,
-          outlet: false,
-          wifi: false,
-          seats: null,
-        })).sort((a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng))
-          .slice(0, MAX_RESULTS);
-        setStores(places);
-        setToCache(cacheKey, places);
-        lastSearchRef.current = { lat, lng, radius };
-      }
-    } catch (e) { console.error("検索エラー:", e); }
+    } catch (e) {
+      console.error("検索エラー:", e);
+      setGpsError("店舗情報を読み込めませんでした。通信状況を確認して、もう一度お試しください");
+    }
     setLoading(false);
-  }, [loadFirestoreData]);
+  }, []);
 
   // URL付きで開いた場合（共有リンク・エリアページ）は自動で検索する
   useEffect(() => {
     if (initialLat && initialLng) {
       setSearchCenter({ lat: initialLat, lng: initialLng });
-      // エリアページ：作り置きの店舗リストをそのまま表示（Googleは呼ばない＝0円）
+      // エリアページ：ページと一緒に届いた店舗リスト（駅から600m以内の全店）をそのまま表示
       // 投稿情報（イートイン有無など）は店舗がセットされた後に自動でFirestoreから読み込まれる
       if (Array.isArray(initialStores) && initialStores.length > 0) {
-        const places = initialStores.map(p => ({
-          ...p,
-          verifications: [],
-          helpedCount: 0,
-          hasEatIn: null,
-          outlet: false,
-          wifi: false,
-          seats: null,
-        })).sort((a, b) => calcDistance(initialLat, initialLng, a.lat, a.lng) - calcDistance(initialLat, initialLng, b.lat, b.lng));
-        // ↑ エリアページは作り置きの全店を表示（20店の制限は「現在地・地図から探す」だけ）
-        lastSearchRef.current = { lat: initialLat, lng: initialLng, radius: 500 };
-        setStores(places);
+        setStores(initialStores.map(blankStore)
+          .sort((a, b) => calcDistance(initialLat, initialLng, a.lat, a.lng) - calcDistance(initialLat, initialLng, b.lat, b.lng)));
         return;
       }
       searchPlaces(initialLat, initialLng);
@@ -443,26 +365,24 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   // URL指定なしで開いたとき：
   //   ① 位置情報を「すでに許可済み」の人 → 現在地へ移動（許可の確認画面は出さない）
   //   ② それ以外 → 前回見ていた場所へ移動
-  //   どちらも、端末に保存済みの検索結果があればそのまま表示する（Googleは呼ばない＝0円）
-  //   保存済みの結果がなければ「このあたりを探す」ボタンを出して、1タップで検索してもらう
+  //   どちらも、その場所のコンビニをすぐ表示する（店舗マスタから読むだけなので料金はかからない）
+  //   初めての人（前回の場所がない）は、何も表示せず検索を待つ
   useEffect(() => {
+    // 以前の仕組み（Googleの検索結果を端末に保存）の残りを片付ける
+    try { localStorage.removeItem("placesCacheV1"); } catch { /* 消せなくても問題なし */ }
     if (initialLat && initialLng) return;
     let cancelled = false;
 
-    const showFromCache = (lat, lng) => {
-      const hit = findNearbyCache(lat, lng);
-      if (!hit) return false;
-      lastSearchRef.current = { lat: hit.lat, lng: hit.lng, radius: hit.radius };
+    const showAround = (lat, lng) => {
       setSearchCenter({ lat, lng });
-      setStores([...hit.data].sort((a, b) => calcDistance(lat, lng, a.lat, a.lng) - calcDistance(lat, lng, b.lat, b.lng)));
-      return true;
+      searchPlaces(lat, lng);
     };
     const goLastView = () => {
       const v = readLastView();
       if (!v || cancelled) return;
       setMapCenter({ lat: v.lat, lng: v.lng });
       setMapZoom(v.zoom || 15);
-      showFromCache(v.lat, v.lng);
+      showAround(v.lat, v.lng);
     };
 
     (async () => {
@@ -480,7 +400,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           setMapCenter({ lat, lng });
           setMapZoom(16);
           setMyLocation({ lat, lng });
-          showFromCache(lat, lng);
+          showAround(lat, lng);
         },
         () => goLastView(),
         { enableHighAccuracy: false, timeout: 8000, maximumAge: 5 * 60 * 1000 }
@@ -526,7 +446,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     if (typeof window !== "undefined") window.dispatchEvent(new Event("eatinmap:usersearch"));
   };
 
-  // 駅名・エリア名のテキスト検索（Google Places Text Search利用）
+  // 駅名・エリア名のテキスト検索（/api/search が座標に変換する）
   const handleTextSearch = useCallback(async () => {
     const q = searchArea.trim();
     if (!q || textSearching) return;
@@ -588,7 +508,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     e.stopPropagation();
     setStores(prev => prev.map(s => s.place_id === store.place_id ? { ...s, helpedCount: (s.helpedCount||0)+1, helpedByMe: true } : s));
     try {
-      const q = query(collection(db, "helped"), where("placeId", "==", store.place_id));
+      // 以前のIDで記録が残っていればそこに足す。なければ今の店舗IDで新しく作る
+      const q = query(collection(db, "helped"), where("placeId", "in", queryIdsOf(store).slice(0, 30)));
       const snap = await getDocs(q);
       if (snap.empty) await addDoc(collection(db, "helped"), { placeId: store.place_id, count: 1 });
       else await updateDoc(doc(db, "helped", snap.docs[0].id), { count: increment(1) });
@@ -598,7 +519,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   // 投稿
   const handleSubmitReport = async () => {
     if (!reportTarget) return;
-    if (isReported(reportTarget.place_id)) return;
+    if (isReported(reportTarget)) return;
     setStores(prev => prev.map(s => {
       if (s.place_id !== reportTarget.place_id) return s;
       const newVer = { userId: "me", comment: reportData.comment, hasEatIn: reportData.hasEatIn };
@@ -620,7 +541,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
   const handleQuickReport = async (store, hasEatIn, e) => {
     e.stopPropagation();
-    if (isReported(store.place_id)) return;
+    if (isReported(store)) return;
     setStores(prev => prev.map(s => {
       if (s.place_id !== store.place_id) return s;
       const newVer = { userId: "me", comment: hasEatIn ? "イートインあり" : "イートインなし", hasEatIn };
@@ -658,7 +579,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const suggestNext = (base) => {
     if (!base) return [];
     return stores
-      .filter(s => s.place_id !== base.place_id && needsCheck(s) && !isReported(s.place_id))
+      .filter(s => s.place_id !== base.place_id && needsCheck(s) && !isReported(s))
       .sort((a, b) => calcDistance(base.lat, base.lng, a.lat, a.lng) - calcDistance(base.lat, base.lng, b.lat, b.lng))
       .slice(0, 2);
   };
@@ -865,7 +786,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
             {/* ワンタップ投稿（スクロールせずに押せるよう上部に配置） */}
             <div style={{ marginBottom: 12 }}>
-            {isReported(selected.place_id) ? (
+            {isReported(selected) ? (
               <div>
                 <div style={{ padding: "12px", borderRadius: 12, background: "#f5f5f5", textAlign: "center", fontSize: "13px", color: "#aaa", fontWeight: 700, marginBottom: 8 }}>✅ 投稿済みです（1店舗1回まで）</div>
                 {justReported?.storeId === selected.place_id && (

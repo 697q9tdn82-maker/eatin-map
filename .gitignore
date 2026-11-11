@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 店舗マスタ（data/stores/）からビルドのたびに自動で作るファイル（scripts/make-store-tiles.mjs）
+/public/stores/
+/data/generated/

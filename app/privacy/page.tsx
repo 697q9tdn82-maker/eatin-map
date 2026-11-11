@@ -43,7 +43,7 @@ export default function PrivacyPolicy() {
         <div style={{ background: "#fff", borderRadius: 12, padding: "20px 24px", marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
           <h2 style={{ fontSize: "15px", fontWeight: 800, color: "#e63946", marginBottom: 10, marginTop: 0 }}>4. 第三者サービスの利用</h2>
           <ul style={{ fontSize: "14px", color: "#555", paddingLeft: 20, margin: "0 0 8px", lineHeight: 2 }}>
-            <li>Google Maps Platform（地図表示・店舗検索）</li>
+            <li>Google Maps Platform（地図表示・駅名検索）</li>
             <li>Firebase（投稿データの保存）</li>
             <li>Vercel Analytics（アクセス解析。Cookieを使わず、個人を特定しない形で閲覧状況を集計します）</li>
             <li>Google AdSense（広告配信）</li>
