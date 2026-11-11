@@ -8,6 +8,7 @@
 //   public/stores/meta.json       … どのタイルがあるか・全部で何店か
 //   data/generated/area-stores.json … エリアページ用。各駅から600m以内の店舗一覧
 //   data/generated/store-summary.json … 全国の店舗数（トップページの「全国○店のうち…」に使う）
+//   data/generated/official-eatin-ids.json … 公式サイトに「イートインあり」と出ている店のID（掲載店舗数に数える）
 // ============================================================
 
 import fs from "node:fs";
@@ -74,6 +75,7 @@ for (const [slug, a] of Object.entries(AREAS)) {
 }
 fs.mkdirSync(GEN_DIR, { recursive: true });
 fs.writeFileSync(path.join(GEN_DIR, "area-stores.json"), JSON.stringify({ total: all.length, areas }));
+fs.writeFileSync(path.join(GEN_DIR, "official-eatin-ids.json"), JSON.stringify(all.filter(r => r[6] === 1).map(r => r[0])));
 // 画面に出す「全国○店」の母数（トップページで使う）
 fs.writeFileSync(path.join(GEN_DIR, "store-summary.json"), JSON.stringify({ total: all.length, counts, officialEatIn: all.filter(r => r[6] === 1).length }));
 
