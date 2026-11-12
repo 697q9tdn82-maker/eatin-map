@@ -3,8 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
-import { db } from "../lib/firebase";
-import { collection, addDoc, getDocs, updateDoc, doc, increment, query, where, orderBy, limit } from "firebase/firestore";
+import { firestore } from "../lib/firebase";
 import { AREAS } from "../lib/areas";
 import { storesNear } from "../lib/store-tiles";
 import SupportLink from "./components/SupportLink";
@@ -232,8 +231,9 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       // Firestoreの"in"検索は一度に30件までなので分割する
       const chunks = [];
       for (let i = 0; i < ids.length; i += 30) chunks.push(ids.slice(i, i + 30));
+      const F = await firestore();
       const snaps = await Promise.all(chunks.map(chunk =>
-        getDocs(query(collection(db, "verifications"), where("placeId", "in", chunk)))
+        F.getDocs(F.query(F.collection(F.db, "verifications"), F.where("placeId", "in", chunk)))
       ));
       const verMap = {};
       for (const snap of snaps) {
@@ -280,7 +280,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     const store = storesRef.current.find(s => s.place_id === selectedId);
     if (!store) return;
     let cancelled = false;
-    getDocs(query(collection(db, "helped"), where("placeId", "in", queryIdsOf(store).slice(0, 30))))
+    firestore()
+      .then(F => F.getDocs(F.query(F.collection(F.db, "helped"), F.where("placeId", "in", queryIdsOf(store).slice(0, 30)))))
       .then(snap => {
         if (cancelled) return;
         let count = 0;
@@ -304,8 +305,9 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
   const loadRecentPosts = useCallback(async () => {
     try {
-      const q = query(collection(db, "verifications"), orderBy("createdAt", "desc"), limit(5));
-      const snap = await getDocs(q);
+      const F = await firestore();
+      const q = F.query(F.collection(F.db, "verifications"), F.orderBy("createdAt", "desc"), F.limit(5));
+      const snap = await F.getDocs(q);
       setRecentPosts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
     } catch (e) { console.error(e); }
   }, []);
@@ -522,10 +524,11 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     setStores(prev => prev.map(s => s.place_id === store.place_id ? { ...s, helpedCount: (s.helpedCount||0)+1, helpedByMe: true } : s));
     try {
       // 以前のIDで記録が残っていればそこに足す。なければ今の店舗IDで新しく作る
-      const q = query(collection(db, "helped"), where("placeId", "in", queryIdsOf(store).slice(0, 30)));
-      const snap = await getDocs(q);
-      if (snap.empty) await addDoc(collection(db, "helped"), { placeId: store.place_id, count: 1 });
-      else await updateDoc(doc(db, "helped", snap.docs[0].id), { count: increment(1) });
+      const F = await firestore();
+      const q = F.query(F.collection(F.db, "helped"), F.where("placeId", "in", queryIdsOf(store).slice(0, 30)));
+      const snap = await F.getDocs(q);
+      if (snap.empty) await F.addDoc(F.collection(F.db, "helped"), { placeId: store.place_id, count: 1 });
+      else await F.updateDoc(F.doc(F.db, "helped", snap.docs[0].id), { count: F.increment(1) });
     } catch (e) { console.error(e); }
   };
 
@@ -542,7 +545,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     markAsReported(reportTarget.place_id, reportTarget.name, reportData.hasEatIn);
     setSubmitted(true);
     try {
-      await addDoc(collection(db, "verifications"), {
+      const F = await firestore();
+      await F.addDoc(F.collection(F.db, "verifications"), {
         placeId: reportTarget.place_id, placeName: reportTarget.name,
         hasEatIn: reportData.hasEatIn, outlet: reportData.outlet, wifi: reportData.wifi,
         seats: reportData.seats ? parseInt(reportData.seats) : null,
@@ -564,7 +568,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     markAsReported(store.place_id, store.name, hasEatIn);
     setJustReported({ storeId: store.place_id, storeName: store.name, hasEatIn });
     try {
-      await addDoc(collection(db, "verifications"), {
+      const F = await firestore();
+      await F.addDoc(F.collection(F.db, "verifications"), {
         placeId: store.place_id, placeName: store.name, hasEatIn,
         outlet: false, wifi: false, seats: null,
         comment: hasEatIn ? "イートインあり" : "イートインなし",
