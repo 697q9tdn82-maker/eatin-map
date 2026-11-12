@@ -1,6 +1,6 @@
 // 「応援する（投げ銭）」ボタン
 // 投げ銭ページ（OFUSE）。変えたいときはここを書き換えるか、Vercelの環境変数 NEXT_PUBLIC_DONATE_URL に入れる
-const DONATE_URL = process.env.NEXT_PUBLIC_DONATE_URL || "https://ofuse.me/5bb88bec";
+const DONATE_URL = process.env.NEXT_PUBLIC_DONATE_URL || "https://ofuse.me/eatin_map";
 
 // variant:
 //   (なし)    … 説明つきのカード（トップ・このサイトについて）
