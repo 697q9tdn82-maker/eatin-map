@@ -18,7 +18,7 @@ export default function HomeContent({ storeCount, totalStores, areaCount }) {
     <div style={{ background: "#f4f5f7", padding: "20px 0 90px", fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif" }}>
       <div style={wrap}>
         <section style={section}>
-          <h1 style={{ fontSize: "18px", fontWeight: 900, margin: "0 0 10px", lineHeight: 1.5 }}>
+          <h1 style={{ fontSize: "18px", fontWeight: 900, margin: "0 0 10px", lineHeight: 1.5, color: "#1a1a1a" }}>
             近くの「座れるコンビニ」を地図で探せる、コンビニイートインマップ
           </h1>
           <p style={p}>

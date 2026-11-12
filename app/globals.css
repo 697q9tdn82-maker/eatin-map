@@ -12,11 +12,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* サイトは明るいデザインで統一。スマホがダークモードでも文字が白くならないよう、常にライト表示にする */
+:root {
+  color-scheme: light;
 }
 
 body {
