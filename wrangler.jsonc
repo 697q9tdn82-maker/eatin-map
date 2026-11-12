@@ -12,7 +12,7 @@
     { "binding": "WORKER_SELF_REFERENCE", "service": "eatin-map" }
   ],
   "kv_namespaces": [
-    // ページの作り置きの保存先。移行時に `npx wrangler kv namespace create NEXT_INC_CACHE_KV` で作り、表示されたidをここに入れる
-    { "binding": "NEXT_INC_CACHE_KV", "id": "REPLACE_WITH_KV_ID" }
+    // ページの作り置きの保存先（Cloudflareの Workers KV「eatin-map-cache」）
+    { "binding": "NEXT_INC_CACHE_KV", "id": "842da10e1b2462cf65bbf9acc06b8c91" }
   ]
 }
