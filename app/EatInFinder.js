@@ -620,14 +620,19 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         @keyframes eatinPulse { 0% { transform: scale(1); opacity: .55 } 100% { transform: scale(2.2); opacity: 0 } }
         .eatin-pin-unknown::before { content: ""; position: absolute; top: 2px; left: 50%; width: 24px; height: 24px; margin-left: -12px; border-radius: 50%; background: #f57c00; animation: eatinPulse 1.8s ease-out infinite; pointer-events: none; }
         @media (prefers-reduced-motion: reduce) { .eatin-pin-unknown::before { animation: none; opacity: .25 } }
+        /* 小さい画面（幅340px以下）では、ヘッダーの「応援する」ボタンと並べられるようタイトルを少し縮める */
+        @media (max-width: 340px) { .eatin-title { font-size: 13px !important } .eatin-title-icon { display: none } }
       `}</style>
 
       {/* ヘッダー */}
       <div style={{ background: "#fff", borderBottom: "2px solid #111", padding: "10px 14px", zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-        <Link href="/" onClick={() => { setStores([]); setSelected(null); setMyLocation(null); setSearchArea(""); setGpsError(""); }} style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", textDecoration: "none", color: "inherit", fontFamily: "inherit" }}>
-          🏪 <span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
+        <Link href="/" onClick={() => { setStores([]); setSelected(null); setMyLocation(null); setSearchArea(""); setGpsError(""); }} className="eatin-title" style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", textDecoration: "none", color: "inherit", fontFamily: "inherit", whiteSpace: "nowrap" }}>
+          <span className="eatin-title-icon">🏪 </span><span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
         </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+        <SupportLink variant="header" />
         <button onClick={() => setShowMenu(true)} aria-label="メニュー" style={{ background: "#fff", border: "1.5px solid #ddd", borderRadius: 10, padding: "5px 11px", fontSize: "15px", cursor: "pointer", color: "#333", lineHeight: 1 }}>☰</button>
+        </div>
       </div>
 
       {/* 検索バー */}
@@ -808,6 +813,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                     <button onClick={() => shareOnX(justReported.storeName, justReported.hasEatIn)} style={{ width: "100%", padding: "11px", borderRadius: 12, border: "none", background: "#000", color: "#fff", fontWeight: 700, fontSize: "13px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                       𝕏 Xでシェアする
                     </button>
+                    <SupportLink variant="thanks" />
                   </>
                 )}
               </div>
@@ -862,6 +868,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
             <button onClick={e => handleHelped(selected, e)} disabled={selected.helpedByMe} style={{ width: "100%", padding: "10px", borderRadius: 10, border: `1.5px solid ${selected.helpedByMe ? "#eee" : "#f4a261"}`, background: selected.helpedByMe ? "#fafafa" : "#fff7f0", color: selected.helpedByMe ? "#ccc" : "#e67e00", fontSize: "13px", fontWeight: 700, cursor: selected.helpedByMe ? "default" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 10 }}>
               {selected.helpedByMe ? "👍 助かった！を送りました" : `👍 助かった！ ${selected.helpedCount > 0 ? `${selected.helpedCount}人が役に立ったと言っています` : "最初に押してみよう"}`}
             </button>
+            {selected.helpedByMe && <div style={{ marginTop: -6, marginBottom: 10 }}><SupportLink variant="thanks" /></div>}
 
           </div>
         </div>
