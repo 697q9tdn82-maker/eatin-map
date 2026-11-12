@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
-import { db } from "../../lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { firestore } from "../../lib/firebase";
 
 // お問い合わせフォーム
 // 送信内容はFirestoreの「contacts」コレクションに保存されます
@@ -23,13 +22,14 @@ export default function ContactForm() {
     if (message.trim().length < 5) return;
     setState("sending");
     try {
-      await addDoc(collection(db, "contacts"), {
+      const F = await firestore();
+      await F.addDoc(F.collection(F.db, "contacts"), {
         category,
         name: name.trim().slice(0, 100),
         email: email.trim().slice(0, 200),
         message: message.trim().slice(0, 2000),
         page: typeof document !== "undefined" ? document.referrer.slice(0, 300) : "",
-        createdAt: serverTimestamp(),
+        createdAt: F.serverTimestamp(),
       });
       setState("done");
     } catch {
