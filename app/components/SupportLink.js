@@ -1,7 +1,6 @@
 // 「応援する（投げ銭）」ボタン
-// Vercelの環境変数 NEXT_PUBLIC_DONATE_URL に、投げ銭ページ（OFUSEなど）のURLを入れると表示されます。
-// 入れていない間は何も表示しません。
-const DONATE_URL = process.env.NEXT_PUBLIC_DONATE_URL || "";
+// 投げ銭ページ（OFUSE）。変えたいときはここを書き換えるか、Vercelの環境変数 NEXT_PUBLIC_DONATE_URL に入れる
+const DONATE_URL = process.env.NEXT_PUBLIC_DONATE_URL || "https://ofuse.me/5bb88bec";
 
 export default function SupportLink({ compact = false }) {
   if (!/^https:\/\//.test(DONATE_URL)) return null;
