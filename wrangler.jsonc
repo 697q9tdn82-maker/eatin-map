@@ -13,6 +13,6 @@
   ],
   "kv_namespaces": [
     // ページの作り置きの保存先（Cloudflareの Workers KV「eatin-map-cache」）
-    { "binding": "NEXT_INC_CACHE_KV", "id": "842da10e1b2462cf65bbf9acc06b8c91" }
+    { "binding": "NEXT_INC_CACHE_KV", "id": "55f0654b5d4e430ab3884c501b91441f" }
   ]
 }
