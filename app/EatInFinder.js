@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, OverlayView, Circle } from "@react-google-maps/api";
 import { firestore } from "../lib/firebase";
 import { AREAS } from "../lib/areas";
 import { storesNear } from "../lib/store-tiles";
@@ -155,6 +155,33 @@ function StorePin({ store, isSelected, onClick }) {
   );
 }
 
+// ============================================================
+// 現在地の表示（Googleマップと同じ「青い点＋向いている方向の扇形」）
+// heading: 北を0°とした向き（分からないときは null → 扇形を出さない）
+// ============================================================
+function MyLocationDot({ heading }) {
+  return (
+    <div style={{ position: "relative", width: 0, height: 0, pointerEvents: "none" }}>
+      {heading != null && (
+        <div style={{
+          position: "absolute", left: -50, top: -50, width: 100, height: 100,
+          transform: `rotate(${heading}deg)`, transition: "transform 0.2s linear",
+          // 上向き（北）を中心に左右30°の扇形。外側に向かって薄くなる
+          background: "conic-gradient(from -30deg, rgba(66,133,244,0.6) 0deg, rgba(66,133,244,0.4) 60deg, transparent 60deg)",
+          WebkitMaskImage: "radial-gradient(circle, #000 15%, transparent 70%)",
+          maskImage: "radial-gradient(circle, #000 15%, transparent 70%)",
+          borderRadius: "50%",
+        }} />
+      )}
+      <div className="eatin-my-dot" style={{
+        position: "absolute", left: -9, top: -9, width: 18, height: 18, borderRadius: "50%",
+        background: "#4285f4", border: "3px solid #fff", boxSizing: "border-box",
+        boxShadow: "0 1px 6px rgba(0,0,0,0.3)",
+      }} />
+    </div>
+  );
+}
+
 // 投稿のあとに「近くの要確認の店」を提案する小さな部品
 function NextStoreSuggest({ list, origin, onPick }) {
   if (!list || list.length === 0) return null;
@@ -202,7 +229,10 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [reportData, setReportData] = useState({ hasEatIn: null, outlet: false, wifi: false, seats: "", comment: "" });
   const [submitted, setSubmitted] = useState(false);
   const [searchCenter, setSearchCenter] = useState(null);
-  const [myLocation, setMyLocation] = useState(null);
+  const [myLocation, setMyLocation] = useState(null);   // { lat, lng, accuracy(m) }
+  const [heading, setHeading] = useState(null);         // 向いている方向（北=0°）。分からなければ null
+  const watchIdRef = useRef(null);                       // 現在地の追跡（watchPosition）のID
+  const compassOnRef = useRef(false);                    // 方位（コンパス）を受け取っているか
   const [recentPosts, setRecentPosts] = useState([]);
   const [justReported, setJustReported] = useState(null);
   const [linkCopied, setLinkCopied] = useState(false);
@@ -335,6 +365,65 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     }
   };
 
+  // ---- 現在地の追跡 ----
+  // 一度位置が分かったら、そのあとも歩くたびに青い点が付いてくるようにする（地図の位置は動かさない）
+  const startTracking = useCallback(() => {
+    if (!navigator.geolocation || watchIdRef.current != null) return;
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      pos => {
+        const { latitude: lat, longitude: lng, accuracy } = pos.coords;
+        setMyLocation({ lat, lng, accuracy });
+      },
+      () => { /* 一時的に取れなくても、最後の位置を出したままにする */ },
+      { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 }
+    );
+  }, []);
+  const stopTracking = useCallback(() => {
+    if (watchIdRef.current != null) navigator.geolocation?.clearWatch(watchIdRef.current);
+    watchIdRef.current = null;
+  }, []);
+
+  // 画面を閉じている間は追跡を止めて電池を節約し、戻ってきたら再開する
+  useEffect(() => {
+    const onVis = () => {
+      if (document.hidden) { if (watchIdRef.current != null) { stopTracking(); watchIdRef.current = "paused"; } }
+      else if (watchIdRef.current === "paused") { watchIdRef.current = null; startTracking(); }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => { document.removeEventListener("visibilitychange", onVis); if (watchIdRef.current !== "paused") stopTracking(); };
+  }, [startTracking, stopTracking]);
+
+  // ---- 向いている方向（コンパス） ----
+  // iPhoneは、ボタンを押したタイミングで許可を求める必要がある（押した瞬間に呼ぶ）
+  const startCompass = useCallback(async () => {
+    if (compassOnRef.current || typeof window === "undefined" || !("DeviceOrientationEvent" in window)) return;
+    try {
+      if (typeof DeviceOrientationEvent.requestPermission === "function") {
+        const r = await DeviceOrientationEvent.requestPermission();
+        if (r !== "granted") return;
+      }
+    } catch { return; }
+    compassOnRef.current = true;
+    let last = null;
+    const onOrient = e => {
+      let h = null;
+      if (typeof e.webkitCompassHeading === "number") h = e.webkitCompassHeading;           // iPhone
+      else if (e.absolute && typeof e.alpha === "number") h = 360 - e.alpha;                // Android
+      if (h == null || Number.isNaN(h)) return;
+      h = (h + (window.screen?.orientation?.angle || 0) + 360) % 360;                       // 画面を横にしたとき
+      if (last == null || Math.abs(((h - last + 540) % 360) - 180) > 3) { last = h; setHeading(h); }
+    };
+    const ev = "ondeviceorientationabsolute" in window ? "deviceorientationabsolute" : "deviceorientation";
+    window.addEventListener(ev, onOrient);
+  }, []);
+
+  // 地図を現在地に戻す（右下のボタン）
+  const recenter = useCallback(() => {
+    if (!myLocation) return;
+    mapRef.current?.panTo({ lat: myLocation.lat, lng: myLocation.lng });
+    if ((mapRef.current?.getZoom() || 0) < 16) mapRef.current?.setZoom(16);
+  }, [myLocation]);
+
   // 近くのコンビニを店舗マスタから探して表示する
   // （店舗マスタはサイト内のファイルなので、何回探しても料金はかからず、1日の上限もない）
   const searchPlaces = useCallback(async (lat, lng, radius = 500) => {
@@ -411,10 +500,11 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       navigator.geolocation.getCurrentPosition(
         pos => {
           if (cancelled) return;
-          const { latitude: lat, longitude: lng } = pos.coords;
+          const { latitude: lat, longitude: lng, accuracy } = pos.coords;
           setMapCenter({ lat, lng });
           setMapZoom(16);
-          setMyLocation({ lat, lng });
+          setMyLocation({ lat, lng, accuracy });
+          startTracking();
           showAround(lat, lng);
         },
         () => goLastView(),
@@ -489,15 +579,17 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const handleGPS = useCallback(() => {
     if (!navigator.geolocation) { setGpsError("このブラウザはGPS非対応です"); return; }
     setGpsError(""); setGpsLoading(true);
+    startCompass(); // ボタンを押したこのタイミングでないと、iPhoneでは方位の許可を求められない
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        const { latitude: lat, longitude: lng } = pos.coords;
+        const { latitude: lat, longitude: lng, accuracy } = pos.coords;
         notifyUserSearch();
         setGpsLoading(false);
         setMapCenter({ lat, lng });
         setMapZoom(16);
         setSearchCenter({ lat, lng });
-        setMyLocation({ lat, lng });
+        setMyLocation({ lat, lng, accuracy });
+        startTracking();
         searchPlaces(lat, lng);
       },
       (err) => {
@@ -506,7 +598,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
-  }, [searchPlaces]);
+  }, [searchPlaces, startCompass, startTracking]);
 
   // 地図移動後に再検索（表示範囲に合わせて検索半径を自動調整）
   const handleMapIdle = useCallback(() => {
@@ -625,13 +717,17 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         @keyframes eatinPulse { 0% { transform: scale(1); opacity: .55 } 100% { transform: scale(2.2); opacity: 0 } }
         .eatin-pin-unknown::before { content: ""; position: absolute; top: 2px; left: 50%; width: 24px; height: 24px; margin-left: -12px; border-radius: 50%; background: #f57c00; animation: eatinPulse 1.8s ease-out infinite; pointer-events: none; }
         @media (prefers-reduced-motion: reduce) { .eatin-pin-unknown::before { animation: none; opacity: .25 } }
+        /* 現在地の青い点：まわりがふわっと広がる */
+        @keyframes eatinMyPulse { 0% { box-shadow: 0 0 0 0 rgba(66,133,244,.45), 0 1px 6px rgba(0,0,0,.3) } 70% { box-shadow: 0 0 0 12px rgba(66,133,244,0), 0 1px 6px rgba(0,0,0,.3) } 100% { box-shadow: 0 0 0 0 rgba(66,133,244,0), 0 1px 6px rgba(0,0,0,.3) } }
+        .eatin-my-dot { animation: eatinMyPulse 2s ease-out infinite }
+        @media (prefers-reduced-motion: reduce) { .eatin-my-dot { animation: none } }
         /* 小さい画面（幅340px以下）では、ヘッダーの「応援する」ボタンと並べられるようタイトルを少し縮める */
         @media (max-width: 340px) { .eatin-title { font-size: 13px !important } .eatin-title-icon { display: none } }
       `}</style>
 
       {/* ヘッダー */}
       <div style={{ background: "#fff", borderBottom: "2px solid #111", padding: "10px 14px", zIndex: 100, boxShadow: "0 2px 8px rgba(0,0,0,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
-        <Link href="/" onClick={() => { setStores([]); setSelected(null); setMyLocation(null); setSearchArea(""); setGpsError(""); }} className="eatin-title" style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", textDecoration: "none", color: "inherit", fontFamily: "inherit", whiteSpace: "nowrap" }}>
+        <Link href="/" onClick={() => { setStores([]); setSelected(null); setMyLocation(null); stopTracking(); setSearchArea(""); setGpsError(""); }} className="eatin-title" style={{ fontWeight: 900, fontSize: "15px", letterSpacing: "-0.5px", textDecoration: "none", color: "inherit", fontFamily: "inherit", whiteSpace: "nowrap" }}>
           <span className="eatin-title-icon">🏪 </span><span style={{ color: "#e63946" }}>コンビニ</span>イートインマップ
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
@@ -716,17 +812,20 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                 />
               </OverlayView>
             ))}
+            {myLocation && myLocation.accuracy > 0 && myLocation.accuracy < 2000 && (
+              // 位置の誤差の範囲（薄い青の円）
+              <Circle
+                center={{ lat: myLocation.lat, lng: myLocation.lng }}
+                radius={myLocation.accuracy}
+                options={{ clickable: false, fillColor: "#4285f4", fillOpacity: 0.12, strokeColor: "#4285f4", strokeOpacity: 0.3, strokeWeight: 1, zIndex: 1 }}
+              />
+            )}
             {myLocation && (
               <OverlayView
-                position={myLocation}
-                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+                position={{ lat: myLocation.lat, lng: myLocation.lng }}
+                mapPaneName={OverlayView.OVERLAY_LAYER}
               >
-                <div style={{
-                  width: 18, height: 18, borderRadius: "50%",
-                  background: "#4285f4", border: "3px solid #fff",
-                  boxShadow: "0 2px 8px rgba(66,133,244,0.6)",
-                  transform: "translate(-50%, -50%)",
-                }} />
+                <MyLocationDot heading={heading} />
               </OverlayView>
             )}
           </GoogleMap>
@@ -739,6 +838,13 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           <div style={{ position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", background: "#fff", borderRadius: 20, padding: "8px 18px", boxShadow: "0 4px 16px rgba(0,0,0,0.15)", fontSize: "13px", fontWeight: 700, color: "#333", display: "flex", alignItems: "center", gap: 8, zIndex: 10 }}>
             <span>⏳</span>コンビニを検索中…
           </div>
+        )}
+
+        {/* 現在地に戻るボタン（現在地が分かっているときだけ） */}
+        {myLocation && !selected && (
+          <button onClick={recenter} aria-label="現在地に戻る" style={{ position: "absolute", right: 12, bottom: "calc(80px + env(safe-area-inset-bottom, 0px))", width: 44, height: 44, borderRadius: "50%", border: "none", background: "#fff", boxShadow: "0 2px 10px rgba(0,0,0,0.2)", cursor: "pointer", zIndex: 6, display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}>
+            <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#4285f4", boxShadow: "0 0 0 4px rgba(66,133,244,0.2)" }} />
+          </button>
         )}
 
         {/* 凡例（1行のコンパクト表示） */}
