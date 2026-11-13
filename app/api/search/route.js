@@ -45,7 +45,8 @@ async function geocode(q, apiKey, stationOnly = false) {
 const lookupPlace = unstable_cache(
   async (q) => {
     const apiKey = KEY();
-    if (!apiKey) return { error: "api key missing" };
+    // キーがないときは例外にする（＝結果を保存しない）。設定したあとすぐ検索できるように
+    if (!apiKey) throw new Error("API_KEY_MISSING");
 
     // 「武蔵小杉」のような駅名らしい言葉は、先に「武蔵小杉駅」で探す（町の真ん中ではなく駅に合わせるため）
     if (looksLikeStationName(q)) {
@@ -56,7 +57,7 @@ const lookupPlace = unstable_cache(
     if (hit) return { ...hit, name: q };
     return { error: "not found" };
   },
-  ["place-lookup-v2"],
+  ["place-lookup-v3"],
   { revalidate: CACHE_DAYS * 24 * 60 * 60 }
 );
 
