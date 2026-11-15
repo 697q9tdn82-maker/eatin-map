@@ -182,6 +182,38 @@ function MyLocationDot({ heading }) {
   );
 }
 
+// 「3分前」「2時間前」「11/14」のような短い時刻表示（createdAtはFirestoreのTimestamp）
+function timeAgo(ts) {
+  const sec = ts?.seconds;
+  if (!sec) return "";
+  const diff = Date.now() / 1000 - sec;
+  if (diff < 60) return "たった今";
+  if (diff < 3600) return `${Math.floor(diff / 60)}分前`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}時間前`;
+  if (diff < 86400 * 7) return `${Math.floor(diff / 86400)}日前`;
+  const d = new Date(sec * 1000);
+  return `${d.getMonth() + 1}/${d.getDate()}`;
+}
+
+// ワンタップ投稿の決まり文句（コメント欄に出しても情報が増えないもの）
+const DEFAULT_COMMENTS = new Set(["イートインあり", "イートインなし", "確認済み"]);
+
+// Googleマップ本体。この部品が画面に出たときに初めてGoogleの地図を読み込む
+// （エリアページでは「地図を表示」を押すまで出さない＝地図の表示回数を節約する）
+function MapCanvas({ center, zoom, options, onLoad, onIdle, children }) {
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
+  });
+  if (!isLoaded) {
+    return <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "#aaa", fontSize: "14px" }}>地図を読み込み中…</div>;
+  }
+  return (
+    <GoogleMap mapContainerStyle={{ width: "100%", height: "100%" }} center={center} zoom={zoom} options={options} onLoad={onLoad} onIdle={onIdle}>
+      {children}
+    </GoogleMap>
+  );
+}
+
 // 投稿のあとに「近くの要確認の店」を提案する小さな部品
 function NextStoreSuggest({ list, origin, onPick }) {
   if (!list || list.length === 0) return null;
@@ -204,10 +236,15 @@ function NextStoreSuggest({ list, origin, onPick }) {
 // initialPlace: 共有リンクで開いたときに自動選択する店舗のplace_id
 // ============================================================
 // initialStores: エリアページから渡される作り置きの店舗リスト（あればGoogleを呼ばずに表示する）
-export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null, initialStores = null, storeCount = null, totalStores = null }) {
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "",
-  });
+// deferMap: true のときは、地図を「地図を表示」ボタンを押すまで読み込まない（エリアページ用）
+export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null, initialStores = null, storeCount = null, totalStores = null, deferMap = false }) {
+  const [mapEnabled, setMapEnabled] = useState(!deferMap);
+  const rootRef = useRef(null);
+  // 地図を表示する（押したら、地図が画面に収まるところまでスクロールする）
+  const enableMap = useCallback(() => {
+    setMapEnabled(true);
+    requestAnimationFrame(() => rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+  }, []);
 
   const [stores, setStores] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -243,7 +280,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [showList, setShowList] = useState(false);      // 近い順の一覧
   const [showMenu, setShowMenu] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [showPosts, setShowPosts] = useState(false);
+  const [showPosts, setShowPosts] = useState(false);    // みんなの最近の投稿（下から出てくる一覧）
   const [areaKeyword, setAreaKeyword] = useState("");
   const mapRef = useRef(null);
   const pendingSelectRef = useRef(initialPlace); // 共有リンクからの自動選択待ち
@@ -336,9 +373,11 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const loadRecentPosts = useCallback(async () => {
     try {
       const F = await firestore();
-      const q = F.query(F.collection(F.db, "verifications"), F.orderBy("createdAt", "desc"), F.limit(5));
+      const q = F.query(F.collection(F.db, "verifications"), F.orderBy("createdAt", "desc"), F.limit(15));
       const snap = await F.getDocs(q);
-      setRecentPosts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      // 人の投稿だけを新しい順に最大10件（AI推定は「みんなの投稿」には出さない）
+      const list = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(p => p.source !== "ai").slice(0, 10);
+      if (list.length > 0) setRecentPosts(list); // 通信が不安定で空が返ってきても、表示中の一覧は消さない
     } catch (e) { console.error(e); }
   }, []);
 
@@ -542,7 +581,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const focusStore = useCallback((store) => {
     setSelected(store);
     setShowList(false);
-    mapRef.current?.panTo({ lat: store.lat, lng: store.lng });
+    if (mapRef.current) mapRef.current.panTo({ lat: store.lat, lng: store.lng });
+    else setMapCenter({ lat: store.lat, lng: store.lng }); // 地図がまだなら、表示したときにこの店から始める
   }, []);
 
   // エリアページ用: ユーザーが手動で別の場所を検索したことをページ側に知らせる
@@ -562,6 +602,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       const data = await res.json();
       if (data.lat && data.lng) {
         notifyUserSearch();
+        setMapEnabled(true); // 場所を検索した人には地図を出す
         setMapCenter({ lat: data.lat, lng: data.lng });
         setMapZoom(16);
         setSearchCenter({ lat: data.lat, lng: data.lng });
@@ -584,6 +625,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       (pos) => {
         const { latitude: lat, longitude: lng, accuracy } = pos.coords;
         notifyUserSearch();
+        setMapEnabled(true); // 現在地で探した人には地図を出す
         setGpsLoading(false);
         setMapCenter({ lat, lng });
         setMapZoom(16);
@@ -602,13 +644,15 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
 
   // 地図移動後に再検索（表示範囲に合わせて検索半径を自動調整）
   const handleMapIdle = useCallback(() => {
+    // 地図をまだ出していないとき（エリアページ）は、まず地図を表示するだけ
+    if (!mapRef.current) { enableMap(); return; }
     const view = getViewArea();
     if (!view) return;
     const { lat, lng, radius } = view;
     notifyUserSearch();
     setSearchCenter({ lat, lng });
     searchPlaces(lat, lng, radius);
-  }, [searchPlaces, getViewArea]);
+  }, [searchPlaces, getViewArea, enableMap]);
 
   // 助かった
   const handleHelped = async (store, e) => {
@@ -667,6 +711,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         comment: hasEatIn ? "イートインあり" : "イートインなし",
         createdAt: new Date(),
       });
+      loadRecentPosts(); // 自分の投稿も「みんなの投稿」にすぐ出す
     } catch (e) { console.error(e); }
   };
 
@@ -694,7 +739,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       .slice(0, 2);
   };
 
-  const mapContainerStyle = { width: "100%", height: "100%" };
   const mapOptions = {
     disableDefaultUI: true,
     zoomControl: false,
@@ -711,7 +755,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   };
 
   return (
-    <div style={{ fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif", height: "100dvh", display: "flex", flexDirection: "column", background: "#f4f5f7", color: "#1a1a1a", overflow: "hidden" }}>
+    // 地図を出すまでは画面いっぱいにせず、高さを詰める（エリアページで下の一覧が見やすいように）
+    <div ref={rootRef} style={{ fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif", height: mapEnabled ? "100dvh" : "auto", display: "flex", flexDirection: "column", background: "#f4f5f7", color: "#1a1a1a", overflow: "hidden" }}>
       {/* 未確認ピンをふわっと点滅させて目立たせる */}
       <style>{`
         @keyframes eatinPulse { 0% { transform: scale(1); opacity: .55 } 100% { transform: scale(2.2); opacity: 0 } }
@@ -767,10 +812,22 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           const activeCount = FILTERS.filter(f => f[0]).length;
           return (
             <>
-              <button onClick={() => setShowFilters(!showFilters)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 20, border: `1.5px solid ${activeCount > 0 ? "#e63946" : "#ddd"}`, background: activeCount > 0 ? "#ffeaea" : "#fff", color: activeCount > 0 ? "#e63946" : "#888", fontWeight: 700, fontSize: "11px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <button onClick={() => setShowFilters(!showFilters)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 20, border: `1.5px solid ${activeCount > 0 ? "#e63946" : "#ddd"}`, background: activeCount > 0 ? "#ffeaea" : "#fff", color: activeCount > 0 ? "#e63946" : "#888", fontWeight: 700, fontSize: "11px", cursor: "pointer", flexShrink: 0 }}>
                 <span>🔎 絞り込み{activeCount > 0 ? `（${activeCount}）` : ""}</span>
                 <span style={{ fontSize: "9px" }}>{showFilters ? "▲" : "▼"}</span>
               </button>
+              {/* みんなの最近の投稿（いちばん新しい1件をいつも表示。タップで一覧）。地図には重ねない */}
+              {recentPosts.length > 0 && (
+                <button onClick={() => { setShowPosts(true); loadRecentPosts(); }} aria-label="みんなの最近の投稿を見る" style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 5, padding: "3px 10px", borderRadius: 20, border: "1.5px solid #f3d3d6", background: "#fff7f7", cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>
+                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#e63946", flexShrink: 0 }}>🕐 みんなの投稿</span>
+                  <span style={{ fontSize: "11px", color: "#333", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", flex: 1, minWidth: 0, textAlign: "left" }}>
+                    {recentPosts[0].hasEatIn ? "🪑" : "✗"} {recentPosts[0].placeName}
+                  </span>
+                  <span style={{ fontSize: "10px", color: "#999", flexShrink: 0 }}>{timeAgo(recentPosts[0].createdAt)} ›</span>
+                </button>
+              )}
+              </div>
               {showFilters && (
                 <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 2, marginTop: 6 }}>
                   {FILTERS.map(([active, setter, label, ac]) => (
@@ -789,10 +846,9 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       </div>
 
       {/* 地図エリア */}
-      <div style={{ flex: 1, position: "relative", overflow: "hidden" }}>
-        {isLoaded ? (
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
+      <div style={mapEnabled ? { flex: 1, position: "relative", overflow: "hidden" } : { height: 260, position: "relative", overflow: "hidden", flexShrink: 0 }}>
+        {mapEnabled ? (
+          <MapCanvas
             center={mapCenter}
             zoom={mapZoom}
             options={mapOptions}
@@ -828,9 +884,17 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                 <MyLocationDot heading={heading} />
               </OverlayView>
             )}
-          </GoogleMap>
+          </MapCanvas>
         ) : (
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "#aaa", fontSize: "14px" }}>地図を読み込み中…</div>
+          // 地図の代わりの「地図を表示」ボタン（押すまでGoogleの地図は読み込まない）
+          <div style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, background: "linear-gradient(#e8eef3 1px, transparent 1px) 0 0 / 28px 28px, linear-gradient(90deg, #e8eef3 1px, #f7f9fb 1px) 0 0 / 28px 28px" }}>
+            <button onClick={enableMap} style={{ display: "flex", alignItems: "center", gap: 8, padding: "13px 26px", borderRadius: 30, border: "none", background: "#e63946", color: "#fff", fontWeight: 800, fontSize: "15px", cursor: "pointer", boxShadow: "0 4px 14px rgba(230,57,70,0.35)", fontFamily: "inherit" }}>
+              🗺️ 地図を表示する
+            </button>
+            <div style={{ fontSize: "11.5px", color: "#777", fontWeight: 600 }}>
+              {stores.length > 0 ? `この駅周辺の${stores.length}店をピンで表示します` : "コンビニの場所を地図で表示します"}
+            </div>
+          </div>
         )}
 
         {/* ローディングオーバーレイ */}
@@ -848,7 +912,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         )}
 
         {/* 凡例（1行のコンパクト表示） */}
-        {!selected && (
+        {!selected && mapEnabled && (
           <div style={{ position: "absolute", bottom: "calc(40px + env(safe-area-inset-bottom, 0px))", left: "50%", transform: "translateX(-50%)", background: "rgba(255,255,255,0.92)", borderRadius: 14, padding: "4px 10px", boxShadow: "0 1px 6px rgba(0,0,0,0.12)", fontSize: "10px", color: "#555", zIndex: 5, display: "flex", gap: 9, whiteSpace: "nowrap" }}>
             {[["#1e88e5", "あり"], ["#90caf9", "たぶんあり"], ["#9e9e9e", "なし"], ["#f57c00", "未確認"]].map(([c, l]) => (
               <span key={l} style={{ display: "flex", alignItems: "center", gap: 3 }}>
@@ -985,26 +1049,36 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         </div>
       )}
 
-      {/* 最近の投稿（下端のバー。たたんでおくと地図が広く使える） */}
-      {!loading && stores.length === 0 && recentPosts.length > 0 && (
-        <div style={{ background: "#fff", borderTop: "1px solid #eee", flexShrink: 0, paddingBottom: "calc(40px + env(safe-area-inset-bottom, 0px))" }}>
-          <button onClick={() => setShowPosts(!showPosts)} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", background: "none", border: "none", padding: "8px 16px", cursor: "pointer", fontFamily: "inherit" }}>
-            <span style={{ fontSize: "11px", fontWeight: 800, color: "#888", letterSpacing: "0.5px" }}>🕐 みんなの最近の投稿</span>
-            <span style={{ fontSize: "10px", color: "#bbb" }}>{showPosts ? "▼ 閉じる" : "▲ 見る"}</span>
-          </button>
-          {showPosts && (
-            <div style={{ maxHeight: 170, overflowY: "auto" }}>
-              {recentPosts.map((post, i) => (
-                <div key={post.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "8px 16px", borderTop: i === 0 ? "1px solid #f0f0f0" : "1px solid #f0f0f0" }}>
-                  <span style={{ fontSize: "18px", flexShrink: 0 }}>{post.hasEatIn ? "🪑" : "✗"}</span>
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: "12px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{post.placeName}</div>
-                    <div style={{ fontSize: "11px", color: post.hasEatIn ? "#2d6a4f" : "#999", fontWeight: 600 }}>{post.hasEatIn ? "イートインあり" : "イートインなし"}</div>
-                  </div>
-                </div>
-              ))}
+      {/* みんなの最近の投稿（下から出てくる一覧） */}
+      {showPosts && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.35)", zIndex: 300, display: "flex", alignItems: "flex-end" }} onClick={e => e.target === e.currentTarget && setShowPosts(false)}>
+          <div style={{ background: "#fff", borderRadius: "20px 20px 0 0", width: "100%", maxHeight: "70vh", display: "flex", flexDirection: "column" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px 18px 10px", borderBottom: "1px solid #eee" }}>
+              <div style={{ fontWeight: 900, fontSize: "15px" }}>🕐 みんなの最近の投稿</div>
+              <button onClick={() => setShowPosts(false)} aria-label="閉じる" style={{ background: "#f5f5f5", border: "none", borderRadius: "50%", width: 28, height: 28, cursor: "pointer", fontSize: "14px", color: "#888" }}>✕</button>
             </div>
-          )}
+            <div style={{ overflowY: "auto", padding: "0 18px", paddingBottom: "calc(40px + env(safe-area-inset-bottom, 0px))" }}>
+              {recentPosts.map(post => {
+                const comment = (post.comment || "").trim();
+                return (
+                  <div key={post.id} style={{ display: "flex", alignItems: "flex-start", gap: 10, padding: "11px 0", borderBottom: "1px solid #f3f3f3" }}>
+                    <span style={{ fontSize: "18px", flexShrink: 0, lineHeight: 1.3, width: 22, textAlign: "center" }}>{post.hasEatIn ? "🪑" : "✗"}</span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: "13px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{post.placeName}</div>
+                      <div style={{ fontSize: "11px", color: post.hasEatIn ? "#2d6a4f" : "#999", fontWeight: 600, marginTop: 1 }}>
+                        {post.hasEatIn ? "イートインあり" : "イートインなし"}
+                        {post.seats ? `・${post.seats}席` : ""}{post.outlet ? "・🔌" : ""}{post.wifi ? "・📶" : ""}
+                      </div>
+                      {comment && !DEFAULT_COMMENTS.has(comment) && (
+                        <div style={{ fontSize: "12px", color: "#555", marginTop: 3, lineHeight: 1.5 }}>💬 {comment}</div>
+                      )}
+                    </div>
+                    <span style={{ fontSize: "10.5px", color: "#aaa", flexShrink: 0, marginTop: 2 }}>{timeAgo(post.createdAt)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 
