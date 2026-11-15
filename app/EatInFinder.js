@@ -812,10 +812,22 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
           const activeCount = FILTERS.filter(f => f[0]).length;
           return (
             <>
-              <button onClick={() => setShowFilters(!showFilters)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 20, border: `1.5px solid ${activeCount > 0 ? "#e63946" : "#ddd"}`, background: activeCount > 0 ? "#ffeaea" : "#fff", color: activeCount > 0 ? "#e63946" : "#888", fontWeight: 700, fontSize: "11px", cursor: "pointer" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <button onClick={() => setShowFilters(!showFilters)} style={{ display: "flex", alignItems: "center", gap: 6, padding: "3px 10px", borderRadius: 20, border: `1.5px solid ${activeCount > 0 ? "#e63946" : "#ddd"}`, background: activeCount > 0 ? "#ffeaea" : "#fff", color: activeCount > 0 ? "#e63946" : "#888", fontWeight: 700, fontSize: "11px", cursor: "pointer", flexShrink: 0 }}>
                 <span>🔎 絞り込み{activeCount > 0 ? `（${activeCount}）` : ""}</span>
                 <span style={{ fontSize: "9px" }}>{showFilters ? "▲" : "▼"}</span>
               </button>
+              {/* みんなの最近の投稿（いちばん新しい1件をいつも表示。タップで一覧）。地図には重ねない */}
+              {recentPosts.length > 0 && (
+                <button onClick={() => { setShowPosts(true); loadRecentPosts(); }} aria-label="みんなの最近の投稿を見る" style={{ flex: 1, minWidth: 0, display: "flex", alignItems: "center", gap: 5, padding: "3px 10px", borderRadius: 20, border: "1.5px solid #f3d3d6", background: "#fff7f7", cursor: "pointer", fontFamily: "inherit", whiteSpace: "nowrap" }}>
+                  <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#e63946", flexShrink: 0 }}>🕐 みんなの投稿</span>
+                  <span style={{ fontSize: "11px", color: "#333", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", flex: 1, minWidth: 0, textAlign: "left" }}>
+                    {recentPosts[0].hasEatIn ? "🪑" : "✗"} {recentPosts[0].placeName}
+                  </span>
+                  <span style={{ fontSize: "10px", color: "#999", flexShrink: 0 }}>{timeAgo(recentPosts[0].createdAt)} ›</span>
+                </button>
+              )}
+              </div>
               {showFilters && (
                 <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 2, marginTop: 6 }}>
                   {FILTERS.map(([active, setter, label, ac]) => (
@@ -898,20 +910,6 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
             <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#4285f4", boxShadow: "0 0 0 4px rgba(66,133,244,0.2)" }} />
           </button>
         )}
-
-        {/* みんなの最近の投稿（いちばん新しい1件を常に表示。タップで一覧） */}
-        {!selected && !showList && recentPosts.length > 0 && (() => {
-          const p = recentPosts[0];
-          return (
-            <button onClick={() => { setShowPosts(true); loadRecentPosts(); }} aria-label="みんなの最近の投稿を見る" style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", bottom: mapEnabled ? "calc(72px + env(safe-area-inset-bottom, 0px))" : 12, maxWidth: "calc(100% - 128px)", display: "flex", alignItems: "center", gap: 6, background: "#fff", border: "none", borderRadius: 20, padding: "7px 12px", boxShadow: "0 2px 10px rgba(0,0,0,0.18)", cursor: "pointer", zIndex: 6, fontFamily: "inherit", whiteSpace: "nowrap" }}>
-              <span style={{ fontSize: "10.5px", fontWeight: 800, color: "#e63946", flexShrink: 0 }}>🕐 みんなの投稿</span>
-              <span style={{ fontSize: "11px", color: "#333", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis" }}>
-                {p.hasEatIn ? "🪑" : "✗"} {p.placeName}
-              </span>
-              <span style={{ fontSize: "10px", color: "#999", flexShrink: 0 }}>{timeAgo(p.createdAt)} ›</span>
-            </button>
-          );
-        })()}
 
         {/* 凡例（1行のコンパクト表示） */}
         {!selected && mapEnabled && (
