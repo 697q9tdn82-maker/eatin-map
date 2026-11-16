@@ -160,7 +160,7 @@ export default async function AreaPage({ params }) {
       </AreaInfo>
 
       {/* 地図（このエリアの店はすぐ出す。Googleの地図本体は「地図を表示」を押してから読み込む） */}
-      <EatInFinder initialLat={area.lat} initialLng={area.lng} initialStores={mapStores} deferMap />
+      <EatInFinder initialLat={area.lat} initialLng={area.lng} initialStores={mapStores} deferMap areaLabel={st} />
 
       <AreaInfo>
         {stores.length > 0 && (

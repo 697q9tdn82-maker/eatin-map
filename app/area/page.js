@@ -17,7 +17,7 @@ export default function AreaIndex() {
       <div style={card}>
         <p style={{ ...p, margin: 0 }}>
           各エリアのページでは、駅から半径約600m（徒歩7〜8分圏）にあるコンビニを調べ、イートイン席の有無・席数・コンセントの有無などを一覧にしています。
-          情報は利用者の投稿とAI推定をもとに毎日更新されます。ここにない場所は<Link href="/" style={linkStyle}>マップ</Link>から駅名や現在地で検索できます。
+          情報は利用者の投稿と推定情報をもとに毎日更新されます。ここにない場所は<Link href="/" style={linkStyle}>マップ</Link>から駅名や現在地で検索できます。
         </p>
       </div>
       {Object.entries(byPref).map(([pref, items]) => (
