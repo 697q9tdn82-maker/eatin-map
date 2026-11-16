@@ -14,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   });
 
   // ※ 情報が少ないエリアページはページ側で noindex にしているので、Googleが自動で判断します
-  const areaPages = Object.keys(AREAS).map(slug => page(`/area/${slug}`, "weekly", 0.8));
+  const areaPages = Object.keys(AREAS).map(slug => page(`/area/${encodeURIComponent(slug)}`, "weekly", 0.8));
   const guidePages = GUIDES.map(g => page(g.href, g.href === "/report" ? "daily" : "monthly", 0.7));
 
   return [
