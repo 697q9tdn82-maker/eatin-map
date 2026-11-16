@@ -31,7 +31,7 @@ jobs:
         run: node scripts/build-stores.mjs
       - name: 以前の投稿を新しい店舗IDに対応づける
         run: node scripts/build-legacy-map.mjs
-      - name: 駅ページの自動追加リストを更新（投稿で確認済みの店が3店以上ある駅）
+      - name: 駅ページの自動追加リストを更新（確認済み5店以上・「あり」1店以上の駅）
         # 投稿が読めなかったときは前回のリストのまま（失敗してもほかの更新は続ける）
         run: node scripts/build-stations.mjs || echo "駅リストは前回のまま"
       - name: 変更があれば保存
