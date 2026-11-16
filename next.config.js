@@ -7,6 +7,16 @@ const nextConfig = {
   // 検索結果に出さないよう noindex を付ける。同じ中身のページが2か所で登録されるのを防ぐため
   async headers() {
     return [
+      // どのページにも付ける基本の安全設定
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },                       // ファイルの種類を勝手に解釈させない
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },                           // 他サイトの枠の中に表示させない（なりすまし画面対策）
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },      // 外部サイトへは最小限の情報だけ渡す
+          { key: "Strict-Transport-Security", value: "max-age=31536000" },           // 常にhttpsで開かせる
+        ],
+      },
       {
         source: "/:path*",
         missing: [{ type: "host", value: "(www\\.)?eatin-map\\.jp" }],
