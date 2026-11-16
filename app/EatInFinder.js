@@ -62,6 +62,19 @@ function saveLastView(lat, lng, zoom) {
   try { localStorage.setItem(LAST_VIEW_KEY, JSON.stringify({ lat, lng, zoom })); } catch { /* 保存できなくても問題なし */ }
 }
 
+// 「いつもの駅」（よく使う場所を最大3つ、この端末に保存）
+const FAV_KEY = "favPlacesV1";
+const MAX_FAVS = 3;
+function readFavs() {
+  try {
+    const v = JSON.parse(localStorage.getItem(FAV_KEY) || "[]");
+    return Array.isArray(v) ? v.filter(f => f && f.name && Number.isFinite(f.lat) && Number.isFinite(f.lng)).slice(0, MAX_FAVS) : [];
+  } catch { return []; }
+}
+function writeFavs(list) {
+  try { localStorage.setItem(FAV_KEY, JSON.stringify(list)); } catch { /* 保存できなくても問題なし */ }
+}
+
 // 距離の表示（120m / 1.2km）
 function formatDistance(d) {
   return d < 1000 ? `${Math.round(d / 10) * 10}m` : `${(d / 1000).toFixed(1)}km`;
@@ -195,6 +208,19 @@ function timeAgo(ts) {
   return `${d.getMonth() + 1}/${d.getDate()}`;
 }
 
+// 人が最後に確認した日時（AI推定は数えない）。投稿がなければ null
+function lastConfirmed(store) {
+  let latest = null;
+  for (const v of store.verifications || []) {
+    if (v.source === "ai" || !v.createdAt?.seconds) continue;
+    if (!latest || v.createdAt.seconds > latest.seconds) latest = v.createdAt;
+  }
+  return latest;
+}
+
+// 一覧から投稿できるのは、今いる場所からこの距離（m）以内の店だけ（行っていない店への投稿を防ぐ）
+const LIST_REPORT_RANGE = 300;
+
 // ワンタップ投稿の決まり文句（コメント欄に出しても情報が増えないもの）
 const DEFAULT_COMMENTS = new Set(["イートインあり", "イートインなし", "確認済み"]);
 
@@ -237,7 +263,8 @@ function NextStoreSuggest({ list, origin, onPick }) {
 // ============================================================
 // initialStores: エリアページから渡される作り置きの店舗リスト（あればGoogleを呼ばずに表示する）
 // deferMap: true のときは、地図を「地図を表示」ボタンを押すまで読み込まない（エリアページ用）
-export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null, initialStores = null, storeCount = null, totalStores = null, deferMap = false }) {
+// areaLabel: エリアページの駅名（「いつもの駅」に保存するときの名前）
+export default function EatInFinder({ initialLat = null, initialLng = null, initialPlace = null, initialStores = null, storeCount = null, totalStores = null, deferMap = false, areaLabel = null }) {
   const [mapEnabled, setMapEnabled] = useState(!deferMap);
   const rootRef = useRef(null);
   // 地図を表示する（押したら、地図が画面に収まるところまでスクロールする）
@@ -282,6 +309,13 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
   const [showFilters, setShowFilters] = useState(false);
   const [showPosts, setShowPosts] = useState(false);    // みんなの最近の投稿（下から出てくる一覧）
   const [areaKeyword, setAreaKeyword] = useState("");
+  const [favs, setFavs] = useState([]);                  // いつもの駅
+  // いま表示している場所の名前（駅名検索・エリアページのとき）。保存ボタンに使う
+  const [placeLabel, setPlaceLabel] = useState(initialLat && areaLabel ? { name: areaLabel, lat: initialLat, lng: initialLng } : null);
+  useEffect(() => {
+    const saved = readFavs();
+    if (saved.length > 0) setFavs(saved); // eslint-disable-line react-hooks/set-state-in-effect -- 端末の保存内容は表示後にしか読めない
+  }, []);
   const mapRef = useRef(null);
   const pendingSelectRef = useRef(initialPlace); // 共有リンクからの自動選択待ち
   const [refreshTick, setRefreshTick] = useState(0); // 同じ場所でもう一度探したときに、投稿情報を読み直す合図
@@ -606,6 +640,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
         setMapCenter({ lat: data.lat, lng: data.lng });
         setMapZoom(16);
         setSearchCenter({ lat: data.lat, lng: data.lng });
+        setPlaceLabel({ name: (data.name || q).slice(0, 20), lat: data.lat, lng: data.lng });
         searchPlaces(data.lat, data.lng);
       } else {
         setGpsError(data.userMessage || "場所が見つかりませんでした。駅名やエリア名で試してください");
@@ -616,6 +651,30 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     setTextSearching(false);
   }, [searchArea, textSearching, searchPlaces]);
 
+  // いつもの駅：保存・削除・その場所へ移動
+  const saveFav = () => {
+    if (!placeLabel) return;
+    const next = [placeLabel, ...favs.filter(f => f.name !== placeLabel.name)].slice(0, MAX_FAVS);
+    setFavs(next);
+    writeFavs(next);
+  };
+  const removeFav = (name) => {
+    const next = favs.filter(f => f.name !== name);
+    setFavs(next);
+    writeFavs(next);
+  };
+  const goFav = (f) => {
+    notifyUserSearch();
+    setMapEnabled(true);
+    setGpsError("");
+    setMapCenter({ lat: f.lat, lng: f.lng });
+    setMapZoom(16);
+    if (mapRef.current) { mapRef.current.panTo({ lat: f.lat, lng: f.lng }); mapRef.current.setZoom(16); }
+    setSearchCenter({ lat: f.lat, lng: f.lng });
+    setPlaceLabel(f);
+    searchPlaces(f.lat, f.lng);
+  };
+
   // GPS
   const handleGPS = useCallback(() => {
     if (!navigator.geolocation) { setGpsError("このブラウザはGPS非対応です"); return; }
@@ -625,6 +684,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       (pos) => {
         const { latitude: lat, longitude: lng, accuracy } = pos.coords;
         notifyUserSearch();
+        setPlaceLabel(null);
         setMapEnabled(true); // 現在地で探した人には地図を出す
         setGpsLoading(false);
         setMapCenter({ lat, lng });
@@ -650,6 +710,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     if (!view) return;
     const { lat, lng, radius } = view;
     notifyUserSearch();
+    setPlaceLabel(null);
     setSearchCenter({ lat, lng });
     searchPlaces(lat, lng, radius);
   }, [searchPlaces, getViewArea, enableMap]);
@@ -674,7 +735,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     if (isReported(reportTarget)) return;
     setStores(prev => prev.map(s => {
       if (s.place_id !== reportTarget.place_id) return s;
-      const newVer = { userId: "me", comment: reportData.comment, hasEatIn: reportData.hasEatIn };
+      const newVer = { userId: "me", comment: reportData.comment, hasEatIn: reportData.hasEatIn, createdAt: { seconds: Date.now() / 1000 } };
       const vers = [...(s.verifications||[]), newVer];
       return { ...s, hasEatIn: aggregateEatIn(vers, s.hasEatIn), outlet: reportData.outlet||s.outlet, wifi: reportData.wifi||s.wifi, seats: reportData.seats ? parseInt(reportData.seats) : s.seats, verifications: vers };
     }));
@@ -697,7 +758,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
     if (isReported(store)) return;
     setStores(prev => prev.map(s => {
       if (s.place_id !== store.place_id) return s;
-      const newVer = { userId: "me", comment: hasEatIn ? "イートインあり" : "イートインなし", hasEatIn };
+      const newVer = { userId: "me", comment: hasEatIn ? "イートインあり" : "イートインなし", hasEatIn, createdAt: { seconds: Date.now() / 1000 } };
       const vers = [...(s.verifications||[]), newVer];
       return { ...s, hasEatIn: aggregateEatIn(vers, s.hasEatIn), verifications: vers };
     }));
@@ -796,6 +857,27 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
             {textSearching ? "…" : "🔍 検索"}
           </button>
         </div>
+        {/* いつもの駅（保存した場所へワンタップで移動） */}
+        {(() => {
+          const canSave = placeLabel && !favs.some(f => f.name === placeLabel.name);
+          if (favs.length === 0 && !canSave) return null;
+          const chip = { display: "flex", alignItems: "center", gap: 4, padding: "4px 10px", borderRadius: 20, fontSize: "11.5px", fontWeight: 700, whiteSpace: "nowrap", flexShrink: 0, fontFamily: "inherit", cursor: "pointer" };
+          return (
+            <div style={{ display: "flex", gap: 6, overflowX: "auto", marginBottom: 8, paddingBottom: 1 }}>
+              {favs.map(f => (
+                <span key={f.name} style={{ ...chip, border: "1.5px solid #ffd54f", background: "#fffbea", color: "#7a5a00", padding: 0 }}>
+                  <button onClick={() => goFav(f)} style={{ background: "none", border: "none", padding: "4px 2px 4px 10px", font: "inherit", color: "inherit", cursor: "pointer" }}>⭐ {f.name}</button>
+                  <button onClick={() => removeFav(f.name)} aria-label={`${f.name}をいつもの駅から外す`} style={{ background: "none", border: "none", padding: "4px 9px 4px 4px", fontSize: "11px", color: "#b8a060", cursor: "pointer" }}>×</button>
+                </span>
+              ))}
+              {canSave && (
+                <button onClick={saveFav} style={{ ...chip, border: "1.5px dashed #ccc", background: "#fff", color: "#888" }}>
+                  ☆ 「{placeLabel.name}」をいつもの駅に{favs.length >= MAX_FAVS ? "（古いものと入れ替え）" : ""}
+                </button>
+              )}
+            </div>
+          );
+        })()}
         <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
           <button onClick={handleGPS} disabled={gpsLoading || loading} style={{ flex: 1, padding: "9px", borderRadius: 10, border: "1.5px solid #ddd", background: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer", color: "#333", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
             {gpsLoading ? <><span>⏳</span>取得中…</> : <><span>📡</span>現在地から探す</>}
@@ -1015,7 +1097,10 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
             {/* 確認済みバッジ */}
             {selected.verifications && selected.verifications.length > 0 ? (
               <div style={{ background: "#fffbea", border: "1.5px solid #f4d03f44", borderRadius: 10, padding: "10px 12px", marginBottom: 10 }}>
-                <div style={{ fontSize: "11px", color: "#b7950b", fontWeight: 700, marginBottom: 6 }}>{isAiOnly(selected) ? "🤖 クチコミからのAI推定（実際に行ったら教えてください）" : `✅ ユーザー確認情報（${selected.verifications.length}件）`}</div>
+                <div style={{ fontSize: "11px", color: "#b7950b", fontWeight: 700, marginBottom: 6 }}>
+                  {isAiOnly(selected) ? "🤖 クチコミからのAI推定（実際に行ったら教えてください）" : `✅ ユーザー確認情報（${selected.verifications.filter(v => v.source !== "ai").length}件）`}
+                  {lastConfirmed(selected) && <span style={{ color: "#999", fontWeight: 600 }}>・最終確認 {timeAgo(lastConfirmed(selected))}</span>}
+                </div>
                 {selected.verifications.slice(-2).reverse().map((v, i) => (
                   <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start", padding: "4px 0", borderTop: i > 0 ? "1px solid #fdebd0" : "none" }}>
                     <div style={{ flex: 1, fontSize: "12px", color: "#555" }}>{v.comment || "確認済み"}</div>
@@ -1145,6 +1230,12 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
               <button onClick={() => setFilterEatIn(!filterEatIn)} style={{ padding: "4px 10px", borderRadius: 20, border: `1.5px solid ${filterEatIn ? "#1e88e5" : "#ddd"}`, background: filterEatIn ? "#e3f2fd" : "#fff", color: filterEatIn ? "#1e88e5" : "#888", fontWeight: 700, fontSize: "11px", cursor: "pointer" }}>🪑 座れる店だけ</button>
               <button onClick={() => setFilterNeedsCheck(!filterNeedsCheck)} style={{ padding: "4px 10px", borderRadius: 20, border: `1.5px solid ${filterNeedsCheck ? "#f57c00" : "#ddd"}`, background: filterNeedsCheck ? "#fff3e0" : "#fff", color: filterNeedsCheck ? "#e65100" : "#888", fontWeight: 700, fontSize: "11px", cursor: "pointer" }}>❓ 要確認だけ</button>
             </div>
+            {needsCheckCount > 0 && (
+              <div style={{ margin: "8px 18px 0", padding: "8px 12px", background: "#fff3e0", borderRadius: 10, fontSize: "11.5px", color: "#e65100", fontWeight: 700, lineHeight: 1.6 }}>
+                🙏 このあたりはまだ<strong>あと{needsCheckCount}店</strong>が未確認です。
+                {myLocation ? `近く（${LIST_REPORT_RANGE}m以内）の店は、この一覧からそのまま「あった／なかった」を送れます` : "行ったお店があれば教えてください"}
+              </div>
+            )}
             <div style={{ overflowY: "auto", padding: "0 18px", paddingBottom: "calc(40px + env(safe-area-inset-bottom, 0px))" }}>
               {byDistance.length === 0 && <div style={{ fontSize: "12px", color: "#aaa", padding: "20px 0", textAlign: "center" }}>条件に合う店がありません</div>}
               {byDistance.map(s => {
@@ -1153,17 +1244,34 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                   : s.hasEatIn === false
                     ? (isAiOnly(s) ? ["たぶんなし", "#f5f5f5", "#aaa"] : ["なし", "#f5f5f5", "#888"])
                     : ["未確認", "#fff3e0", "#e65100"];
+                // 今いる場所の近く（300m以内）で、まだ人の確認がない店は、一覧から直接投稿できる
+                const nearMe = myLocation && calcDistance(myLocation.lat, myLocation.lng, s.lat, s.lng) <= LIST_REPORT_RANGE;
+                const canQuick = nearMe && needsCheck(s);
+                const reported = isReported(s);
+                const confirmed = lastConfirmed(s);
                 return (
-                  <button key={s.place_id} onClick={() => focusStore(s)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: "11px 0", border: "none", borderBottom: "1px solid #f3f3f3", background: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
+                  <div key={s.place_id} style={{ borderBottom: "1px solid #f3f3f3" }}>
+                  <button onClick={() => focusStore(s)} style={{ width: "100%", display: "flex", alignItems: "center", gap: 10, padding: canQuick ? "11px 0 6px" : "11px 0", border: "none", background: "none", cursor: "pointer", textAlign: "left", fontFamily: "inherit" }}>
                     <div style={{ width: 52, flexShrink: 0, fontSize: "12px", fontWeight: 800, color: "#333" }}>{formatDistance(calcDistance(origin.lat, origin.lng, s.lat, s.lng))}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a1a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{s.name}</div>
                       <div style={{ fontSize: "11px", color: "#999", marginTop: 1 }}>
-                        {[s.seats ? `🪑${s.seats}席` : "", s.outlet ? "🔌" : "", s.wifi ? "📶" : ""].filter(Boolean).join("　")}
+                        {[s.seats ? `🪑${s.seats}席` : "", s.outlet ? "🔌" : "", s.wifi ? "📶" : "", confirmed ? (timeAgo(confirmed) === "たった今" ? "たった今確認" : `${timeAgo(confirmed)}に確認`) : ""].filter(Boolean).join("　")}
                       </div>
                     </div>
                     <span style={{ fontSize: "10.5px", fontWeight: 800, background: st[1], color: st[2], borderRadius: 10, padding: "3px 8px", flexShrink: 0 }}>{st[0]}</span>
                   </button>
+                  {canQuick && (
+                    reported ? (
+                      <div style={{ margin: "0 0 10px 62px", fontSize: "11px", color: "#2d6a4f", fontWeight: 700 }}>✅ 投稿しました。ありがとうございます！</div>
+                    ) : (
+                      <div style={{ display: "flex", gap: 6, margin: "0 0 10px 62px" }}>
+                        <button onClick={e => handleQuickReport(s, true, e)} style={{ flex: 1, padding: "7px 4px", borderRadius: 10, border: "1.5px solid #a5d6a7", background: "#e8f5e9", color: "#2d6a4f", fontSize: "12px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>🪑 あった</button>
+                        <button onClick={e => handleQuickReport(s, false, e)} style={{ flex: 1, padding: "7px 4px", borderRadius: 10, border: "1.5px solid #ffcdd2", background: "#ffeaea", color: "#c0392b", fontSize: "12px", fontWeight: 700, cursor: "pointer", fontFamily: "inherit" }}>✗ なかった</button>
+                      </div>
+                    )
+                  )}
+                  </div>
                 );
               })}
             </div>
