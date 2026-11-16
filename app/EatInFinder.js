@@ -221,6 +221,13 @@ function lastConfirmed(store) {
 // 一覧から投稿できるのは、今いる場所からこの距離（m）以内の店だけ（行っていない店への投稿を防ぐ）
 const LIST_REPORT_RANGE = 300;
 
+// 投稿の席数：1〜300の整数だけ受け付ける（それ以外は「不明」扱い）
+function cleanSeats(v) {
+  const n = parseInt(v, 10);
+  return Number.isFinite(n) && n >= 1 && n <= 300 ? n : null;
+}
+const MAX_COMMENT = 200; // コメントの最大文字数
+
 // ワンタップ投稿の決まり文句（コメント欄に出しても情報が増えないもの）
 const DEFAULT_COMMENTS = new Set(["イートインあり", "イートインなし", "確認済み"]);
 
@@ -737,7 +744,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       if (s.place_id !== reportTarget.place_id) return s;
       const newVer = { userId: "me", comment: reportData.comment, hasEatIn: reportData.hasEatIn, createdAt: { seconds: Date.now() / 1000 } };
       const vers = [...(s.verifications||[]), newVer];
-      return { ...s, hasEatIn: aggregateEatIn(vers, s.hasEatIn), outlet: reportData.outlet||s.outlet, wifi: reportData.wifi||s.wifi, seats: reportData.seats ? parseInt(reportData.seats) : s.seats, verifications: vers };
+      return { ...s, hasEatIn: aggregateEatIn(vers, s.hasEatIn), outlet: reportData.outlet||s.outlet, wifi: reportData.wifi||s.wifi, seats: cleanSeats(reportData.seats) ?? s.seats, verifications: vers };
     }));
     markAsReported(reportTarget.place_id, reportTarget.name, reportData.hasEatIn);
     setSubmitted(true);
@@ -746,8 +753,8 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
       await F.addDoc(F.collection(F.db, "verifications"), {
         placeId: reportTarget.place_id, placeName: reportTarget.name,
         hasEatIn: reportData.hasEatIn, outlet: reportData.outlet, wifi: reportData.wifi,
-        seats: reportData.seats ? parseInt(reportData.seats) : null,
-        comment: reportData.comment, createdAt: new Date(),
+        seats: cleanSeats(reportData.seats),
+        comment: reportData.comment.trim().slice(0, MAX_COMMENT), createdAt: new Date(),
       });
       loadRecentPosts();
     } catch (e) { console.error(e); }
@@ -1198,7 +1205,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                     <div style={{ fontSize: "11px", fontWeight: 800, color: "#aaa", marginBottom: 6 }}>{pref}</div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                       {items.map(([slug, a]) => (
-                        <Link key={slug} href={`/area/${slug}`} onClick={() => setShowMenu(false)} style={{ fontSize: "12px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "5px 11px", textDecoration: "none" }}>{a.name}</Link>
+                        <Link key={slug} href={`/area/${encodeURIComponent(slug)}`} onClick={() => setShowMenu(false)} style={{ fontSize: "12px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "5px 11px", textDecoration: "none" }}>{a.name}</Link>
                       ))}
                     </div>
                   </div>
@@ -1320,7 +1327,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                     </div>
                     {reportData.hasEatIn && (
                       <>
-                        <input value={reportData.seats} onChange={e => setReportData({ ...reportData, seats: e.target.value })} placeholder="席数（例：10）" type="number" style={{ width: "100%", boxSizing: "border-box", padding: "11px", borderRadius: 10, border: "1.5px solid #ddd", fontSize: "14px", outline: "none", marginBottom: 12 }} />
+                        <input value={reportData.seats} onChange={e => setReportData({ ...reportData, seats: e.target.value })} placeholder="席数（例：10）" type="number" min={1} max={300} inputMode="numeric" style={{ width: "100%", boxSizing: "border-box", padding: "11px", borderRadius: 10, border: "1.5px solid #ddd", fontSize: "14px", outline: "none", marginBottom: 12 }} />
                         <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
                           {[["outlet","🔌 コンセント"],["wifi","📶 Wi-Fi"]].map(([key,label]) => (
                             <button key={key} onClick={() => setReportData({ ...reportData, [key]: !reportData[key] })} style={{ flex: 1, padding: "11px", borderRadius: 12, border: `2px solid ${reportData[key] ? "#0077b6" : "#eee"}`, background: reportData[key] ? "#e3f2fd" : "#fff", fontWeight: 700, fontSize: "13px", cursor: "pointer", color: reportData[key] ? "#0077b6" : "#888" }}>{label}</button>
@@ -1333,7 +1340,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                 )}
                 {reportStep === 2 && (
                   <div>
-                    <textarea value={reportData.comment} onChange={e => setReportData({ ...reportData, comment: e.target.value })} placeholder="例：2階に8席あり。窓際にコンセントあり" rows={4} style={{ width: "100%", boxSizing: "border-box", padding: "12px", borderRadius: 10, border: "1.5px solid #ddd", fontSize: "14px", outline: "none", resize: "none", marginBottom: 16, fontFamily: "inherit" }} />
+                    <textarea value={reportData.comment} onChange={e => setReportData({ ...reportData, comment: e.target.value })} placeholder="例：2階に8席あり。窓際にコンセントあり" rows={4} maxLength={MAX_COMMENT} style={{ width: "100%", boxSizing: "border-box", padding: "12px", borderRadius: 10, border: "1.5px solid #ddd", fontSize: "14px", outline: "none", resize: "none", marginBottom: 16, fontFamily: "inherit" }} />
                     <div style={{ display: "flex", gap: 10 }}>
                       <button onClick={() => setReportStep(1)} style={{ padding: "13px 18px", borderRadius: 12, border: "1.5px solid #ddd", background: "#fff", fontWeight: 700, fontSize: "13px", cursor: "pointer", color: "#888" }}>← 戻る</button>
                       <button onClick={handleSubmitReport} style={{ flex: 1, padding: "13px", borderRadius: 12, border: "none", background: "#e63946", color: "#fff", fontWeight: 700, fontSize: "14px", cursor: "pointer" }}>✅ 確認済みとして投稿</button>

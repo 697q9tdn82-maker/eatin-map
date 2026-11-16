@@ -1,7 +1,8 @@
 # 店舗マスタ（全国のコンビニの店名・住所・位置）を週1回、自動で更新する
 # ・取得元: All The Places（コンビニ各社の公式の店舗検索をもとにしたオープンデータ・CC0）
 # ・Google Places API は使いません（料金も1日の上限もなし）
-# ・data/stores/ と data/legacy-place-ids.json を更新して保存 → Vercelが自動で再デプロイ
+# ・data/stores/ と data/legacy-place-ids.json を更新して保存 → 自動で再デプロイ
+# ・あわせて、投稿で確認済みの店が多い駅を data/stations.js に書き出す（駅ページの自動追加）
 name: 店舗マスタの更新
 
 on:
@@ -30,9 +31,12 @@ jobs:
         run: node scripts/build-stores.mjs
       - name: 以前の投稿を新しい店舗IDに対応づける
         run: node scripts/build-legacy-map.mjs
+      - name: 駅ページの自動追加リストを更新（確認済み5店以上・「あり」1店以上の駅）
+        # 投稿が読めなかったときは前回のリストのまま（失敗してもほかの更新は続ける）
+        run: node scripts/build-stations.mjs || echo "駅リストは前回のまま"
       - name: 変更があれば保存
         run: |
-          git add data/stores data/legacy-place-ids.json
+          git add data/stores data/legacy-place-ids.json data/stations.js
           if git diff --cached --quiet; then
             echo "変更なし"
             exit 0
