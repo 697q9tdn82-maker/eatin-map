@@ -63,8 +63,13 @@ const lookupPlace = unstable_cache(
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const q = (searchParams.get("q") || "").trim().slice(0, 100);
+  const q = (searchParams.get("q") || "").normalize("NFKC").trim().replace(/\s+/g, " ");
   if (!q) return Response.json({ error: "q required" }, { status: 400 });
+  // 駅名・地名として不自然な入力（長すぎる・記号やURLを含む）は、外部に問い合わせずに断る。
+  // でたらめな文字列を大量に送られて、地名検索の無料枠を使い切られるのを防ぐため
+  if (q.length > 40 || !/^[\p{L}\p{N}\p{M} ・\-ー－−,、.。()（）〒丁目番地号]+$/u.test(q)) {
+    return Response.json({ error: "invalid query", userMessage: "場所が見つかりませんでした。駅名やエリア名で試してください" }, { status: 400 });
+  }
 
   const area = matchArea(q);
   if (area) return Response.json(area);
@@ -76,6 +81,7 @@ export async function GET(request) {
     }
     return Response.json(hit);
   } catch (e) {
-    return Response.json({ error: e.message, userMessage: "検索に失敗しました。時間をおいて再度お試しください" }, { status: 500 });
+    console.error("search error:", e?.message); // 詳しい原因はサーバーのログにだけ残す（利用者には返さない）
+    return Response.json({ error: "search failed", userMessage: "検索に失敗しました。時間をおいて再度お試しください" }, { status: 500 });
   }
 }

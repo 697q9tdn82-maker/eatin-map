@@ -138,7 +138,7 @@ export default async function AreaPage({ params }) {
   return (
     <div style={{ fontFamily: "'Noto Sans JP','Hiragino Sans',sans-serif", background: "#f4f5f7", color: "#1a1a1a", paddingBottom: 40 }}>
       {jsonLd.map((j, i) => (
-        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(j) }} />
+        <script key={i} type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(j).replace(/</g, "\\u003c") }} />
       ))}
 
       {/* 紹介文（AreaInfoで包む＝地図で別の場所を検索したら自動で消える） */}
