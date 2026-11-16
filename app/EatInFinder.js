@@ -1198,7 +1198,7 @@ export default function EatInFinder({ initialLat = null, initialLng = null, init
                     <div style={{ fontSize: "11px", fontWeight: 800, color: "#aaa", marginBottom: 6 }}>{pref}</div>
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                       {items.map(([slug, a]) => (
-                        <Link key={slug} href={`/area/${slug}`} onClick={() => setShowMenu(false)} style={{ fontSize: "12px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "5px 11px", textDecoration: "none" }}>{a.name}</Link>
+                        <Link key={slug} href={`/area/${encodeURIComponent(slug)}`} onClick={() => setShowMenu(false)} style={{ fontSize: "12px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "5px 11px", textDecoration: "none" }}>{a.name}</Link>
                       ))}
                     </div>
                   </div>

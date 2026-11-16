@@ -22,8 +22,13 @@ export function generateStaticParams() {
 
 const loadArea = cache(getAreaData); // 同じリクエスト内でのデータ取得を1回にまとめる
 
+// 自動追加の駅ページは /area/江坂 のように日本語のURLなので、%E6%B1… の形で届いても読めるようにする
+function decodeSlug(raw) {
+  try { return decodeURIComponent(raw); } catch { return raw; }
+}
+
 export async function generateMetadata({ params }) {
-  const { slug } = await params;
+  const slug = decodeSlug((await params).slug);
   const area = AREAS[slug];
   if (!area) return {};
   const st = stationName(area);
@@ -38,13 +43,13 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
-    alternates: { canonical: `https://www.eatin-map.jp/area/${slug}` },
+    alternates: { canonical: `https://www.eatin-map.jp/area/${encodeURIComponent(slug)}` },
     // 情報が少ないうちは検索結果に出さない（リンクはたどってもらう）
     ...(data?.indexable ? {} : { robots: { index: false, follow: true } }),
     openGraph: {
       title,
       description,
-      url: `https://www.eatin-map.jp/area/${slug}`,
+      url: `https://www.eatin-map.jp/area/${encodeURIComponent(slug)}`,
       siteName: "コンビニイートインマップ",
       locale: "ja_JP",
       type: "website",
@@ -70,7 +75,7 @@ function chainSentence(chainCounts) {
 }
 
 export default async function AreaPage({ params }) {
-  const { slug } = await params;
+  const slug = decodeSlug((await params).slug);
   const area = AREAS[slug];
   if (!area) notFound();
   const st = stationName(area);
@@ -272,7 +277,7 @@ export default async function AreaPage({ params }) {
         <div style={{ fontSize: "12px", fontWeight: 800, color: "#888", marginBottom: 8 }}>🗾 {area.name}から近いエリア</div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
           {near.map(a => (
-            <Link key={a.slug} href={`/area/${a.slug}`} style={{ fontSize: "12px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "5px 12px", textDecoration: "none" }}>{a.name}</Link>
+            <Link key={a.slug} href={`/area/${encodeURIComponent(a.slug)}`} style={{ fontSize: "12px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "5px 12px", textDecoration: "none" }}>{a.name}</Link>
           ))}
           <Link href="/area" style={{ fontSize: "12px", fontWeight: 700, color: "#555", background: "#f0f0f0", borderRadius: 20, padding: "5px 12px", textDecoration: "none" }}>全エリア一覧 →</Link>
         </div>

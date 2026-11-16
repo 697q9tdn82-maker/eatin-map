@@ -25,7 +25,7 @@ export default function AreaIndex() {
           <h2 style={h2}>{pref}</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             {items.map(([slug, a]) => (
-              <Link key={slug} href={`/area/${slug}`} style={{ fontSize: "13px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "6px 13px", textDecoration: "none" }}>
+              <Link key={slug} href={`/area/${encodeURIComponent(slug)}`} style={{ fontSize: "13px", fontWeight: 700, color: "#0077b6", background: "#e3f2fd", borderRadius: 20, padding: "6px 13px", textDecoration: "none" }}>
                 {a.name}
               </Link>
             ))}
